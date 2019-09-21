@@ -37,3 +37,29 @@ int main(void)
 {
   return 0;
 }
+
+
+/***************************************************************
+Menu Function - Lists all the menu options avaliable.
+***************************************************************/
+void menu(void)
+{
+
+} 
+
+
+/***************************************************************
+Display Function - Displays all the selected data fetched from the database.
+***************************************************************/
+void display_all_customers(void)
+{
+
+}
+
+
+
+
+
+
+
+
