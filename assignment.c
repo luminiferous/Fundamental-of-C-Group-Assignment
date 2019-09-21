@@ -1,8 +1,8 @@
 /*******************************************************************************
 Fundamentals of C Programming - Assessment 3
 Project Name: Secure Clothing Store Database System (Placeholder)
-Authors: Cameron Wang (13202320), Brendan Huynh, Peter Phan,
-          David Ung, Daming Luo(13160039)
+Authors: Cameron Wang (13202320), Brendan Huynh (13202155), Peter Phan,
+          David Ung (13245547), Daming Luo (13160039)
 Date of Submission: -
 *******************************************************************************/
 
