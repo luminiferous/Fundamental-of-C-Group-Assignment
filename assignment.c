@@ -58,3 +58,18 @@ void display_all_customers(void)
 {
 
 }
+
+
+/*******************************************************************************
+View Item Function - Lists all the items in the users shopping cart.
+*******************************************************************************/
+void view_items(void)
+{
+
+}
+
+
+/*******************************************************************************
+Menu Function - Lists all the menu options avaliable.
+*******************************************************************************/
+void search_items(void)
