@@ -68,6 +68,7 @@ void help(void);
 
 /*******************************************************************************
 Main Function
+Author(s): Daming Luo
 *******************************************************************************/
 int main(void)
 {
@@ -88,19 +89,19 @@ int main(void)
 					add_customer(customer_t** add, int count);
 					break;
 
-					case 2:
+				case 2:
 					login(customer_t** log, int logged_customer, int count);
 					break;
 
-					case 3:
+				case 3:
 					display_all_customers(void);
 					break;
 
-					case 4:
+				case 4:
 					success_exit = 1;
 					break;
 
-					default:
+				default:
 					printf("Invaild input\n");
 			}
 			if (success_exit) break;
@@ -175,8 +176,10 @@ void add_customer(customer_t** add, int count)
 {
 
 }
+
 /*******************************************************************************
 Menu Function - Lists all the menu options avaliable.
+Author(s): Daming Luo
 *******************************************************************************/
 void menu(void)
 {
@@ -200,6 +203,7 @@ void menu2(void)
 /*******************************************************************************
 Display Function - Displays all the selected data fetched from
 the database.
+Author(s):
 *******************************************************************************/
 void display_all_customers(void)
 {
@@ -209,6 +213,7 @@ void display_all_customers(void)
 
 /*******************************************************************************
 View Item Function - Lists the items on the item catalogue.
+Author(s):
 *******************************************************************************/
 void view_items(void)
 {
@@ -218,6 +223,7 @@ void view_items(void)
 
 /*******************************************************************************
 Search Item Function - Searches for specific items on the item catalogue.
+Author(s):
 *******************************************************************************/
 void search_items(void)
 {
