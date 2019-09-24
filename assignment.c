@@ -1,7 +1,7 @@
 /*******************************************************************************
 Fundamentals of C Programming - Assessment 3
 Project Name: Secure Clothing Store Database System (Placeholder)
-Authors: Cameron Wang (13202320), Brendan Huynh (13202155), 
+Authors: Cameron Wang (13202320), Brendan Huynh (13202155),
 	Peter Phan (13202268), David Ung (13245547), Daming Luo (13160039)
 Date of Submission: -
 *******************************************************************************/
@@ -163,8 +163,7 @@ void checkpoint(void)
 			count = load_customer(&up);
 			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
 				"This program lets multiple customers sign up and login\n"
-      			"Then customer will be able to add, view, search, remove
-				items\n"
+      			"Customer will be able to add, view, search, remove items\n"
       			"Customer can also view the purchase history\n"
       			"The encrypted password of Customers makes more safety \n");
 		}
