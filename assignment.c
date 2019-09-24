@@ -21,13 +21,15 @@ Function Prototypes
 **NOTE** - At current stage in development, function prototypes
             are subject to change.
 *******************************************************************************/
-typedef struct customer{
+typedef struct customer
+{
 	char customer_id[10];
 	char customer_password[20];
 	int encrypt_password;
 }customer_t;
 
-typedef struct compress_code{
+typedef struct compress_code
+{
 	char letter;
 	int letter_f;
 	unsigned int code;
@@ -36,7 +38,8 @@ typedef struct compress_code{
 	struct compress_code* rd;
 }compress_code_c;
 
-typedef struct compress_table{
+typedef struct compress_table
+{
 	char letter;
 	int letter_f;
 	unsigned int code;
@@ -73,50 +76,67 @@ int main(void)
 	int logged_customer;
 	int success_exit = 0;
 	int choice = -1;
-	while(1){
-		while(count == 0){
-		menu(void);
-		scanf("%d", &choice);
-		switch(choice){
-			case 1: 
-			add_customer(customer_t** add, int count);
-			break;
-			case 2: 
-			login(customer_t** log, int logged_customer, int count);
-			break;
-			case 3: 
-			display_all_customers(void);
-			break;
-			case 4:
-			success_exit = 1;
-			break;
-			default: 
-			printf("Invaild input\n");
-		}
-		if (success_exit) break;
+	while(1)
+	{
+		while(count == 0)
+		{
+			menu(void);
+			scanf("%d", &choice);
+			switch(choice)
+			{
+				case 1:
+					add_customer(customer_t** add, int count);
+					break;
+
+					case 2:
+					login(customer_t** log, int logged_customer, int count);
+					break;
+
+					case 3:
+					display_all_customers(void);
+					break;
+
+					case 4:
+					success_exit = 1;
+					break;
+
+					default:
+					printf("Invaild input\n");
+			}
+			if (success_exit) break;
 		}
 		return 0;
-		while(count == 1){
+
+		while(count == 1)
+		{
 			menu2(void);
+
 			scanf("%d", &choice);
-			switch(choice){
-			case 1: 
-			add_items(void);
-			break;
-			case 2: 
-			view_items(void);
-			break;
-			case 3: 
-			search_items(void);
-			break;
-			case 4:
-			view_purchase_history(void);
-			case 5:
-			success_exit = 1;
-			break;
-			default: 
-			printf("Invaild input\n");
-		}
+			switch(choice)
+			{
+				case 1:
+					add_items(void);
+					break;
+
+				case 2:
+					view_items(void);
+					break;
+
+				case 3:
+					search_items(void);
+					break;
+
+				case 4:
+					view_purchase_history(void);
+					break;
+
+				case 5:
+					success_exit = 1;
+					break;
+
+				default:
+					printf("Invaild input\n");
+			}
 		}
 	}
 	return 0;
@@ -130,17 +150,23 @@ void checkpoint(void)
 
 	customer_t* wu = NULL;
 	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
-	while(1){
-		if (wu == NULL){
+	while(1)
+	{
+		if (wu == NULL)
+		{
 			printf("Error\n");
 			return 1;
-		}else{
-		count = load_customer(&up);
-		printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
-		"This program lets multiple customers sign up and login\n"
-      	"Then customer will be able to add, view, search, remove items\n"
-      	"Customer can also view the purchase history\n"
-      	"The encrypted password of Customers makes more safety \n");
+		}
+
+		else
+		{
+			count = load_customer(&up);
+			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
+				"This program lets multiple customers sign up and login\n"
+      			"Then customer will be able to add, view, search, remove
+				items\n"
+      			"Customer can also view the purchase history\n"
+      			"The encrypted password of Customers makes more safety \n");
 		}
 	}
 }
