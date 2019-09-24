@@ -88,19 +88,19 @@ int main(void)
 					add_customer(customer_t** add, int count);
 					break;
 
-					case 2:
+				case 2:
 					login(customer_t** log, int logged_customer, int count);
 					break;
 
-					case 3:
+				case 3:
 					display_all_customers(void);
 					break;
 
-					case 4:
+				case 4:
 					success_exit = 1;
 					break;
 
-					default:
+				default:
 					printf("Invaild input\n");
 			}
 			if (success_exit) break;
