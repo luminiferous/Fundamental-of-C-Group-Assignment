@@ -162,11 +162,10 @@ void checkpoint(void)
 		{
 			count = load_customer(&up);
 			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
-				"This program lets multiple customers sign up and login\n"
-      			"Then customer will be able to add, view, search, remove
-				items\n"
-      			"Customer can also view the purchase history\n"
-      			"The encrypted password of Customers makes more safety \n");
+				"This program lets multiple customers sign up and login.\n"
+      			"Then customer will be able to add, view, search, remove items.\n"
+      			"Customer can also view the purchase history.\n"
+      			"The encrypted password of Customers ensures security.\n");
 		}
 	}
 }
