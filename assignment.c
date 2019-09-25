@@ -16,6 +16,7 @@ C Libraries
 
 #define MAX_USER 5
 #define USER "database"
+
 /*******************************************************************************
 Function Prototypes
 **NOTE** - At current stage in development, function prototypes
@@ -182,6 +183,10 @@ int main(void)
 	return 0;
 }
 
+/*******************************************************************************
+Add Customer Function - Adds a customer to the system.
+Author(s): Daming Luo
+*******************************************************************************/
 void add_customer(customer_t** add, int count)
 {
 	int i, k;
