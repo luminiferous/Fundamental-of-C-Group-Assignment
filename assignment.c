@@ -26,7 +26,7 @@ typedef struct customer
 	char customer_id[10];
 	char customer_password[20];
 	int encrypt_password;
-}customer_t;
+} customer_t;
 
 typedef struct compress_code
 {
@@ -36,14 +36,14 @@ typedef struct compress_code
 	struct compress_code* st;
 	struct compress_code* nd;
 	struct compress_code* rd;
-}compress_code_c;
+} compress_code_c;
 
 typedef struct compress_table
 {
 	char letter;
 	int letter_f;
 	unsigned int code;
-}compress_table_t;
+} compress_table_t;
 
 // Displays main menu options.
 void main_menu(void);
@@ -87,7 +87,31 @@ Author(s): Daming Luo
 *******************************************************************************/
 int main(void)
 {
-	checkpoint(void);
+
+	int count = 0, customer_number = 0;
+	int logged_customer;
+
+	customer_t* wu = NULL;
+	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
+	while(1)
+	{
+		if (wu == NULL)
+		{
+			printf("Error\n");
+			return 1;
+		}
+
+		else
+		{
+			count = load_customer(&up);
+			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
+						"This program lets multiple customers sign up and login\n"
+						"Customer will be able to add, view, search, remove items\n"
+						"Customer can also view the purchase history\n"
+						"The encrypted password of Customers makes more safety \n");
+		}
+	}
+
 	int count = 0, customer_number = 0;
 	int logged_customer;
 	int success_exit = 0;
@@ -101,15 +125,15 @@ int main(void)
 			switch(choice)
 			{
 				case 1:
-					add_customer(customer_t** add, int count);
+					add_customer(&wu, count);
 					break;
 
 				case 2:
-					login(customer_t** log, int logged_customer, int count);
+					login(&wu, count);
 					break;
 
 				case 3:
-					display_all_customers(void);
+					display_all_customers();
 					break;
 
 				case 4:
@@ -158,38 +182,117 @@ int main(void)
 	return 0;
 }
 
-
-void checkpoint(void)
-{
-	int count = 0, customer_number = 0;
-	int logged_customer;
-
-	customer_t* wu = NULL;
-	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
-	while(1)
-	{
-		if (wu == NULL)
-		{
-			printf("Error\n");
-			return 1;
-		}
-
-		else
-		{
-			count = load_customer(&up);
-			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
-				"This program lets multiple customers sign up and login\n"
-      			"Customer will be able to add, view, search, remove items\n"
-      			"Customer can also view the purchase history\n"
-      			"The encrypted password of Customers makes more safety \n");
-		}
-	}
-}
-
-
 void add_customer(customer_t** add, int count)
 {
+	int i, k;
+	char name[10];
+	char password[20];
+	char cust_dir[30] = "mkdir -p USER/";
 
+	printf("Please enter an username with 6 more characters.\n"
+					"Letters (a-z, A-Z, numbers(0-9)\n"
+					"> ");
+	fgets(name, 100, stdin);
+	fgets(name, 100, stdin);
+
+	for (i = 0; name[i] != '\0'; i++){
+		if (name[0] == '\n' || name[0] <= 6 || name[0] == ' ')
+		{
+			printf("\nInvaild input.\n"
+				   "The username must start by character or number\n"
+				   "Please enter a username\n"
+				   ">  ");
+			fgets(name, 100, stdin);
+			i = -1;
+			continue;
+		}
+		else if(name[i] == 96)
+		{
+			continue;
+		}
+		else if(_isdigit(name[i]))
+		{
+			continue;
+		}
+		else if(_isaplha(name[i]))
+		{
+			continue;
+		}
+		else if(_isupper(name[i]))
+		{
+			continue;
+		}
+		else if(_islower(name[i]))
+		{
+			continue;
+		}
+		else if(name[i] == '\n' && count != 0 && i > 2){
+			name[i] = '\0';
+			for (k = 0; k != count; k++)
+			{
+				if(strcmp(name, (*add + k)->customer_id))
+				{
+					printf("\nUsername already exsits\n"
+						   "\nPlease enter a username\n> ");
+					fgets(name, 100, stdin);
+					i = -1;
+					break;
+				}else{continue;}
+			}
+			i--;
+			continue;
+		}
+		else
+		{
+			printf("\nInvaild input\n"
+				   "Please enter another username\n> ");
+			fgets(name, 100, stdin);
+			i = -1;
+			continue;
+		}
+	}
+
+	strcpy((*au+count)->customer_id, name);
+	printf("\nPlease enter password\n> ");
+	fgets(password, 100, stdin);
+	int i;
+	for (i = 0; password[i] != '0'; i++)
+	{
+		if(_isSpecial(password[i]))
+		{
+			continue;
+		}
+		else if(password[i] == '\n' && i > 6)
+		{
+			password[i] = '\0';
+			i--;
+			continue;
+		}
+		else if(password[i] == '\n' && i <= 6)
+		{
+			printf("\nPassword too short\n"
+				   "\nPlease enter another password\n> ");
+			fgets(password[i], 100, stdin);
+			i = -1;
+			continue;
+		}
+		else
+		{
+			printf("\nInvaild input\n"
+				   "\nPlease enter another password\n> ");
+			fgets(password[i], 100, stdin);
+			i = -1;
+			continue;
+		}
+	}
+
+	strcpy((*add+count)->cust_password, password);
+	srand(count);
+	(*add+count)->encrypt_password = rand() % 3 + 1;
+	stract(cust_dir, name);
+	system(cust_dir);
+	count++;
+	return count;
 }
 
 /*******************************************************************************
@@ -256,4 +359,59 @@ Author(s):
 void search_items(void)
 {
 
+}
+
+int _isdigit(char c)
+{
+    if (c >= 48 && c <= 57)
+		{
+        return 1;
+    }
+		return 0;
+}
+
+int _isalpha(char c)
+{
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		{
+        return 1;
+    }
+		return 0;
+}
+
+int _isupper(char c)
+{
+    if (c >= 'A' && c <= 'Z')
+		{
+        return 1;
+    }
+		return 0;
+}
+
+char _toupper(char c)
+{
+    if(_isalpha(c))
+		{
+        if(_isupper(c)) return c;
+        return c - 32;
+    }
+		printf("Input is not an alphabet.");
+    return c;
+}
+
+int _islower(char c)
+{
+	if(c <= 'z' && c >='a'){
+		return 1;
+	}
+	return 0;
+}
+
+int _isSpecial(char c)
+{
+	if(c => 36 && c <= 126)
+	{
+		return 1;
+	}
+	return 0;
 }
