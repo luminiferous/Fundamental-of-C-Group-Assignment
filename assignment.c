@@ -45,25 +45,40 @@ typedef struct compress_table
 	unsigned int code;
 }compress_table_t;
 
-
+// Displays main menu options.
 void main_menu(void);
+// Displays menu options for customers.
 void customer_menu(void);
-void checkpoint(void);
+// Allows customers to prvide their details.
 void customer_detail_input(void);
+// Adds customer to the system.
 void add_customer(customer_t** add, int count);
+// Saves all customers to the database.
 void save_customer(customer_t** save, int count);
 void check_customer(customer_t** check);
+// Allows a customer to log into the system.
 void login(customer_t** log, int logged_customer, int count);
+// Displays all customers in the database.
 void display_all_customers(void);
+// Encrypts the customer's password before being stored in the database.
 int encrypt_customer_password(char[] database_file, char[] customer_password);
+// Decrypts the customer's password.
 int decrypt_customer_password(char[] database_file, char[] customer);
+// Compresses the database file.
 int compress_database_file(char[] database_file);
+// Decompresses the database file.
 int decompress_database_file(char[] compressed_database_file);
+// Displays all products.
 void view_items(void);
+// Allows customers to search the items for specific products.
 void search_items(void);
+// Adds an item/s to the product database.
 int add_items(void);
+// Removes an item/s from the priduct database.
 int remove_items(void);
+// Displays a customer's purchase history.
 void view_purchase_history(void);
+// Display the help screen.
 void help(void);
 
 /*******************************************************************************
@@ -198,6 +213,19 @@ void customer_menu(void)
 		"3: Search items\n"
 		"4: Remove items\n"
 		"5: View purchase history");
+}
+
+void customer_input(void) {
+	int input;
+	while(1) {
+		customer_menu();
+		printf("Input> ")
+		scanf("%d", &input);
+		switch(input) {
+			case 1:
+
+		}
+	}
 }
 
 /*******************************************************************************
