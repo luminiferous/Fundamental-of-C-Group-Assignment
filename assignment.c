@@ -17,11 +17,6 @@ C Libraries
 #define MAX_USER 5
 #define USER "database"
 
-/*******************************************************************************
-Function Prototypes
-**NOTE** - At current stage in development, function prototypes
-            are subject to change.
-*******************************************************************************/
 typedef struct customer
 {
 	char customer_id[10];
@@ -46,41 +41,64 @@ typedef struct compress_table
 	unsigned int code;
 } compress_table_t;
 
+/*******************************************************************************
+Function Prototypes
+**NOTE** - At current stage in development, function prototypes
+            are subject to change.
+*******************************************************************************/
 // Displays main menu options.
+// Author: Daming Luo, Cameron Wang
 void main_menu(void);
 // Displays menu options for customers.
+// Author: Daming Luo, Cameron Wang
 void customer_menu(void);
 // Allows customers to prvide their details.
+// Author: Daming Luo
 void customer_detail_input(void);
 // Adds customer to the system.
+// Author: Daming Luo
 void add_customer(customer_t** add, int count);
 // Saves all customers to the database.
+// Author: Brendan Huynh
 void save_customer(customer_t** save, int count);
 void check_customer(customer_t** check);
 // Allows a customer to log into the system.
+// Author: Brendan Huynh
 void login(customer_t** log, int logged_customer, int count);
 // Displays all customers in the database.
+// Author: Daming Luo
 void display_all_customers(void);
 // Encrypts the customer's password before being stored in the database.
+// Author: David Ung
 int encrypt_customer_password(char[] database_file, char[] customer_password);
 // Decrypts the customer's password.
+// Author: David Ung
 int decrypt_customer_password(char[] database_file, char[] customer);
 // Compresses the database file.
+// Author: Cameron Wang
 int compress_database_file(char[] database_file);
 // Decompresses the database file.
+// Author: Cameron Wang
 int decompress_database_file(char[] compressed_database_file);
 // Displays all products.
+// Author: Peter Phan
 void view_items(void);
 // Allows customers to search the items for specific products.
+// Author: Peter Phan
 void search_items(void);
 // Adds an item/s to the product database.
+// Author: Brendan Huynh
 int add_items(void);
 // Removes an item/s from the priduct database.
+// Author: Brendan Huynh
 int remove_items(void);
 // Displays a customer's purchase history.
+// Author: Peter Phan
 void view_purchase_history(void);
 // Display the help screen.
+// Author: Peter Phan
 void help(void);
+
 
 /*******************************************************************************
 Main Function
