@@ -9,10 +9,10 @@ Date of Submission: -
 /*******************************************************************************
 C Libraries
 *******************************************************************************/
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<math.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
 
 #define MAX_USER 5
 #define USER "database"
@@ -46,8 +46,8 @@ typedef struct compress_table
 }compress_table_t;
 
 
-void menu(void);
-void menu2(void);
+void main_menu(void);
+void customer_menu(void);
 void checkpoint(void);
 void customer_detail_input(void);
 void add_customer(customer_t** add, int count);
@@ -81,7 +81,7 @@ int main(void)
 	{
 		while(count == 0)
 		{
-			menu(void);
+			main_menu(void);
 			scanf("%d", &choice);
 			switch(choice)
 			{
@@ -181,7 +181,7 @@ void add_customer(customer_t** add, int count)
 Menu Function - Lists all the menu options avaliable.
 Author(s): Daming Luo
 *******************************************************************************/
-void menu(void)
+void main_menu(void)
 {
 	printf("Please enter vaild number for sign up or log in\n"
 		"1: Sign up\n"
@@ -190,9 +190,9 @@ void menu(void)
 		"4: Exit");
 }
 
-void menu2(void)
+void customer_menu(void)
 {
-	printf("Welcome to the supermarket\n"
+	printf("Welcome to the Online Clothing Store\n"
 		"1: View items\n"
 		"2: Add items\n"
 		"3: Search items\n"
