@@ -43,25 +43,29 @@ typedef struct compress_table
 
 /*******************************************************************************
 Function Prototypes
-**NOTE** - At current stage in development, function prototypes
-            are subject to change.
 *******************************************************************************/
 // Displays main menu options.
 // Author: Daming Luo, Cameron Wang
-void main_menu(void);
+void account_menu(void);
 // Displays menu options for customers.
 // Author: Daming Luo, Cameron Wang
 void customer_menu(void);
+// Displays menu options for admin.
+// Author: Cameron Wang
+void admin_menu(void);
+// Gets an input from the user.
+// Author: Cameron Wang
+int get_input(void);
 // Allows customers to prvide their details.
 // Author: Daming Luo
 void customer_detail_input(void);
 // Adds customer to the system.
 // Author: Daming Luo
-void add_customer(customer_t** add, int count);
+void add_customer(customer_t* add, int count);
 // Saves all customers to the database.
 // Author: Brendan Huynh
-void save_customer(customer_t** save, int count);
-void check_customer(customer_t** check);
+void save_customer(customer_t* save, int count);
+void check_customer(customer_t* check);
 // Allows a customer to log into the system.
 // Author: Brendan Huynh
 void login(customer_t** log, int logged_customer, int count);
@@ -86,12 +90,15 @@ void view_items(void);
 // Allows customers to search the items for specific products.
 // Author: Peter Phan
 void search_items(void);
-// Adds an item/s to the product database.
+// Adds an item / items to the product database.
 // Author: Brendan Huynh
 int add_items(void);
-// Removes an item/s from the priduct database.
+// Removes an item / items from the product database.
 // Author: Brendan Huynh
 int remove_items(void);
+// Allows a customer to purchase items from the store.
+// Author: Brendan Huynh
+void purchase_items(void);
 // Displays a customer's purchase history.
 // Author: Peter Phan
 void view_purchase_history(void);
@@ -104,101 +111,215 @@ void help(void);
 Main Function
 Author(s): Daming Luo
 *******************************************************************************/
-int main(void)
-{
-
-	int count = 0, customer_number = 0;
-	int logged_customer;
-
-	customer_t* wu = NULL;
+int main(void) {
+	int input;
+	customer_t* wu = NUL
 	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
-	while(1)
+	while (1)
 	{
-		if (wu == NULL)
+		account_menu();
+		input = get_input();
+		switch (input)
 		{
-			printf("Error\n");
-			return 1;
-		}
-
-		else
-		{
-			count = load_customer(&up);
-			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
-						"This program lets multiple customers sign up and login\n"
-						"Customer will be able to add, view, search, remove items\n"
-						"Customer can also view the purchase history\n"
-						"The encrypted password of Customers makes more safety \n");
+			case 1:
+				add_customer();
+				break;
+			case 2:
+				login();
+				break;
+			case 3:
+				exit(0);
+				break;
+			default:
+				printf("Invalid input\n");
 		}
 	}
+}
 
-	int count = 0, customer_number = 0;
-	int logged_customer;
-	int success_exit = 0;
-	int choice = -1;
-	while(1)
-	{
-		while(count == 0)
-		{
-			main_menu(void);
-			scanf("%d", &choice);
-			switch(choice)
-			{
-				case 1:
-					add_customer(&wu, count);
-					break;
+// int main(void)
+// {
+//
+// 	int count = 0, customer_number = 0;
+// 	int logged_customer;
+//
+// 	while(1)
+// 	{
+// 		if (wu == NULL)
+// 		{
+// 			printf("Error\n");
+// 			return 1;
+// 		}
+//
+// 		else
+// 		{
+// 			count = load_customer(&up);
+// 			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
+// 						"This program lets multiple customers sign up and login\n"
+// 						"Customer will be able to add, view, search, remove items\n"
+// 						"Customer can also view the purchase history\n"
+// 						"The encrypted password of Customers makes more safety \n");
+// 		}
+// 	}
+//
+// 	int count = 0, customer_number = 0;
+// 	int logged_customer;
+// 	int success_exit = 0;
+// 	int choice = -1;
+// 	while(1)
+// 	{
+// 		while(count == 0)
+// 		{
+// 			main_menu(void);
+// 			scanf("%d", &choice);
+// 			switch(choice)
+// 			{
+// 				case 1:
+// 					add_customer(&wu, count);
+// 					break;
+//
+// 				case 2:
+// 					login(&wu, count);
+// 					break;
+//
+// 				case 3:
+// 					display_all_customers();
+// 					break;
+//
+// 				case 4:
+// 					success_exit = 1;
+// 					break;
+//
+// 				default:
+// 					printf("Invaild input\n");
+// 			}
+// 			if (success_exit) break;
+// 		}
+// 		return 0;
+//
+// 		while(count == 1)
+// 		{
+// 			menu2(void);
+//
+// 			scanf("%d", &choice);
+// 			switch(choice)
+// 			{
+// 				case 1:
+// 					add_items(void);
+// 					break;
+//
+// 				case 2:
+// 					view_items(void);
+// 					break;
+//
+// 				case 3:
+// 					search_items(void);
+// 					break;
+//
+// 				case 4:
+// 					view_purchase_history(void);
+// 					break;
+//
+// 				case 5:
+// 					success_exit = 1;
+// 					break;
+//
+// 				default:
+// 					printf("Invaild input\n");
+// 			}
+// 		}
+// 	}
+// 	return 0;
+// }
 
-				case 2:
-					login(&wu, count);
-					break;
+/*******************************************************************************
+Menu Functions - Lists all the menu options avaliable.
+Author(s): Daming Luo, Cameron Wang
+*******************************************************************************/
+void account_menu(void) {
+	printf("Welcome to the Online Clothing Store.\n"
+		"1: Sign Up\n"
+		"2. Log In\n"
+		"3. Exit\n");
+}
 
-				case 3:
-					display_all_customers();
-					break;
+void customer_menu(void)
+{
+	printf("Welcome to the Online Clothing Store\n"
+		"1: View items\n"
+		"2: Add items\n"
+		"3: Search items\n"
+		"4: Remove items\n"
+		"5: View purchase history\n"
+		"6: Help\n");
+}
 
-				case 4:
-					success_exit = 1;
-					break;
+void admin_menu(void) {
+	printf("Welcome to the Admin Controls."
+		"1: Display All Customers\n"
+		"2: Compress Database\n"
+		"3: Decompress Database\n"
+		"4: Help\n");
+}
 
-				default:
-					printf("Invaild input\n");
-			}
-			if (success_exit) break;
-		}
-		return 0;
+int get_input(void) {
+	int input;
+	printf("Select an Option> ");
+	scanf("%d", &input);
+	return input;
+}
 
-		while(count == 1)
-		{
-			menu2(void);
-
-			scanf("%d", &choice);
-			switch(choice)
-			{
-				case 1:
-					add_items(void);
-					break;
-
-				case 2:
-					view_items(void);
-					break;
-
-				case 3:
-					search_items(void);
-					break;
-
-				case 4:
-					view_purchase_history(void);
-					break;
-
-				case 5:
-					success_exit = 1;
-					break;
-
-				default:
-					printf("Invaild input\n");
-			}
+void customer_input(void) {
+	int input;
+	while (1) {
+		customer_menu()
+		input = get_input();
+		switch (input) {
+			case 1:
+				view_items();
+				break;
+			case 2:
+				add_items();
+				break;
+			case 3:
+				search_items();
+				break;
+			case 4:
+				remove_items();
+				break;
+			case 5:
+				view_purchase_history();
+				break;
+			case 6:
+				help();
+				break;
+			default:
+				printf("Invalid input\n");
 		}
 	}
-	return 0;
+}
+
+void admin_input(void) {
+	int input;
+	while (1) {
+		admin_menu();
+		input = get_input();
+		switch (input) {
+			case 1:
+				display_all_customers();
+				break;
+			case 2:
+				compress_database_file();
+				break;
+			case 3:
+				decompress_database_file();
+				break;
+			case 4:
+				help();
+				break;
+			default:
+				printf("Invalid input\n");
+		}
+	}
 }
 
 /*******************************************************************************
@@ -318,38 +439,30 @@ void add_customer(customer_t** add, int count)
 	return count;
 }
 
-/*******************************************************************************
-Menu Function - Lists all the menu options avaliable.
-Author(s): Daming Luo
-*******************************************************************************/
-void main_menu(void)
-{
-	printf("Please enter vaild number for sign up or log in\n"
-		"1: Sign up\n"
-		"2: Log in\n"
-		"3: Display all customers\n"
-		"4: Exit");
-}
-
-void customer_menu(void)
-{
-	printf("Welcome to the Online Clothing Store\n"
-		"1: View items\n"
-		"2: Add items\n"
-		"3: Search items\n"
-		"4: Remove items\n"
-		"5: View purchase history");
-}
-
 void customer_input(void) {
 	int input;
 	while(1) {
 		customer_menu();
-		printf("Input> ")
+		printf("Select an Option> ")
 		scanf("%d", &input);
 		switch(input) {
 			case 1:
-
+				view_items();
+				break;
+			case 2:
+				add_items();
+				break;
+			case 3:
+				search_items();
+				break;
+			case 4:
+				remove_items();
+				break;
+			case 5:
+				view_purchase_history();
+				break;
+			default:
+				printf("Invalid input\n");
 		}
 	}
 }
