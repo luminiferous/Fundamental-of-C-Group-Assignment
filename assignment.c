@@ -56,7 +56,13 @@ void admin_menu(void);
 // Gets an input from the user.
 // Author: Cameron Wang
 int get_input(void);
-// Allows customers to prvide their details.
+// Gets an input from the customer.
+// Author: Cameron Wang
+void customer_input(void);
+// Gets an input from the system admin.
+// Author: Cameron Wang
+void admin_input(void);
+// Allows customers to provide their details.
 // Author: Daming Luo
 void customer_detail_input(void);
 // Adds customer to the system.
@@ -68,7 +74,7 @@ void save_customer(customer_t* save, int count);
 void check_customer(customer_t* check);
 // Allows a customer to log into the system.
 // Author: Brendan Huynh
-void login(customer_t** log, int logged_customer, int count);
+void login(customer_t* log, int logged_customer, int count);
 // Displays all customers in the database.
 // Author: Daming Luo
 void display_all_customers(void);
@@ -439,32 +445,19 @@ void add_customer(customer_t** add, int count)
 	return count;
 }
 
-void customer_input(void) {
-	int input;
-	while(1) {
-		customer_menu();
-		printf("Select an Option> ")
-		scanf("%d", &input);
-		switch(input) {
-			case 1:
-				view_items();
-				break;
-			case 2:
-				add_items();
-				break;
-			case 3:
-				search_items();
-				break;
-			case 4:
-				remove_items();
-				break;
-			case 5:
-				view_purchase_history();
-				break;
-			default:
-				printf("Invalid input\n");
-		}
-	}
+void save_customer(customer_t* save, int count)
+{
+
+}
+
+void check_customer(customer_t* check)
+{
+
+}
+
+void login(customer_t* log, int logged_customer, int count)
+{
+
 }
 
 /*******************************************************************************
@@ -477,6 +470,25 @@ void display_all_customers(void)
 
 }
 
+int encrypt_customer_password(char[] database_file, char[] customer_password)
+{
+	return 0;
+}
+
+int decrypt_customer_password(char[] database_file, char[] customer)
+{
+	return 0;
+}
+
+int compress_database_file(char[] database_file)
+{
+	return 0;
+}
+
+int decompress_database_file(char[] compressed_database_file)
+{
+	return 0;
+}
 
 /*******************************************************************************
 View Item Function - Lists the items on the item catalogue.
@@ -493,6 +505,31 @@ Search Item Function - Searches for specific items on the item catalogue.
 Author(s):
 *******************************************************************************/
 void search_items(void)
+{
+
+}
+
+int add_items(void)
+{
+	return 0;
+}
+
+int remove_items(void)
+{
+	return 0;
+}
+
+void puchase_items(void)
+{
+
+}
+
+void view_purchase_history(void)
+{
+
+}
+
+void help(void)
 {
 
 }
