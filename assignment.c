@@ -198,28 +198,15 @@ void menu2(void)
 }
 
 /*******************************************************************************
-Display Function - Displays all the selected data fetched from
-the database.
+Encrypt Function - Encrypts passwords.
 *******************************************************************************/
-void display_all_customers(void)
+int encrypt_customer_password(char[] database_file, char[] customer_password)
 {
-
-}
-
-
-/*******************************************************************************
-View Item Function - Lists the items on the item catalogue.
-*******************************************************************************/
-void view_items(void)
-{
-
-}
-
-
-/*******************************************************************************
-Search Item Function - Searches for specific items on the item catalogue.
-*******************************************************************************/
-void search_items(void)
-{
-
+	int i;
+	for(i = 0; (i < 100 && customer_password[i] != '\0'); i++)
+	{
+		customer_password[i] = customer_password[i] + 7;
+		printf("\nEncrypted string: %s\n", str);
+		break;
+	}
 }
