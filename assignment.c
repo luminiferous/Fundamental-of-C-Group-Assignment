@@ -34,6 +34,14 @@ struct customer
 };
 typedef struct customer customer_t;
 
+struct item
+{
+	char name[30];
+	char sex;
+	int size;
+	double price;
+};
+typedef struct item item_t;
 /* typedef struct compress_code
 {
 	char letter;
@@ -519,17 +527,36 @@ int decompress_database_file(char compressed_database_file[])
 
 /*******************************************************************************
 View Item Function - Lists the items on the item catalogue.
-Author(s):
+Author(s): Peter Phan
 *******************************************************************************/
 void view_items(void)
 {
+	FILE *fp;
+    int i;
+    fp = fopen(USER, "r");
+    if(fp == NULL)
+    {
+        printf("Read error\n");
+        return 1;
+    }
 
+    for(i = 0; i < counter; i++)
+    {
+        /*fscanf(fp, "%s %02d %02d %02d %02d %s %02d %02d %02d %02d",
+        flight[i].flightcode, &flight[i].departure_dt.month,
+        &flight[i].departure_dt.date, &flight[i].departure_dt.hour,
+        &flight[i].departure_dt.minute, flight[i].arrival_city,
+        &flight[i].arrival_dt.month, &flight[i].arrival_dt.date,
+        &flight[i].arrival_dt.hour, &flight[i].arrival_dt.minute);*/
+    }
+
+    return 0;
 }
 
 
 /*******************************************************************************
 Search Item Function - Searches for specific items on the item catalogue.
-Author(s): Peter Phan Brendan Huynh
+Author(s): Peter Phan, Brendan Huynh
 *******************************************************************************/
 void search_items(void)
 {
