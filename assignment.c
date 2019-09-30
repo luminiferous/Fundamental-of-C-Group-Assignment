@@ -42,6 +42,7 @@ struct item
 	double price;
 };
 typedef struct item item_t;
+
 /* typedef struct compress_code
 {
 	char letter;
