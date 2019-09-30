@@ -557,12 +557,23 @@ void view_purchase_history(void)
 
 void help(void)
 {
-
+	printf("Below is a detailed explanation on how to use the menu\n\n
+		View items - Display all products available on the catalogue.\n
+		Search items - User can search up key words to find specific products or
+			categories on the catalogue.\n
+		Add items - Add an item / items to the shopping cart.\n
+		Remove items - Remove an item / items from the shopping cart\n
+		View purchase history - Allows user to see what products they have
+		bought in the past\n");
 }
 
 void help_admin(void)
 {
-	
+	printf("Below is a detailed explanation on how to use the admin menu.\n
+		Display all customers - Retrieves and displays a list of customers and
+			their details from the database.\n
+		Compress database - Compresses database.\n
+		Decompress database - Decompresses database.\n");
 }
 
 void debug(void)
