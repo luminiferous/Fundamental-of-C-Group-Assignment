@@ -120,6 +120,9 @@ void view_purchase_history(void);
 /* Display the help screen.
 Author: Peter Phan */
 void help(void);
+/*Display the help screen for admin.
+Author: Peter Phan*/
+void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
