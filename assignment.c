@@ -280,9 +280,9 @@ void customer_menu(void)
 
 void admin_menu(void) {
 	printf("Welcome to the Admin Controls."
-		"1: Display All Customers\n"
-		"2: Compress Database\n"
-		"3: Decompress Database\n"
+		"1: Display all customers\n"
+		"2: Compress database\n"
+		"3: Decompress database\n"
 		"4: Help\n");
 }
 
