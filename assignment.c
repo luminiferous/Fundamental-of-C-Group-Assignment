@@ -579,15 +579,10 @@ void help_admin(void)
 
 void debug(void)
 {
-	int input, arraySize = 0, exitFlag, existingFlag;
-	/* int input, exitFlag; */
+	int input, exitFlag = 0, existingFlag;
 	char string[101];
 	weight_t characters[30];
 	weight_t letter;
-	/* node_t* linkedListp;
-	node_t* ip;
-	linkedListp = (node_t*)malloc(sizeof(node_t));
-	linkedListp -> nextp = NULL; */
 	while (1)
 	{
 		printf("Debug Menu:\n"
@@ -605,11 +600,9 @@ void debug(void)
 			case 1:
 				printf("Enter a debug string (Max 100 Characters)> ");
 				scanf("%s", string);
-				/* fgets(string, 100, stdin); */
-				int j, i = 0;
+				int arraySize = 0, j, i = 0;
 				while (string[i] != '\0')
 				{
-					printf("%c\n", string[i]);
 					existingFlag = 0;
 					for (j = 0; j < arraySize; j++)
 					{
@@ -625,15 +618,13 @@ void debug(void)
 						letter = weight_count(string[i], string, i);
 						characters[j].letter = letter.letter;
 						characters[j].weight = letter.weight;
-						/* printf("characters letter %c weight %d\n",
-								characters[j].letter, characters[j].weight); */
+						arraySize++;
 					}
 					i++;
 				}
 
 				for (j = 0; j < arraySize; j++)
 				{
-					printf("Checkpoint 8;\n");
 					letter.letter = characters[j].letter;
 					letter.weight = characters[j].weight;
 					weight_output(&letter);
