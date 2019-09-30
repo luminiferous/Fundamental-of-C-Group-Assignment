@@ -576,10 +576,28 @@ void search_items(void)
 
 }
 
-item_t add_items()
+int add_items()
 {
 	item_t items;
-	return items;
+	int i;
+
+	FILE *fp;
+	fp = fopen(USER, "w");
+
+	if(fp == NULL)
+	{
+		printf("Write error\n");
+		return 1;
+	}
+
+	for(i = 0; i < counter; i++)
+	{
+		fprintf(fp, "%s %c %d %0.2lf\n", &items[i].name, &items[i].sex,
+			&items[i].size, &items[i].price););
+	}
+
+	fclose(fp);
+	return 0;
 }
 
 int remove_items(void)
