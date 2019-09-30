@@ -560,6 +560,11 @@ void help(void)
 
 }
 
+void help_admin(void)
+{
+	
+}
+
 void debug(void)
 {
 	int input, exitFlag, existingFlag;
