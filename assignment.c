@@ -105,11 +105,11 @@ void save_customer(customer_t* save, int count);
 void check_customer(customer_t* check);
 
 /* Allows a customer to log into the system.
-Author: Brendan Huynh */
+Author: Daming Luo */
 void login(customer_t* log, int logged_customer, int count);
 
 /* Displays all customers in the database.
-Author: Daming Luo */
+Author: Brendan Huynh */
 void display_all_customers(void);
 
 /* Encrypts the customer's password before being stored in the database.
@@ -425,11 +425,164 @@ void admin_input(void)
 Add Customer Function - Adds a customer to the system.
 Author(s): Daming Luo
 *******************************************************************************/
-void add_customer(customer_t* add, int count)
-{
 
+/***************************ADD_CUSTOMER FUNCTION********************************/
+void add_customer(customer_t** add, int count){
+	int i, k;
+	char name[10];
+	char password[20];
+	/*Command of Linux for create a direction in computer*/
+	char cust_dir[30] = "mkdir -p USER/";
+
+	printf("Please enter an username with 6 more characters.\n"
+					"Letters (a-z, A-Z, numbers(0-9)\n> ");
+	fgets(name, 100, stdin);
+	/***CUSTOMER_NAME VALIDATION***/
+ 	/*Username must use only letters and numbers*/
+	for (i = 0; name[i] != '\0'; i++){
+		if (name[0] == '\n' || name[0] == ' ')
+		{
+			printf("\nInvaild input.\n"
+				   "The username must start by character or number\n"
+				   "Please enter a username\n> ");
+			fgets(name, 100, stdin);
+			i = -1;
+			continue;
+		/*Function to define username must use only letters and numbers*/
+		}else if(_isdigit(name[i]) || _isalpha(name[i])){
+			continue;
+		/*Checks if username is the same as another customer's*/
+		}else if(name[i] == '\n' && count != 0 && i > 5){
+			/*fgets function includes '\n' before '\0'*/
+   			/*replaces '\n' with '\0'*/
+			name[i] = '\0';
+			for (k = 0; k != count; k++)
+			{
+				/*The result of exsits customer name*/
+				if(strcmp(name, (*add + k)->customer_id)==0)
+				{
+					printf("\nUsername already exsits\n"
+						   "\nPlease enter a username\n> ");
+					fgets(name, 100, stdin);
+					i = -1;
+					break;
+				}else{continue;}
+			}
+			i--;
+			continue;
+		}
+		else
+		{
+			/*Result of invaild input*/
+			printf("\nInvaild input\n"
+				   "Please enter another username\n> ");
+			fgets(name, 100, stdin);
+			i = -1;
+			continue;
+		}
+	}/*End of customer_name for loop*/
+
+	/*Saves username to structure array*/
+	strcpy((*add+count)->customer_id, name);
+	/***PASSWORD CREATION***/
+	printf("\nPlease enter password\n> ");
+	fgets(password, 100, stdin);
+	int i;
+	/*Travel through input password*/
+	for (i = 0; password[i] != '\0'; i++)
+	{
+		if(_isSpecial(password[i]) || _isalpha(password[i]))
+		{
+			continue;
+		}
+		/*Check if the password over 6 characters or not*/
+		else if(password[i] == '\n' && i > 6)
+		{
+			password[i] = '\0';
+			i--;
+			continue;
+		}
+		/*Result of the password less than 6 characters*/
+		else if(password[i] == '\n' && i < 6)
+		{
+			printf("\nPassword too short\n"
+				   "\nPlease enter another password\n> ");
+			fgets(password[i], 100, stdin);
+			i = -1;
+			continue;
+		}
+		/*Result of invaild input*/
+		else
+		{
+			printf("\nInvaild input\n"
+				   "\nPlease enter another password\n> ");
+			fgets(password[i], 100, stdin);
+			i = -1;
+			continue;
+		}
+	}/*End of Password for loop*/
+	/*Saves password to structure array*/
+	strcpy((*add+count)->cust_password, password);
+	/*Initialise srand seed using number of existing users*/
+	srand(count);
+	 /*Assign random number as user's encryption number*/
+	(*add+count)->encrypt_password = rand() % 3 + 1;
+	/***CREATE NEW USER DIRECTORY***/
+	/*Add customer name to cust_dir*/
+	strcat(cust_dir, name);
+	/*Command of Linux to create customer's folder*/
+	system(cust_dir);
+	count++;
+	return count;
 }
 
+/***************************LOGIN FUNCTION********************************/
+void login(customer_t* log, int logged_customer, int count)
+{
+	int i;
+	int logged_customer = 0;
+	char cust_pass[20];
+
+ /***Select Customer***/
+ while (logged_customer <= 0 || logged_customer > count)
+ {
+  printf("Select an existing name (from 1-%d):\n", count);
+  for (i = 0; i < user_count; i++)
+  {
+   printf("%d %s\n \n> ", i+1, (*log+i)->customer_id);
+  }
+  scanf("%d", &logged_customer); 
+
+  /*Error input when customer name less than 0 or large than customer number*/
+  if (logged_customer <= 0 || logged_customer > count)
+  {
+   printf("\nInvalid input.\n");
+  }
+ }
+
+ logged_user = logged_user - 1;
+ fgets(cust_pass, 50, stdin);
+ 
+ /***CHECK PASSWORD***/
+ while(1)
+ {
+  printf("Enter your password.\n> ");
+  fgets(u_pass, 50, stdin);
+  /*Compare the input password with previous password*/
+  u_pass[strlen(cust_pass)-1] = '\0';
+  /*Save cust_pass to customer_password struct and end this loop*/
+  if (strcmp(cust_pass, (*logu+logged_customer)->customer_password) == 0)
+  {
+   printf("\nLogged in.\n");
+   return logged_customer;
+  }
+  else
+  {
+   printf("Incorrect password.\n");
+   continue;
+  }
+ }
+}
 
 void save_customer(customer_t* save, int count)
 {
@@ -441,10 +594,7 @@ void check_customer(customer_t* check)
 
 }
 
-void login(customer_t* log, int logged_customer, int count)
-{
 
-}
 
 /*******************************************************************************
 Display Function - Displays all the selected data fetched from
