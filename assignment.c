@@ -130,12 +130,8 @@ int decompress_database_file(char compressed_database_file[]);
 
 /* Displays all products.
 Author: Peter Phan */
-<<<<<<< HEAD
-void view_items(item_t items[], int counter);
-=======
 int view_items(item_t items, int counter);
 
->>>>>>> 0949ca6565d65810fdb0cbdf1940777a3863e060
 /* Allows customers to search the items for specific products.
 Author: Cameron Wang */
 int search_items(void);
@@ -500,7 +496,7 @@ Author(s): Peter Phan
 	    }
 	}
 
-/*	if(file_size != 0)
+	if(file_size != 0)
 	{
 		for(i = 0, i < counter, i++)
 		{
@@ -513,14 +509,8 @@ Author(s): Peter Phan
 			printf("-------------------------\n\n");
 		}
 	}
-<<<<<<< HEAD
-*/
-}
-
-=======
 
 } */
->>>>>>> 0949ca6565d65810fdb0cbdf1940777a3863e060
 
 /*******************************************************************************
 Search Item Function - Searches for specific items on the item catalogue.
