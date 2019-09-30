@@ -13,9 +13,18 @@ C Libraries
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include "huffman_coding.h"
 
 #define MAX_USER 5
 #define USER "database"
+
+struct node
+{
+	char letter;
+	int weight;
+	struct node* nextp;
+};
+typedef struct node node_t;
 
 typedef struct customer
 {
@@ -24,7 +33,7 @@ typedef struct customer
 	int encrypt_password;
 } customer_t;
 
-typedef struct compress_code
+/* typedef struct compress_code
 {
 	char letter;
 	int letter_f;
@@ -39,78 +48,80 @@ typedef struct compress_table
 	char letter;
 	int letter_f;
 	unsigned int code;
-} compress_table_t;
+} compress_table_t; */
 
 /*******************************************************************************
 Function Prototypes
 *******************************************************************************/
-// Displays main menu options.
-// Author: Daming Luo, Cameron Wang
+/* Displays main menu options.
+Author: Daming Luo, Cameron Wang */
 void account_menu(void);
-// Displays menu options for customers.
-// Author: Daming Luo, Cameron Wang
+/* Displays menu options for customers.
+Author: Daming Luo, Cameron Wang */
 void customer_menu(void);
-// Displays menu options for admin.
-// Author: Cameron Wang
+/* Displays menu options for admin.
+Author: Cameron Wang */
 void admin_menu(void);
-// Gets an input from the user.
-// Author: Cameron Wang
+/* Gets an input from the user.
+Author: Cameron Wang */
 int get_input(void);
-// Gets an input from the customer.
-// Author: Cameron Wang
+/* Gets an input from the customer.
+Author: Cameron Wang */
 void customer_input(void);
-// Gets an input from the system admin.
-// Author: Cameron Wang
+/* Gets an input from the system admin.
+Author: Cameron Wang */
 void admin_input(void);
-// Allows customers to provide their details.
-// Author: Daming Luo
+/* Allows customers to provide their details.
+Author: Daming Luo */
 void customer_detail_input(void);
-// Adds customer to the system.
-// Author: Daming Luo
+/* Adds customer to the system.
+Author: Daming Luo */
 void add_customer(customer_t* add, int count);
-// Saves all customers to the database.
-// Author: Brendan Huynh
+/* Saves all customers to the database.
+Author: Brendan Huynh */
 void save_customer(customer_t* save, int count);
 void check_customer(customer_t* check);
-// Allows a customer to log into the system.
-// Author: Brendan Huynh
+/* Allows a customer to log into the system.
+Author: Brendan Huynh */
 void login(customer_t* log, int logged_customer, int count);
-// Displays all customers in the database.
-// Author: Daming Luo
+/* Displays all customers in the database.
+Author: Daming Luo */
 void display_all_customers(void);
-// Encrypts the customer's password before being stored in the database.
-// Author: David Ung
-int encrypt_customer_password(char[] database_file, char[] customer_password);
-// Decrypts the customer's password.
-// Author: David Ung
-int decrypt_customer_password(char[] database_file, char[] customer);
-// Compresses the database file.
-// Author: Cameron Wang
-int compress_database_file(char[] database_file);
-// Decompresses the database file.
-// Author: Cameron Wang
-int decompress_database_file(char[] compressed_database_file);
-// Displays all products.
-// Author: Peter Phan
+/* Encrypts the customer's password before being stored in the database.
+Author: David Ung */
+int encrypt_customer_password(char database_file[], char customer_password[]);
+/* Decrypts the customer's password.
+Author: David Ung */
+int decrypt_customer_password(char database_file[], char customer[]);
+/* Compresses the database file.
+Author: Cameron Wang */
+int compress_database_file(char database_file[]);
+/* Decompresses the database file.
+Author: Cameron Wang */
+int decompress_database_file(char compressed_database_file[]);
+/* Displays all products.
+Author: Peter Phan */
 void view_items(void);
-// Allows customers to search the items for specific products.
-// Author: Peter Phan
+/* Allows customers to search the items for specific products.
+Author: Peter Phan */
 void search_items(void);
-// Adds an item / items to the product database.
-// Author: Brendan Huynh
+/* Adds an item / items to the product database.
+Author: Brendan Huynh */
 int add_items(void);
-// Removes an item / items from the product database.
-// Author: Brendan Huynh
+/* Removes an item / items from the product database.
+Author: Brendan Huynh */
 int remove_items(void);
-// Allows a customer to purchase items from the store.
-// Author: Brendan Huynh
+/* Allows a customer to purchase items from the store.
+Author: Brendan Huynh */
 void purchase_items(void);
-// Displays a customer's purchase history.
-// Author: Peter Phan
+/* Displays a customer's purchase history.
+Author: Peter Phan */
 void view_purchase_history(void);
-// Display the help screen.
-// Author: Peter Phan
+/* Display the help screen.
+Author: Peter Phan */
 void help(void);
+/* Function for debugging. */
+void debug(void);
 
 
 /*******************************************************************************
@@ -119,8 +130,8 @@ Author(s): Daming Luo
 *******************************************************************************/
 int main(void) {
 	int input;
-	customer_t* wu = NUL
-	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
+	/* customer_t* wu = NULL;
+	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t)); */
 	while (1)
 	{
 		account_menu();
@@ -128,13 +139,18 @@ int main(void) {
 		switch (input)
 		{
 			case 1:
-				add_customer();
+				printf("Add Customer Function currently Unavailable\n");
+				/* add_customer(); */
 				break;
 			case 2:
-				login();
+				printf("Login Function currently Unavailable\n");
+				/* login(); */
 				break;
 			case 3:
 				exit(0);
+				break;
+			case 9:
+				debug();
 				break;
 			default:
 				printf("Invalid input\n");
@@ -142,100 +158,100 @@ int main(void) {
 	}
 }
 
-// int main(void)
-// {
-//
-// 	int count = 0, customer_number = 0;
-// 	int logged_customer;
-//
-// 	while(1)
-// 	{
-// 		if (wu == NULL)
-// 		{
-// 			printf("Error\n");
-// 			return 1;
-// 		}
-//
-// 		else
-// 		{
-// 			count = load_customer(&up);
-// 			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
-// 						"This program lets multiple customers sign up and login\n"
-// 						"Customer will be able to add, view, search, remove items\n"
-// 						"Customer can also view the purchase history\n"
-// 						"The encrypted password of Customers makes more safety \n");
-// 		}
-// 	}
-//
-// 	int count = 0, customer_number = 0;
-// 	int logged_customer;
-// 	int success_exit = 0;
-// 	int choice = -1;
-// 	while(1)
-// 	{
-// 		while(count == 0)
-// 		{
-// 			main_menu(void);
-// 			scanf("%d", &choice);
-// 			switch(choice)
-// 			{
-// 				case 1:
-// 					add_customer(&wu, count);
-// 					break;
-//
-// 				case 2:
-// 					login(&wu, count);
-// 					break;
-//
-// 				case 3:
-// 					display_all_customers();
-// 					break;
-//
-// 				case 4:
-// 					success_exit = 1;
-// 					break;
-//
-// 				default:
-// 					printf("Invaild input\n");
-// 			}
-// 			if (success_exit) break;
-// 		}
-// 		return 0;
-//
-// 		while(count == 1)
-// 		{
-// 			menu2(void);
-//
-// 			scanf("%d", &choice);
-// 			switch(choice)
-// 			{
-// 				case 1:
-// 					add_items(void);
-// 					break;
-//
-// 				case 2:
-// 					view_items(void);
-// 					break;
-//
-// 				case 3:
-// 					search_items(void);
-// 					break;
-//
-// 				case 4:
-// 					view_purchase_history(void);
-// 					break;
-//
-// 				case 5:
-// 					success_exit = 1;
-// 					break;
-//
-// 				default:
-// 					printf("Invaild input\n");
-// 			}
-// 		}
-// 	}
-// 	return 0;
-// }
+/* int main(void)
+{
+
+	int count = 0, customer_number = 0;
+	int logged_customer;
+
+	while(1)
+	{
+		if (wu == NULL)
+		{
+			printf("Error\n");
+			return 1;
+		}
+
+		else
+		{
+			count = load_customer(&up);
+			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
+						"This program lets multiple customers sign up and login\n"
+						"Customer will be able to add, view, search, remove items\n"
+						"Customer can also view the purchase history\n"
+						"The encrypted password of Customers makes more safety \n");
+		}
+	}
+
+	int count = 0, customer_number = 0;
+	int logged_customer;
+	int success_exit = 0;
+	int choice = -1;
+	while(1)
+	{
+		while(count == 0)
+		{
+			main_menu(void);
+			scanf("%d", &choice);
+			switch(choice)
+			{
+				case 1:
+					add_customer(&wu, count);
+					break;
+
+				case 2:
+					login(&wu, count);
+					break;
+
+				case 3:
+					display_all_customers();
+					break;
+
+				case 4:
+					success_exit = 1;
+					break;
+
+				default:
+					printf("Invaild input\n");
+			}
+			if (success_exit) break;
+		}
+		return 0;
+
+		while(count == 1)
+		{
+			menu2(void);
+
+			scanf("%d", &choice);
+			switch(choice)
+			{
+				case 1:
+					add_items(void);
+					break;
+
+				case 2:
+					view_items(void);
+					break;
+
+				case 3:
+					search_items(void);
+					break;
+
+				case 4:
+					view_purchase_history(void);
+					break;
+
+				case 5:
+					success_exit = 1;
+					break;
+
+				default:
+					printf("Invaild input\n");
+			}
+		}
+	}
+	return 0;
+} */
 
 /*******************************************************************************
 Menu Functions - Lists all the menu options avaliable.
@@ -277,7 +293,7 @@ int get_input(void) {
 void customer_input(void) {
 	int input;
 	while (1) {
-		customer_menu()
+		customer_menu();
 		input = get_input();
 		switch (input) {
 			case 1:
@@ -314,10 +330,12 @@ void admin_input(void) {
 				display_all_customers();
 				break;
 			case 2:
-				compress_database_file();
+				printf("Compress Database File Function currently Unavailable\n");
+				/* compress_database_file(); */
 				break;
 			case 3:
-				decompress_database_file();
+				printf("Decompress Database File Function currently Unavailable\n");
+				/* decompress_database_file(); */
 				break;
 			case 4:
 				help();
@@ -332,7 +350,12 @@ void admin_input(void) {
 Add Customer Function - Adds a customer to the system.
 Author(s): Daming Luo
 *******************************************************************************/
-void add_customer(customer_t** add, int count)
+void add_customer(customer_t* add, int count)
+{
+
+}
+
+/* void add_customer(customer_t** add, int count)
 {
 	int i, k;
 	char name[10];
@@ -443,7 +466,7 @@ void add_customer(customer_t** add, int count)
 	system(cust_dir);
 	count++;
 	return count;
-}
+} */
 
 void save_customer(customer_t* save, int count)
 {
@@ -470,22 +493,22 @@ void display_all_customers(void)
 
 }
 
-int encrypt_customer_password(char[] database_file, char[] customer_password)
+int encrypt_customer_password(char database_file[], char customer_password[])
 {
 	return 0;
 }
 
-int decrypt_customer_password(char[] database_file, char[] customer)
+int decrypt_customer_password(char database_file[], char customer[])
 {
 	return 0;
 }
 
-int compress_database_file(char[] database_file)
+int compress_database_file(char database_file[])
 {
 	return 0;
 }
 
-int decompress_database_file(char[] compressed_database_file)
+int decompress_database_file(char compressed_database_file[])
 {
 	return 0;
 }
@@ -534,7 +557,91 @@ void help(void)
 
 }
 
-int _isdigit(char c)
+void debug(void)
+{
+	int input, exitFlag, existingFlag;
+	/* int input, exitFlag; */
+	char string[101];
+	weight_t letter;
+	node_t* linkedListp;
+	node_t* ip;
+	linkedListp = (node_t*)malloc(sizeof(node_t));
+	linkedListp -> nextp = NULL;
+	while (1)
+	{
+		printf("Debug Menu:\n"
+				"1. Weight Count + Output Debugging / Testing\n"
+				"0. Exit\n");
+		input = get_input();
+
+		switch (input)
+		{
+			case 0:
+				exitFlag = 1;
+				break;
+			case 1:
+				printf("Enter a debug string (Max 100 Characters)> ");
+				scanf("%s", string);
+				/* fgets(string, 100, stdin); */
+				int i = 0;
+				printf("Checkpoint 1; Letter %c\n", string[i]);
+				printf("Checkpoint 2; LinkedList Position %c %d\n",
+						linkedListp -> letter, linkedListp -> weight);
+				while (string[i] != '\n')
+				{
+					existingFlag = 0;
+					printf("Checkpoint 2; LinkedList Position %c %d\n",
+							linkedListp -> letter, linkedListp -> weight);
+					ip = linkedListp;
+					while (ip -> nextp != NULL)
+					{
+						printf("Checkpoint 3; ip Position %c %d\n",
+								ip -> letter, ip -> weight);
+						if (ip -> letter == string[i])
+						{
+							printf("Checkpoint 4; flag == 1\n");
+							existingFlag = 1;
+							break;
+						}
+						ip = ip -> nextp;
+					}
+
+					printf("Checkpoint 5; existingFlag %d\n", existingFlag);
+					if (!existingFlag)
+					{
+						printf("Checkpoint 6; Letter Position %d\n", i);
+						letter = weight_count(string[i], string, i);
+						printf("Checkpoint 7; letter %c %d\n",
+								letter.letter, letter.weight);
+						ip -> letter = letter.letter;
+						ip -> weight = letter.weight;
+						ip -> nextp = (node_t*)malloc(sizeof(node_t));
+						ip -> nextp -> nextp = NULL;
+					}
+					i++;
+				}
+
+				ip = linkedListp;
+				while (ip -> nextp != NULL)
+				{
+					printf("Checkpoint 8;\n");
+					letter.letter = ip -> letter;
+					letter.weight = ip -> weight;
+					weight_output(&letter);
+				}
+				break;
+			default:
+				printf("Invalid input\n");
+		}
+
+		if (exitFlag)
+		{
+			break;
+		}
+	}
+}
+
+/* int _isdigit(char c)
 {
     if (c >= 48 && c <= 57)
 		{
@@ -587,4 +694,4 @@ int _isSpecial(char c)
 		return 1;
 	}
 	return 0;
-}
+} */
