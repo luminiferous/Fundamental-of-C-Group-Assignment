@@ -305,6 +305,8 @@ int get_input(void) {
 
 void customer_input(void) {
 	int input;
+	item_t items[100];
+	int counter = 0;
 	while (1) {
 		customer_menu();
 		input = get_input();
@@ -313,7 +315,8 @@ void customer_input(void) {
 				view_items();
 				break;
 			case 2:
-				add_items();
+				items[counter] = add_items();
+				counter++;
 				break;
 			case 3:
 				search_items();
@@ -530,7 +533,7 @@ int decompress_database_file(char compressed_database_file[])
 View Item Function - Lists the items on the item catalogue.
 Author(s): Peter Phan
 *******************************************************************************/
-void view_items(void)
+void view_items(item_t items)
 {
 	FILE *fp;
     int i;
@@ -541,7 +544,7 @@ void view_items(void)
         return 1;
     }
 
-    for(i = 0; i < counter; i++)
+    for(i = 0; i < ; i++)
     {
         /*fscanf(fp, "%s %02d %02d %02d %02d %s %02d %02d %02d %02d",
         flight[i].flightcode, &flight[i].departure_dt.month,
@@ -564,9 +567,10 @@ void search_items(void)
 
 }
 
-int add_items(void)
+item_t add_items()
 {
-	return 0;
+	item_t items;
+	return items;
 }
 
 int remove_items(void)
