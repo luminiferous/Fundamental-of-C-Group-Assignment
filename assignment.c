@@ -16,6 +16,7 @@ C Libraries
 #include "huffman_coding.h"
 
 #define MAX_USER 5
+#define ITEMS_IN_DATABASE 50
 #define USER "database"
 
 /* struct node
@@ -310,7 +311,7 @@ void customer_input(void)
 {
 	int input;
 	item_t items[100];
-	int counter = 0;
+	int counter = ITEMS_IN_DATABASE;
 	while (1)
 	{
 		customer_menu();
@@ -546,7 +547,7 @@ void view_items(item_t items[], int counter)
 {
 	FILE *fp;
     int i;
-	int file_size;
+	long file_size;
 
 	fp = fopen(USER, "r");
     if(fp == NULL)
@@ -561,7 +562,7 @@ void view_items(item_t items[], int counter)
     	file_size = ftell(fp);
 	}
 
-    if (0 == file_size) 
+    if (0 == file_size)
 	{
         printf("There are no items in the catalogue.\n");
     }
