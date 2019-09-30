@@ -294,7 +294,8 @@ int main(void) {
 Menu Functions - Lists all the menu options avaliable.
 Author(s): Daming Luo, Cameron Wang
 *******************************************************************************/
-void account_menu(void) {
+void account_menu(void)
+{
 	printf("Welcome to the Online Clothing Store.\n"
 		"1: Sign Up\n"
 		"2. Log In\n"
@@ -312,7 +313,8 @@ void customer_menu(void)
 		"6: Help\n");
 }
 
-void admin_menu(void) {
+void admin_menu(void)
+{
 	printf("Welcome to the Admin Controls."
 		"1: Display all customers\n"
 		"2: Compress database\n"
@@ -320,14 +322,16 @@ void admin_menu(void) {
 		"4: Help\n");
 }
 
-int get_input(void) {
+int get_input(void)
+{
 	int input;
 	printf("Select an Option> ");
 	scanf("%d", &input);
 	return input;
 }
 
-void customer_input(void) {
+void customer_input(void)
+{
 	int input;
 	item_t items[100];
 	int counter = 0;
@@ -360,7 +364,8 @@ void customer_input(void) {
 	}
 }
 
-void admin_input(void) {
+void admin_input(void)
+{
 	int input;
 	while (1) {
 		admin_menu();
