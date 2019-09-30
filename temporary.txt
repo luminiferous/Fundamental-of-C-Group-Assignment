@@ -1,3 +1,7 @@
+**TEMPORARY TEXT FILE**
+***Text File used to store any code that is pushed to the git repository,
+but does not compile***
+
 void add_customer(customer_t* add, int count)
 {
 	int i, k;
