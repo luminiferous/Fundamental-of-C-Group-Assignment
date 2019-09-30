@@ -529,7 +529,7 @@ void view_items(void)
 
 /*******************************************************************************
 Search Item Function - Searches for specific items on the item catalogue.
-Author(s): Peter Phan
+Author(s): Peter Phan Brendan Huynh
 *******************************************************************************/
 void search_items(void)
 {
