@@ -495,8 +495,6 @@ int view_items()
     fseek(fp, 0, SEEK_END);
     fileSize = ftell(fp);
 
-	printf("%ld\n", fileSize);
-
     if (fileSize == 0)
 	{
         printf("There are no items in the catalogue.\n");
