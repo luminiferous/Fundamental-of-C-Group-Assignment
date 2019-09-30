@@ -625,8 +625,8 @@ void debug(void)
 						letter = weight_count(string[i], string, i);
 						characters[j].letter = letter.letter;
 						characters[j].weight = letter.weight;
-						printf("characters letter %c weight %d\n",
-								characters[j].letter, characters[j].weight);
+						/* printf("characters letter %c weight %d\n",
+								characters[j].letter, characters[j].weight); */
 					}
 					i++;
 				}
@@ -640,10 +640,10 @@ void debug(void)
 				}
 				break;
 			case 2:
-				customer_menu();
+				customer_input();
 				break;
 			case 3:
-				admin_menu();
+				admin_input();
 				break;
 			default:
 				printf("Invalid input\n");
