@@ -17,6 +17,8 @@ C Libraries
 
 #define MAX_USER 5
 #define USER "database"
+#define ITEM_DB "item_db"
+#define ITEM_NAME_SIZE 30
 
 /* struct node
 {
@@ -36,7 +38,7 @@ typedef struct customer customer_t;
 
 struct item
 {
-	char name[30];
+	char name[ITEM_NAME_SIZE + 1];
 	char sex;
 	int size;
 	double price;
@@ -127,15 +129,15 @@ int decompress_database_file(char compressed_database_file[]);
 
 /* Displays all products.
 Author: Peter Phan */
-void view_items(void);
+int view_items(item_t items, int counter);
 
 /* Allows customers to search the items for specific products.
-Author: Peter Phan */
-void search_items(void);
+Author: Cameron Wang */
+int search_items(void);
 
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
-int add_items(void);
+item_t add_items(void);
 
 /* Removes an item / items from the product database.
 Author: Brendan Huynh */
@@ -327,27 +329,30 @@ int get_input(void)
 	int input;
 	printf("Select an Option> ");
 	scanf("%d", &input);
+	printf("\n");
 	return input;
 }
 
 void customer_input(void)
 {
 	int input;
-	item_t items[100];
-	int counter = 0;
+	/* item_t items[100];
+	int counter = 0; */
 	while (1) {
 		customer_menu();
 		input = get_input();
 		switch (input) {
 			case 1:
-				view_items();
+				printf("View Items is currently Unavailable\n");
+				/* view_items(); */
 				break;
 			case 2:
-				items[counter] = add_items();
-				counter++;
+				search_items();
 				break;
 			case 3:
-				search_items();
+				printf("Add Items is currently Unavailable\n");
+				/* items[counter] = add_items();
+				counter++; */
 				break;
 			case 4:
 				remove_items();
@@ -562,7 +567,7 @@ int decompress_database_file(char compressed_database_file[])
 View Item Function - Lists the items on the item catalogue.
 Author(s): Peter Phan
 *******************************************************************************/
-void view_items(item_t items, int counter)
+int view_items(item_t items, int counter)
 {
 	FILE *fp;
     int i;
@@ -589,17 +594,57 @@ void view_items(item_t items, int counter)
 
 /*******************************************************************************
 Search Item Function - Searches for specific items on the item catalogue.
-Author(s): Peter Phan, Brendan Huynh
+Author(s): Cameron Wang
 *******************************************************************************/
-void search_items(void)
+int search_items(void)
 {
+	item_t item;
+	int existingFlag = 0;
+	char input[ITEM_NAME_SIZE + 1];
+	FILE *fp = fopen(ITEM_DB, "r");
 
+	if (fp == NULL)
+	{
+		printf("Read error\n");
+		return 1;
+	}
+
+	printf("Enter Clothing Name You Wish To Find> ");
+	scanf("%s", input);
+	while (fscanf(fp, "%s %c %d %lf",
+			item.name, &item.sex, &item.size, &item.price) != EOF)
+	{
+		if (!strcmp(input, item.name))
+		{
+			existingFlag = 1;
+			printf("-------------------------\n");
+			printf("Clothing Name: %s\n"
+					"Gender: %c\n"
+					"Size: %d\n"
+					"Price: $%0.2lf\n",
+					item.name, item.sex, item.size, item.price);
+			printf("-------------------------\n");
+		}
+	}
+
+	if (!existingFlag)
+	{
+		printf("No Matching Results\n");
+	}
+	printf("\n");
+
+	fclose(fp);
+	return 0;
 }
 
 item_t add_items()
 {
-	item_t items;
-	return items;
+	item_t item;
+	strcpy(item.name, "name");
+	item.sex = 'M';
+	item.size = 0;
+	item.price = 0;
+	return item;
 }
 
 int remove_items(void)
