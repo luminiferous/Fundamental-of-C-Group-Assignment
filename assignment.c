@@ -338,7 +338,7 @@ void customer_input(void)
 {
 	int input, exitFlag = 0;
 	/* item_t items[100];
-	int counter = 0; */
+	int counter = ITEMS_IN_DATABASE; */
 	while (1) {
 		customer_menu();
 		input = get_input();
@@ -614,7 +614,7 @@ void help(void)
 			"or categories on the catalogue.\n"
 		"Add items - Add an item / items to the shopping cart.\n"
 		"Remove items - Remove an item / items from the shopping cart.\n"
-		"View purchase history - Allows user to see what products they have"
+		"View purchase history - Allows user to see what products they have "
 			"bought in the past.\n");
 }
 
@@ -622,7 +622,7 @@ void help_admin(void)
 {
 	printf("Below is a detailed explanation on how to use the admin menu.\n\n"
 		"Display all customers - Retrieves and displays a list of customers and"
-			"their details from the database.\n"
+			" their details from the database.\n"
 		"Compress database - Compresses database.\n"
 		"Decompress database - Decompresses database.\n");
 }
