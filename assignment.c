@@ -18,20 +18,21 @@ C Libraries
 #define MAX_USER 5
 #define USER "database"
 
-struct node
+/* struct node
 {
 	char letter;
 	int weight;
 	struct node* nextp;
 };
-typedef struct node node_t;
+typedef struct node node_t; */
 
-typedef struct customer
+struct customer
 {
 	char customer_id[10];
 	char customer_password[20];
 	int encrypt_password;
-} customer_t;
+};
+typedef struct customer customer_t;
 
 /* typedef struct compress_code
 {
@@ -271,8 +272,8 @@ void customer_menu(void)
 {
 	printf("Welcome to the Online Clothing Store\n"
 		"1: View items\n"
-		"2: Add items\n"
-		"3: Search items\n"
+		"2: Search items\n"
+		"3: Add items\n"
 		"4: Remove items\n"
 		"5: View purchase history\n"
 		"6: Help\n");
@@ -280,9 +281,9 @@ void customer_menu(void)
 
 void admin_menu(void) {
 	printf("Welcome to the Admin Controls."
-		"1: Display All Customers\n"
-		"2: Compress Database\n"
-		"3: Decompress Database\n"
+		"1: Display all customers\n"
+		"2: Compress database\n"
+		"3: Decompress database\n"
 		"4: Help\n");
 }
 
@@ -528,7 +529,7 @@ void view_items(void)
 
 /*******************************************************************************
 Search Item Function - Searches for specific items on the item catalogue.
-Author(s):
+Author(s): Peter Phan
 *******************************************************************************/
 void search_items(void)
 {
@@ -557,28 +558,46 @@ void view_purchase_history(void)
 
 void help(void)
 {
-
+	printf("Below is a detailed explanation on how to use the menu\n\n"
+		"View items - Display all products available on the catalogue.\n"
+		"Search items - User can search up key words to find specific products"
+			"or categories on the catalogue.\n"
+		"Add items - Add an item / items to the shopping cart.\n"
+		"Remove items - Remove an item / items from the shopping cart.\n"
+		"View purchase history - Allows user to see what products they have"
+			"bought in the past.\n");
 }
 
 void help_admin(void)
 {
-	
+<<<<<<< HEAD
+
+=======
+	printf("Below is a detailed explanation on how to use the admin menu.\n\n"
+		"Display all customers - Retrieves and displays a list of customers and"
+			"their details from the database.\n"
+		"Compress database - Compresses database.\n"
+		"Decompress database - Decompresses database.\n");
+>>>>>>> a69605c2632961063ca946f0b980f6cb4c381a1d
 }
 
 void debug(void)
 {
-	int input, exitFlag, existingFlag;
+	int input, arraySize = 0, exitFlag, existingFlag;
 	/* int input, exitFlag; */
 	char string[101];
+	weight_t characters[30];
 	weight_t letter;
-	node_t* linkedListp;
+	/* node_t* linkedListp;
 	node_t* ip;
 	linkedListp = (node_t*)malloc(sizeof(node_t));
-	linkedListp -> nextp = NULL;
+	linkedListp -> nextp = NULL; */
 	while (1)
 	{
 		printf("Debug Menu:\n"
 				"1. Weight Count + Output Debugging / Testing\n"
+				"2. Force Customer Menu\n"
+				"3. Force Admin Menu\n"
 				"0. Exit\n");
 		input = get_input();
 
@@ -591,52 +610,44 @@ void debug(void)
 				printf("Enter a debug string (Max 100 Characters)> ");
 				scanf("%s", string);
 				/* fgets(string, 100, stdin); */
-				int i = 0;
-				printf("Checkpoint 1; Letter %c\n", string[i]);
-				printf("Checkpoint 2; LinkedList Position %c %d\n",
-						linkedListp -> letter, linkedListp -> weight);
-				while (string[i] != '\n')
+				int j, i = 0;
+				while (string[i] != '\0')
 				{
+					printf("%c\n", string[i]);
 					existingFlag = 0;
-					printf("Checkpoint 2; LinkedList Position %c %d\n",
-							linkedListp -> letter, linkedListp -> weight);
-					ip = linkedListp;
-					while (ip -> nextp != NULL)
+					for (j = 0; j < arraySize; j++)
 					{
-						printf("Checkpoint 3; ip Position %c %d\n",
-								ip -> letter, ip -> weight);
-						if (ip -> letter == string[i])
+						if (characters[j].letter == string[i])
 						{
-							printf("Checkpoint 4; flag == 1\n");
 							existingFlag = 1;
 							break;
 						}
-						ip = ip -> nextp;
 					}
 
-					printf("Checkpoint 5; existingFlag %d\n", existingFlag);
 					if (!existingFlag)
 					{
-						printf("Checkpoint 6; Letter Position %d\n", i);
 						letter = weight_count(string[i], string, i);
-						printf("Checkpoint 7; letter %c %d\n",
-								letter.letter, letter.weight);
-						ip -> letter = letter.letter;
-						ip -> weight = letter.weight;
-						ip -> nextp = (node_t*)malloc(sizeof(node_t));
-						ip -> nextp -> nextp = NULL;
+						characters[j].letter = letter.letter;
+						characters[j].weight = letter.weight;
+						printf("characters letter %c weight %d\n",
+								characters[j].letter, characters[j].weight);
 					}
 					i++;
 				}
 
-				ip = linkedListp;
-				while (ip -> nextp != NULL)
+				for (j = 0; j < arraySize; j++)
 				{
 					printf("Checkpoint 8;\n");
-					letter.letter = ip -> letter;
-					letter.weight = ip -> weight;
+					letter.letter = characters[j].letter;
+					letter.weight = characters[j].weight;
 					weight_output(&letter);
 				}
+				break;
+			case 2:
+				customer_menu();
+				break;
+			case 3:
+				admin_menu();
 				break;
 			default:
 				printf("Invalid input\n");
