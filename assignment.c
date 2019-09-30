@@ -533,7 +533,7 @@ int decompress_database_file(char compressed_database_file[])
 View Item Function - Lists the items on the item catalogue.
 Author(s): Peter Phan
 *******************************************************************************/
-void view_items(item_t items)
+void view_items(item_t items, int counter)
 {
 	FILE *fp;
     int i;
@@ -544,7 +544,7 @@ void view_items(item_t items)
         return 1;
     }
 
-    for(i = 0; i < ; i++)
+    for(i = 0; i < counter; i++)
     {
         /*fscanf(fp, "%s %02d %02d %02d %02d %s %02d %02d %02d %02d",
         flight[i].flightcode, &flight[i].departure_dt.month,
