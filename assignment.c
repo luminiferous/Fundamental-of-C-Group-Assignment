@@ -571,13 +571,19 @@ void help(void)
 void help_admin(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+=======
+>>>>>>> a69605c2632961063ca946f0b980f6cb4c381a1d
 	printf("Below is a detailed explanation on how to use the admin menu.\n\n"
 		"Display all customers - Retrieves and displays a list of customers and"
 			"their details from the database.\n"
 		"Compress database - Compresses database.\n"
 		"Decompress database - Decompresses database.\n");
+<<<<<<< HEAD
+>>>>>>> a69605c2632961063ca946f0b980f6cb4c381a1d
+=======
 >>>>>>> a69605c2632961063ca946f0b980f6cb4c381a1d
 }
 
