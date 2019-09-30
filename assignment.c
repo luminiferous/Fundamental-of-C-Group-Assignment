@@ -546,6 +546,7 @@ void view_items(item_t items[], int counter)
 {
 	FILE *fp;
     int i;
+	int item_flag = 1;
 
 	fp = fopen(USER, "r");
     if(fp == NULL)
@@ -563,7 +564,25 @@ void view_items(item_t items[], int counter)
 			&items[i].size, &items[i].price);
     }
 
-    return 0;
+	if(counter == 0)
+	{
+		printf("No items in catalogue.\n");
+	}
+
+	else if(counter > 0)
+	{
+		for(i = 0, i < counter, i++)
+		{
+			printf("-------------------------\n");
+        	printf("Clothing Name: %s\n"
+				"Sex: %c\n"
+                "Size: %d\n"
+                "Price: $%0.2lf\n",
+                item[i].name, item[i].sex, item[i].size, item[i].price);
+			printf("-------------------------\n\n");
+		}
+	}
+
 }
 
 
