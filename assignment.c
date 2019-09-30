@@ -68,67 +68,52 @@ Function Prototypes
 /* Displays main menu options.
 Author: Daming Luo, Cameron Wang */
 void account_menu(void);
-
 /* Displays menu options for customers.
 Author: Daming Luo, Cameron Wang */
 void customer_menu(void);
-
 /* Displays menu options for admin.
 Author: Cameron Wang */
 void admin_menu(void);
-
 /* Gets an input from the user.
 Author: Cameron Wang */
 int get_input(void);
-
 /* Gets an input from the customer.
 Author: Cameron Wang */
 void customer_input(void);
-
 /* Gets an input from the system admin.
 Author: Cameron Wang */
 void admin_input(void);
-
 /* Allows customers to provide their details.
 Author: Daming Luo */
 void customer_detail_input(void);
-
 /* Adds customer to the system.
 Author: Daming Luo */
 void add_customer(customer_t* add, int count);
-
 /* Saves all customers to the database.
 Author: Brendan Huynh */
 void save_customer(customer_t* save, int count);
-
 void check_customer(customer_t* check);
-
 /* Allows a customer to log into the system.
 Author: Brendan Huynh */
 void login(customer_t* log, int logged_customer, int count);
-
 /* Displays all customers in the database.
-Author: Brendan Huynh */
+Author: Daming Luo */
 void display_all_customers(void);
-
 /* Encrypts the customer's password before being stored in the database.
 Author: David Ung */
 int encrypt_customer_password(char database_file[], char customer_password[]);
-
 /* Decrypts the customer's password.
 Author: David Ung */
 int decrypt_customer_password(char database_file[], char customer[]);
-
 /* Compresses the database file.
 Author: Cameron Wang */
 int compress_database_file(char database_file[]);
-
 /* Decompresses the database file.
 Author: Cameron Wang */
 int decompress_database_file(char compressed_database_file[]);
-
 /* Displays all products.
 Author: Peter Phan */
+<<<<<<< HEAD
 int view_items(item_t items, int counter);
 
 /* Allows customers to search the items for specific products.
@@ -139,26 +124,30 @@ int search_items(void);
 Author: Brendan Huynh */
 item_t add_items(void);
 
+=======
+void view_items(void);
+/* Allows customers to search the items for specific products.
+Author: Peter Phan */
+void search_items(void);
+/* Adds an item / items to the product database.
+Author: Brendan Huynh */
+int add_items(void);
+>>>>>>> fa777c02b75c47acb59d1393f58876cbe81f6cb5
 /* Removes an item / items from the product database.
 Author: Brendan Huynh */
 int remove_items(void);
-
 /* Allows a customer to purchase items from the store.
 Author: Brendan Huynh */
 void purchase_items(void);
-
 /* Displays a customer's purchase history.
 Author: Peter Phan */
 void view_purchase_history(void);
-
 /* Display the help screen.
 Author: Peter Phan */
 void help(void);
-
 /*Display the help screen for admin.
 Author: Peter Phan*/
 void help_admin(void);
-
 /* Function for debugging. */
 void debug(void);
 
@@ -336,12 +325,20 @@ int get_input(void)
 void customer_input(void)
 {
 	int input;
+<<<<<<< HEAD
 	/* item_t items[100];
 	int counter = 0; */
 	while (1) {
+=======
+	item_t items[100];
+	int counter = 0;
+	while (1)
+	{
+>>>>>>> fa777c02b75c47acb59d1393f58876cbe81f6cb5
 		customer_menu();
 		input = get_input();
-		switch (input) {
+		switch (input)
+		{
 			case 1:
 				printf("View Items is currently Unavailable\n");
 				/* view_items(); */
@@ -372,10 +369,12 @@ void customer_input(void)
 void admin_input(void)
 {
 	int input;
-	while (1) {
+	while (1)
+	{
 		admin_menu();
 		input = get_input();
-		switch (input) {
+		switch (input)
+		{
 			case 1:
 				display_all_customers();
 				break;
@@ -567,28 +566,55 @@ int decompress_database_file(char compressed_database_file[])
 View Item Function - Lists the items on the item catalogue.
 Author(s): Peter Phan
 *******************************************************************************/
+<<<<<<< HEAD
 int view_items(item_t items, int counter)
+=======
+void view_items(item_t items[], int counter)
+>>>>>>> fa777c02b75c47acb59d1393f58876cbe81f6cb5
 {
 	FILE *fp;
     int i;
-    fp = fopen(USER, "r");
+
+	fp = fopen(USER, "r");
     if(fp == NULL)
     {
         printf("Read error\n");
         return 1;
     }
 
-    for(i = 0; i < counter; i++)
-    {
-        /*fscanf(fp, "%s %02d %02d %02d %02d %s %02d %02d %02d %02d",
-        flight[i].flightcode, &flight[i].departure_dt.month,
-        &flight[i].departure_dt.date, &flight[i].departure_dt.hour,
-        &flight[i].departure_dt.minute, flight[i].arrival_city,
-        &flight[i].arrival_dt.month, &flight[i].arrival_dt.date,
-        &flight[i].arrival_dt.hour, &flight[i].arrival_dt.minute);*/
+	if (NULL != fp) {
+    fseek (fp, 0, SEEK_END);
+    size = ftell(fp);
+
+    if (0 == size) {
+        printf("There are no items in the catalogue.\n");
     }
 
-    return 0;
+    for(i = 0; i < counter; i++)
+    {
+		fscanf(fp, "%s %c %d %0.2lf", &items[i].name, &items[i].sex,
+			&items[i].size, &items[i].price);
+    }
+
+	if(counter == 0)
+	{
+		printf("There are no items in the catalogue	.\n");
+	}
+
+	else if(counter > 0)
+	{
+		for(i = 0, i < counter, i++)
+		{
+			printf("-------------------------\n");
+        	printf("Clothing Name: %s\n"
+				"Sex: %c\n"
+                "Size: %d\n"
+                "Price: $%0.2lf\n",
+                item[i].name, item[i].sex, item[i].size, item[i].price);
+			printf("-------------------------\n\n");
+		}
+	}
+
 }
 
 
@@ -637,14 +663,37 @@ int search_items(void)
 	return 0;
 }
 
-item_t add_items()
+int add_items()
 {
+<<<<<<< HEAD
 	item_t item;
 	strcpy(item.name, "name");
 	item.sex = 'M';
 	item.size = 0;
 	item.price = 0;
 	return item;
+=======
+	item_t items;
+	int i;
+
+	FILE *fp;
+	fp = fopen(USER, "w");
+
+	if(fp == NULL)
+	{
+		printf("Write error\n");
+		return 1;
+	}
+
+	for(i = 0; i < counter; i++)
+	{
+		fprintf(fp, "%s %c %d %0.2lf\n", &items[i].name, &items[i].sex,
+			&items[i].size, &items[i].price););
+	}
+
+	fclose(fp);
+	return 0;
+>>>>>>> fa777c02b75c47acb59d1393f58876cbe81f6cb5
 }
 
 int remove_items(void)
