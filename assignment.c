@@ -130,7 +130,7 @@ int decompress_database_file(char compressed_database_file[]);
 
 /* Displays all products.
 Author: Peter Phan */
-int view_items(item_t items, int counter);
+int view_items(void);
 
 /* Allows customers to search the items for specific products.
 Author: Cameron Wang */
@@ -336,7 +336,7 @@ int get_input(void)
 
 void customer_input(void)
 {
-	int input;
+	int input, exitFlag = 0;
 	/* item_t items[100];
 	int counter = 0; */
 	while (1) {
@@ -345,9 +345,9 @@ void customer_input(void)
 		switch (input)
 		{
 			case 1:
-				printf("View Items is currently Unavailable\n");
-				printf("\n");
-				/* view_items(); */
+				/* printf("View Items is currently Unavailable\n");
+				printf("\n"); */
+				view_items();
 				break;
 			case 2:
 				search_items();
@@ -367,15 +367,24 @@ void customer_input(void)
 			case 6:
 				help();
 				break;
+			case 0:
+				exitFlag = 1;
+				break;
 			default:
 				printf("Invalid input\n");
+		}
+
+		if (exitFlag)
+		{
+			break;
 		}
 	}
 }
 
 void admin_input(void)
 {
-	int input;
+	int input, exitFlag = 0;
+
 	while (1)
 	{
 		admin_menu();
@@ -398,8 +407,16 @@ void admin_input(void)
 			case 4:
 				help();
 				break;
+			case 0:
+				exitFlag = 1;
+				break;
 			default:
 				printf("Invalid input\n");
+		}
+
+		if (exitFlag)
+		{
+			break;
 		}
 	}
 }
@@ -463,54 +480,47 @@ int decompress_database_file(char compressed_database_file[])
 View Item Function - Lists the items on the item catalogue.
 Author(s): Peter Phan
 *******************************************************************************/
-/* int view_items(item_t items, int counter)
+int view_items()
 {
-	FILE *fp;
-    int i;
-	long file_size;
+	FILE *fp = fopen(ITEM_DB, "r");
+	long fileSize;
+	item_t item;
 
-	fp = fopen(ITEM_DB, "r");
     if(fp == NULL)
     {
         printf("Read error\n");
-
+		return 1;
     }
 
-	if (NULL != fp)
-	{
-    	fseek(fp, 0, SEEK_END);
-    	file_size = ftell(fp);
-	}
+    fseek(fp, 0, SEEK_END);
+    fileSize = ftell(fp);
 
-    if (0 == file_size)
+	printf("%ld\n", fileSize);
+
+    if (fileSize == 0)
 	{
         printf("There are no items in the catalogue.\n");
     }
 
-	if(file_size != 0)
+	else
 	{
-		for(i = 0; i < counter; i++)
-	    {
-			fscanf(fp, "%s %c %d %0.2lf", &items[i].name, &items[i].sex,
-				&items[i].size, &items[i].price);
-	    }
-	}
-
-	if(file_size != 0)
-	{
-		for(i = 0, i < counter, i++)
+		fseek(fp, 0, SEEK_SET);
+		while (fscanf(fp, "%s %c %d %lf",
+				item.name, &item.sex, &item.size, &item.price) != EOF)
 		{
 			printf("-------------------------\n");
         	printf("Clothing Name: %s\n"
 				"Sex: %c\n"
                 "Size: %d\n"
                 "Price: $%0.2lf\n",
-                items[i].name, items[i].sex, items[i].size, items[i].price);
-			printf("-------------------------\n\n");
+                item.name, item.sex, item.size, item.price);
+			printf("-------------------------\n");
 		}
 	}
 
-} */
+	printf("\n");
+	return 0;
+}
 
 /*******************************************************************************
 Search Item Function - Searches for specific items on the item catalogue.
