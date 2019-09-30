@@ -112,7 +112,7 @@ Author: Cameron Wang */
 int decompress_database_file(char compressed_database_file[]);
 /* Displays all products.
 Author: Peter Phan */
-void view_items(void);
+void view_items(item_t items[], int counter);
 /* Allows customers to search the items for specific products.
 Author: Peter Phan */
 void search_items(void);
@@ -545,7 +545,7 @@ void view_items(item_t items[], int counter)
     if(fp == NULL)
     {
         printf("Read error\n");
-        return 1;
+
     }
 
 	if (NULL != fp)
@@ -559,13 +559,16 @@ void view_items(item_t items[], int counter)
         printf("There are no items in the catalogue.\n");
     }
 
-    for(i = 0; i < counter; i++)
-    {
-		fscanf(fp, "%s %c %d %0.2lf", &items[i].name, &items[i].sex,
-			&items[i].size, &items[i].price);
-    }
+	if(file_size != 0)
+	{
+		for(i = 0; i < counter; i++)
+	    {
+			fscanf(fp, "%s %c %d %0.2lf", &items[i].name, &items[i].sex,
+				&items[i].size, &items[i].price);
+	    }
+	}
 
-	if()
+/*	if(file_size != 0)
 	{
 		for(i = 0, i < counter, i++)
 		{
@@ -574,11 +577,11 @@ void view_items(item_t items[], int counter)
 				"Sex: %c\n"
                 "Size: %d\n"
                 "Price: $%0.2lf\n",
-                item[i].name, item[i].sex, item[i].size, item[i].price);
+                items[i].name, items[i].sex, items[i].size, items[i].price);
 			printf("-------------------------\n\n");
 		}
 	}
-
+*/
 }
 
 
