@@ -546,6 +546,7 @@ void view_items(item_t items[], int counter)
 {
 	FILE *fp;
     int i;
+	int file_size;
 
 	fp = fopen(USER, "r");
     if(fp == NULL)
@@ -554,11 +555,14 @@ void view_items(item_t items[], int counter)
         return 1;
     }
 
-	if (NULL != fp) {
-    fseek (fp, 0, SEEK_END);
-    size = ftell(fp);
+	if (NULL != fp)
+	{
+    	fseek(fp, 0, SEEK_END);
+    	file_size = ftell(fp);
+	}
 
-    if (0 == size) {
+    if (0 == file_size) 
+	{
         printf("There are no items in the catalogue.\n");
     }
 
@@ -568,12 +572,7 @@ void view_items(item_t items[], int counter)
 			&items[i].size, &items[i].price);
     }
 
-	if(counter == 0)
-	{
-		printf("There are no items in the catalogue	.\n");
-	}
-
-	else if(counter > 0)
+	if()
 	{
 		for(i = 0, i < counter, i++)
 		{
