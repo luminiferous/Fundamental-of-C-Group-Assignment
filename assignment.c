@@ -376,60 +376,39 @@ void admin_input(void)
 Add Customer Function - Adds a customer to the system.
 Author(s): Daming Luo
 *******************************************************************************/
-void add_customer(customer_t* add, int count)
-{
-
-}
-
-/* void add_customer(customer_t** add, int count)
-{
+void add_customer(customer_t** add, int count){
 	int i, k;
 	char name[10];
 	char password[20];
+	/*Command of Linux for create a direction in computer*/
 	char cust_dir[30] = "mkdir -p USER/";
 
 	printf("Please enter an username with 6 more characters.\n"
-					"Letters (a-z, A-Z, numbers(0-9)\n"
-					"> ");
+					"Letters (a-z, A-Z, numbers(0-9)\n> ");
 	fgets(name, 100, stdin);
-	fgets(name, 100, stdin);
-
+	/***CUSTOMER_NAME VALIDATION***/
+ 	/*Username must use only letters and numbers*/
 	for (i = 0; name[i] != '\0'; i++){
-		if (name[0] == '\n' || name[0] <= 6 || name[0] == ' ')
+		if (name[0] == '\n' || name[0] == ' ')
 		{
 			printf("\nInvaild input.\n"
 				   "The username must start by character or number\n"
-				   "Please enter a username\n"
-				   ">  ");
+				   "Please enter a username\n> ");
 			fgets(name, 100, stdin);
 			i = -1;
 			continue;
-		}
-		else if(name[i] == 96)
-		{
+		/*Function to define username must use only letters and numbers*/
+		}else if(_isdigit(name[i]) || _isalpha(name[i])){
 			continue;
-		}
-		else if(_isdigit(name[i]))
-		{
-			continue;
-		}
-		else if(_isaplha(name[i]))
-		{
-			continue;
-		}
-		else if(_isupper(name[i]))
-		{
-			continue;
-		}
-		else if(_islower(name[i]))
-		{
-			continue;
-		}
-		else if(name[i] == '\n' && count != 0 && i > 2){
+		/*Checks if username is the same as another customer's*/
+		}else if(name[i] == '\n' && count != 0 && i > 5){
+			/*fgets function includes '\n' before '\0'*/
+   			/*replaces '\n' with '\0'*/
 			name[i] = '\0';
 			for (k = 0; k != count; k++)
 			{
-				if(strcmp(name, (*add + k)->customer_id))
+				/*The result of exsits customer name*/
+				if(strcmp(name, (*add + k)->customer_id)==0)
 				{
 					printf("\nUsername already exsits\n"
 						   "\nPlease enter a username\n> ");
@@ -443,31 +422,37 @@ void add_customer(customer_t* add, int count)
 		}
 		else
 		{
+			/*Result of invaild input*/
 			printf("\nInvaild input\n"
 				   "Please enter another username\n> ");
 			fgets(name, 100, stdin);
 			i = -1;
 			continue;
 		}
-	}
+	}/*End of customer_name for loop*/
 
-	strcpy((*au+count)->customer_id, name);
+	/*Saves username to structure array*/
+	strcpy((*add+count)->customer_id, name);
+	/***PASSWORD CREATION***/
 	printf("\nPlease enter password\n> ");
 	fgets(password, 100, stdin);
 	int i;
-	for (i = 0; password[i] != '0'; i++)
+	/*Travel through input password*/
+	for (i = 0; password[i] != '\0'; i++)
 	{
-		if(_isSpecial(password[i]))
+		if(_isSpecial(password[i]) || _isalpha(password[i]))
 		{
 			continue;
 		}
+		/*Check if the password over 6 characters or not*/
 		else if(password[i] == '\n' && i > 6)
 		{
 			password[i] = '\0';
 			i--;
 			continue;
 		}
-		else if(password[i] == '\n' && i <= 6)
+		/*Result of the password less than 6 characters*/
+		else if(password[i] == '\n' && i < 6)
 		{
 			printf("\nPassword too short\n"
 				   "\nPlease enter another password\n> ");
@@ -475,6 +460,7 @@ void add_customer(customer_t* add, int count)
 			i = -1;
 			continue;
 		}
+		/*Result of invaild input*/
 		else
 		{
 			printf("\nInvaild input\n"
@@ -483,16 +469,22 @@ void add_customer(customer_t* add, int count)
 			i = -1;
 			continue;
 		}
-	}
-
+	}/*End of Password for loop*/
+	/*Saves password to structure array*/
 	strcpy((*add+count)->cust_password, password);
+	/*Initialise srand seed using number of existing users*/
 	srand(count);
+	 /*Assign random number as user's encryption number*/
 	(*add+count)->encrypt_password = rand() % 3 + 1;
-	stract(cust_dir, name);
+	/***CREATE NEW USER DIRECTORY***/
+	/*Add customer name to cust_dir*/
+	strcat(cust_dir, name);
+	/*Command of Linux to create customer's folder*/
 	system(cust_dir);
 	count++;
 	return count;
-} */
+}
+
 
 void save_customer(customer_t* save, int count)
 {
