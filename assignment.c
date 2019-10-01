@@ -551,7 +551,7 @@ void login(customer_t* log, int logged_customer, int count)
   {
    printf("%d %s\n \n> ", i+1, (*log+i)->customer_id);
   }
-  scanf("%d", &logged_customer); 
+  scanf("%d", &logged_customer);
 
   /*Error input when customer name less than 0 or large than customer number*/
   if (logged_customer <= 0 || logged_customer > count)
@@ -562,7 +562,7 @@ void login(customer_t* log, int logged_customer, int count)
 
  logged_user = logged_user - 1;
  fgets(cust_pass, 50, stdin);
- 
+
  /***CHECK PASSWORD***/
  while(1)
  {
