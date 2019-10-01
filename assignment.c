@@ -56,8 +56,7 @@ typedef struct item item_t;
 	struct compress_code* rd;
 } compress_code_c;
 
-typedef struct compress_table
-{
+typedef struct compress_table{
 	char letter;
 	int letter_f;
 	unsigned int code;
@@ -137,8 +136,8 @@ Author: Cameron Wang */
 int search_items(void);
 
 /* Adds an item / items to the product database.
-Author: Brendan Huynh */
-item_t add_items(void);
+Author: Cameron Wang */
+int add_items(void);
 
 /* Removes an item / items from the product database.
 Author: Brendan Huynh */
@@ -247,47 +246,70 @@ int main(void) {
 					display_all_customers();
 					break;
 
-				case 4:
-					success_exit = 1;
-					break;
+	customer_t* wu = NULL;
 
-				default:
-					printf("Invaild input\n");
-			}
-			if (success_exit) break;
+	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
+	while(1){
+		if (wu == NULL){
+			printf("Error\n");
+			return 1;
+		}else{
+		count = load_customer(&wu);
+		printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
+		"This program lets multiple customers sign up and login\n"
+      	"Then customer will be able to add, view, search, remove items\n"
+      	"Customer can also view the purchase history\n"
+      	"The encrypted password of Customers makes more safety \n");
+		}
+	}
+	int count = 0, customer_number = 0;
+	int logged_customer;
+	int success_exit = 0;
+	int choice = -1;
+	while(1){
+		while(count == 0){
+		menu(void);
+		scanf("%d", &choice);
+		switch(choice){
+			case 1:
+			add_customer(&wu, count);
+			break;
+			case 2:
+			login(&wu, count);
+			break;
+			case 3:
+			display_all_customers(void);
+			break;
+			case 4:
+			success_exit = 1;
+			break;
+			default:
+			printf("Invaild input\n");
+		}
+		if (success_exit) break;
 		}
 		return 0;
-
-		while(count == 1)
-		{
+		while(count == 1){
 			menu2(void);
-
 			scanf("%d", &choice);
-			switch(choice)
-			{
-				case 1:
-					add_items(void);
-					break;
-
-				case 2:
-					view_items(void);
-					break;
-
-				case 3:
-					search_items(void);
-					break;
-
-				case 4:
-					view_purchase_history(void);
-					break;
-
-				case 5:
-					success_exit = 1;
-					break;
-
-				default:
-					printf("Invaild input\n");
-			}
+			switch(choice){
+			case 1:
+			add_items(void);
+			break;
+			case 2:
+			view_items(void);
+			break;
+			case 3:
+			search_items(void);
+			break;
+			case 4:
+			view_purchase_history(void);
+			case 5:
+			success_exit = 1;
+			break;
+			default:
+			printf("Invaild input\n");
+		}
 		}
 	}
 	return 0;
@@ -299,30 +321,31 @@ Author(s): Daming Luo, Cameron Wang
 *******************************************************************************/
 void account_menu(void)
 {
-	printf("Welcome to the Online Clothing Store.\n"
-		"1: Sign Up\n"
+	printf("\nWelcome to the Online Clothing Store.\n"
+		"1. Sign Up\n"
 		"2. Log In\n"
-		"3. Exit\n");
+		"0. Exit\n");
 }
 
 void customer_menu(void)
 {
-	printf("Welcome to the Online Clothing Store\n"
-		"1: View items\n"
-		"2: Search items\n"
-		"3: Add items\n"
-		"4: Remove items\n"
-		"5: View purchase history\n"
-		"6: Help\n");
+	printf("\nWelcome to the Online Clothing Store\n"
+		"1. View items\n"
+		"2. Search items\n"
+		"3. Add items\n"
+		"4. Remove items\n"
+		"5. View purchase history\n"
+		"6. Help\n");
 }
 
 void admin_menu(void)
 {
-	printf("Welcome to the Admin Controls."
-		"1: Display all customers\n"
-		"2: Compress database\n"
-		"3: Decompress database\n"
-		"4: Help\n");
+	printf("\nWelcome to the Admin Controls.\n"
+		"1. Add Items to the Database\n"
+		"2. Display all customers\n"
+		"3. Compress database\n"
+		"4. Decompress database\n"
+		"0. Help\n");
 }
 
 int get_input(void)
@@ -330,7 +353,6 @@ int get_input(void)
 	int input;
 	printf("Select an Option> ");
 	scanf("%d", &input);
-	printf("\n");
 	return input;
 }
 
@@ -354,7 +376,6 @@ void customer_input(void)
 				break;
 			case 3:
 				printf("Add Items is currently Unavailable\n");
-				printf("\n");
 				/* items[counter] = add_items();
 				counter++; */
 				break;
@@ -392,19 +413,20 @@ void admin_input(void)
 		switch (input)
 		{
 			case 1:
-				display_all_customers();
+				add_items();
 				break;
 			case 2:
-				printf("Compress Database File Function currently Unavailable\n");
-				printf("\n");
-				/* compress_database_file(); */
+				display_all_customers();
 				break;
 			case 3:
-				printf("Decompress Database File Function currently Unavailable\n");
-				printf("\n");
-				/* decompress_database_file(); */
+				printf("Compress Database File Function currently Unavailable\n");
+				/* compress_database_file(); */
 				break;
 			case 4:
+				printf("Decompress Database File Function currently Unavailable\n");
+				/* decompress_database_file(); */
+				break;
+			case 5:
 				help();
 				break;
 			case 0:
@@ -420,125 +442,21 @@ void admin_input(void)
 		}
 	}
 }
-
 /*******************************************************************************
 Add Customer Function - Adds a customer to the system.
 Author(s): Daming Luo
 *******************************************************************************/
 
 /***************************ADD_CUSTOMER FUNCTION********************************/
-void add_customer(customer_t** add, int count){
-	int i, k;
-	char name[10];
-	char password[20];
-	/*Command of Linux for create a direction in computer*/
-	char cust_dir[30] = "mkdir -p USER/";
+void add_customer(customer_t* add, int count)
+{
 
-	printf("Please enter an username with 6 more characters.\n"
-					"Letters (a-z, A-Z, numbers(0-9)\n> ");
-	fgets(name, 100, stdin);
-	/***CUSTOMER_NAME VALIDATION***/
- 	/*Username must use only letters and numbers*/
-	for (i = 0; name[i] != '\0'; i++){
-		if (name[0] == '\n' || name[0] == ' ')
-		{
-			printf("\nInvaild input.\n"
-				   "The username must start by character or number\n"
-				   "Please enter a username\n> ");
-			fgets(name, 100, stdin);
-			i = -1;
-			continue;
-		/*Function to define username must use only letters and numbers*/
-		}else if(_isdigit(name[i]) || _isalpha(name[i])){
-			continue;
-		/*Checks if username is the same as another customer's*/
-		}else if(name[i] == '\n' && count != 0 && i > 5){
-			/*fgets function includes '\n' before '\0'*/
-   			/*replaces '\n' with '\0'*/
-			name[i] = '\0';
-			for (k = 0; k != count; k++)
-			{
-				/*The result of exsits customer name*/
-				if(strcmp(name, (*add + k)->customer_id)==0)
-				{
-					printf("\nUsername already exsits\n"
-						   "\nPlease enter a username\n> ");
-					fgets(name, 100, stdin);
-					i = -1;
-					break;
-				}else{continue;}
-			}
-			i--;
-			continue;
-		}
-		else
-		{
-			/*Result of invaild input*/
-			printf("\nInvaild input\n"
-				   "Please enter another username\n> ");
-			fgets(name, 100, stdin);
-			i = -1;
-			continue;
-		}
-	}/*End of customer_name for loop*/
-
-	/*Saves username to structure array*/
-	strcpy((*add+count)->customer_id, name);
-	/***PASSWORD CREATION***/
-	printf("\nPlease enter password\n> ");
-	fgets(password, 100, stdin);
-	int i;
-	/*Travel through input password*/
-	for (i = 0; password[i] != '\0'; i++)
-	{
-		if(_isSpecial(password[i]) || _isalpha(password[i]))
-		{
-			continue;
-		}
-		/*Check if the password over 6 characters or not*/
-		else if(password[i] == '\n' && i > 6)
-		{
-			password[i] = '\0';
-			i--;
-			continue;
-		}
-		/*Result of the password less than 6 characters*/
-		else if(password[i] == '\n' && i < 6)
-		{
-			printf("\nPassword too short\n"
-				   "\nPlease enter another password\n> ");
-			fgets(password[i], 100, stdin);
-			i = -1;
-			continue;
-		}
-		/*Result of invaild input*/
-		else
-		{
-			printf("\nInvaild input\n"
-				   "\nPlease enter another password\n> ");
-			fgets(password[i], 100, stdin);
-			i = -1;
-			continue;
-		}
-	}/*End of Password for loop*/
-	/*Saves password to structure array*/
-	strcpy((*add+count)->cust_password, password);
-	/*Initialise srand seed using number of existing users*/
-	srand(count);
-	 /*Assign random number as user's encryption number*/
-	(*add+count)->encrypt_password = rand() % 3 + 1;
-	/***CREATE NEW USER DIRECTORY***/
-	/*Add customer name to cust_dir*/
-	strcat(cust_dir, name);
-	/*Command of Linux to create customer's folder*/
-	system(cust_dir);
-	count++;
-	return count;
 }
 
 /***************************LOGIN FUNCTION********************************/
 void login(customer_t* log, int logged_customer, int count)
 {
+<<<<<<< HEAD
 	int i;
 	int logged_customer = 0;
 	char cust_pass[20];
@@ -582,6 +500,9 @@ void login(customer_t* log, int logged_customer, int count)
    continue;
   }
  }
+=======
+
+>>>>>>> 7526f8f859d299198ebebdd08564537ed6fc65ac
 }
 
 void save_customer(customer_t* save, int count)
@@ -599,7 +520,6 @@ void check_customer(customer_t* check)
 /*******************************************************************************
 Display Function - Displays all the selected data fetched from
 the database.
-Author(s):
 *******************************************************************************/
 void display_all_customers(void)
 {
@@ -715,13 +635,10 @@ int search_items(void)
 	return 0;
 }
 
-/* int add_items()
+int add_items()
 {
-	item_t items;
-	int i;
-
-	FILE *fp;
-	fp = fopen(USER, "w");
+	item_t item;
+	FILE *fp = fopen(ITEM_DB, "a");
 
 	if(fp == NULL)
 	{
@@ -729,15 +646,48 @@ int search_items(void)
 		return 1;
 	}
 
-	for(i = 0; i < counter; i++)
+	printf("\nEnter Clothing Name> ");
+	scanf("%s", item.name);
+
+	int genderOption, selectedFlag = 0;
+	printf("Gender Options:\n"
+			"1. M\n"
+			"2. F\n"
+			"3. Unisex (U)\n");
+	while (!selectedFlag)
 	{
-		fprintf(fp, "%s %c %d %0.2lf\n", &items[i].name, &items[i].sex,
-			&items[i].size, &items[i].price););
+		printf("Enter Clothing Gender> ");
+		scanf("%d", &genderOption);
+		switch (genderOption)
+		{
+			case 1:
+				item.sex = 'M';
+				selectedFlag = 1;
+				break;
+			case 2:
+				item.sex = 'F';
+				selectedFlag = 1;
+				break;
+			case 3:
+				item.sex = 'U';
+				selectedFlag = 1;
+				break;
+			default:
+				printf("Invalid input\n");
+		}
 	}
+
+	printf("Enter Clothing Size> ");
+	scanf("%d", &item.size);
+
+	printf("Enter Clothing Price> ");
+	scanf("%lf", &item.price);
+
+	fprintf(fp, "%s %c %d %0.2lf\n", item.name, item.sex, item.size, item.price);
 
 	fclose(fp);
 	return 0;
-} */
+}
 
 int remove_items(void)
 {
@@ -783,7 +733,7 @@ void debug(void)
 	weight_t letter;
 	while (1)
 	{
-		printf("Debug Menu:\n"
+		printf("\nDebug Menu:\n"
 				"1. Weight Count + Output Debugging / Testing\n"
 				"2. Force Customer Menu\n"
 				"3. Force Admin Menu\n"
