@@ -266,3 +266,53 @@ strcat(cust_dir, name);
 system(cust_dir);
 count++;
 return count;
+
+----------
+
+<<<<<<< HEAD
+	int i;
+	int logged_customer = 0;
+	char cust_pass[20];
+
+ /***Select Customer***/
+ while (logged_customer <= 0 || logged_customer > count)
+ {
+  printf("Select an existing name (from 1-%d):\n", count);
+  for (i = 0; i < user_count; i++)
+  {
+   printf("%d %s\n \n> ", i+1, (*log+i)->customer_id);
+  }
+  scanf("%d", &logged_customer);
+
+  /*Error input when customer name less than 0 or large than customer number*/
+  if (logged_customer <= 0 || logged_customer > count)
+  {
+   printf("\nInvalid input.\n");
+  }
+ }
+
+ logged_user = logged_user - 1;
+ fgets(cust_pass, 50, stdin);
+
+ /***CHECK PASSWORD***/
+ while(1)
+ {
+  printf("Enter your password.\n> ");
+  fgets(u_pass, 50, stdin);
+  /*Compare the input password with previous password*/
+  u_pass[strlen(cust_pass)-1] = '\0';
+  /*Save cust_pass to customer_password struct and end this loop*/
+  if (strcmp(cust_pass, (*logu+logged_customer)->customer_password) == 0)
+  {
+   printf("\nLogged in.\n");
+   return logged_customer;
+  }
+  else
+  {
+   printf("Incorrect password.\n");
+   continue;
+  }
+ }
+=======
+
+>>>>>>> 7526f8f859d299198ebebdd08564537ed6fc65ac
