@@ -335,7 +335,7 @@ void customer_menu(void)
 		"3. Add items\n"
 		"4. Remove items\n"
 		"5. View purchase history\n"
-		"6. Help\n");
+		"0. Help\n");
 }
 
 void admin_menu(void)
