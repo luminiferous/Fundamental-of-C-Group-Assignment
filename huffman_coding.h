@@ -14,7 +14,7 @@ typedef struct node node_t;
 
 node_t character_count(char letter, char string[], int letter_position);
 void bubble_sort(node_t characters[], int arraySize);
-void code_assign(node_t characters[]);
+void code_assign(node_t characters[], int arraySize);
 
 /* Debugging Functions */
 void character_output(node_t character);
