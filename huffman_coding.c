@@ -2,26 +2,58 @@
 #include "huffman_coding.h"
 
 /* Functionality */
-weight_t weight_count(char letter, char string[], int letterPosition)
+node_t character_count(char letter, char string[], int letterPosition)
 {
-    weight_t letterWeight;
-    letterWeight.letter = letter;
-    letterWeight.weight = 1;
+    node_t letterFreq;
+    letterFreq.letter = letter;
+    letterFreq.freq = 1;
     int i = letterPosition + 1;
     while (string[i] != '\0')
     {
         if (letter == string[i])
         {
-            letterWeight.weight++;
+            letterFreq.freq++;
         }
         i++;
     }
-    return letterWeight;
+    return letterFreq;
+}
+
+void bubble_sort(node_t characters[], int arraySize)
+{
+    int i, j;
+    node_t temp;
+    for (i = 0; i < arraySize - 1; i++)
+    {
+        for (j = 0; j < arraySize - 1; j++)
+        {
+            if (characters[j].freq > characters[j + 1].freq)
+            {
+                temp = characters[j];
+                characters[j] = characters[j + 1];
+                characters[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void code_assign(node_t characters[])
+{
+    
 }
 
 /* Debugging Functions */
-void weight_output(weight_t* character)
+void character_output(node_t character)
 {
-    printf("Character: %c; Weight: %d\n",
-            character -> letter, character -> weight);
+    printf("Character: %c; Frequency: %d\n",
+            character.letter, character.freq);
+}
+
+void character_output_loop(node_t characters[], int arraySize)
+{
+    int i;
+    for (i = 0; i < arraySize; i++)
+    {
+        character_output(characters[i]);
+    }
 }
