@@ -39,7 +39,7 @@ void bubble_sort(node_t characters[], int arraySize)
 
 void code_assign(node_t characters[], int arraySize)
 {
-
+    
 }
 
 /* Debugging Functions */

@@ -21,6 +21,9 @@ C Libraries
 #define ITEM_DB "item_db"
 #define ITEM_NAME_SIZE 30
 
+/*******************************************************************************
+Structures
+*******************************************************************************/
 /* struct node
 {
 	char letter;
@@ -565,7 +568,8 @@ void debug(void)
 				break;
 			case 3:
 				printf("Enter a debug string (Max 100 Characters)> ");
-				scanf("%s", string);
+				fgets(string, 100, stdin);
+				fgets(string, 100, stdin);
 				int arraySize = 0, j, i = 0;
 				while (string[i] != '\0')
 				{
