@@ -2,7 +2,20 @@
 #include "huffman_coding.h"
 
 /* Functionality */
-/* node_t create_node(char ch, int freq, char code[], node_t *left, node_t *right){} */
+int frequency_count(char letter, char string[], int letterPosition)
+{
+    int frequency = 1;
+    int i = letterPosition + 1;
+    while (string[i] != '\0')
+    {
+        if (letter == string[i])
+        {
+            frequency++;
+        }
+        i++;
+    }
+    return frequency;
+}
 
 void bubble_sort(node_t characters[], int arraySize)
 {
@@ -22,13 +35,22 @@ void bubble_sort(node_t characters[], int arraySize)
     }
 }
 
+node_t create_node(char ch, char str[], int chPos, node_t *left, node_t *right)
+{
+    node_t node;
+    node.letter = ch;
+    node.freq = freq;
+    node.left = left;
+    node.right = right;
+}
+
 void encoding(node_t characters[], int arraySize)
 {
 
 }
 
 /* Debugging Functions */
-node_t character_count(char letter, char string[], int letterPosition)
+node_t debug_frequency_count(char letter, char string[], int letterPosition)
 {
     node_t letterFreq;
     letterFreq.letter = letter;

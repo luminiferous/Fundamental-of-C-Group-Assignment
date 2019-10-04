@@ -18,7 +18,7 @@ void bubble_sort(node_t characters[], int arraySize);
 void encoding(node_t characters[], int arraySize);
 
 /* Debugging Functions */
-node_t character_count(char letter, char string[], int letter_position);
+node_t frequency_count(char letter, char string[], int letter_position);
 void character_output(node_t character);
 void character_output_loop(node_t characters[], int arraySize);
 
