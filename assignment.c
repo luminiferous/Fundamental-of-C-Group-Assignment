@@ -111,9 +111,9 @@ void check_customer(customer_t* check);
 Author: Daming Luo */
 void login(customer_t* log, int logged_customer, int count);
 
-/* Displays all customers in the database.
+/* Displays all, or a specific customer in the database.
 Author: Brendan Huynh */
-void display_all_customers(void);
+void display_customers(void);
 
 /* Encrypts the customer's password before being stored in the database.
 Author: David Ung */
@@ -300,7 +300,7 @@ void admin_input(void)
 		switch (input)
 		{
 			case 1:
-				display_all_customers();
+				display_customers();
 				break;
 			case 2:
 				printf("Compress Database File Function currently "
@@ -365,7 +365,7 @@ Display Function - Displays all the selected data fetched from
 the database.
 Author(s):
 *******************************************************************************/
-void display_all_customers(void)
+void display_customers(void)
 {
 
 }
@@ -585,7 +585,7 @@ void debug(void)
 
 					if (!existingFlag)
 					{
-						letter = character_count(string[i], string, i);
+						letter = debug_frequency_count(string[i], string, i);
 						characters[j].letter = letter.letter;
 						characters[j].freq = letter.freq;
 						arraySize++;
