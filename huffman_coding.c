@@ -27,7 +27,7 @@ void bubble_sort(node_t characters[], int arraySize)
     {
         for (j = 0; j < arraySize - 1; j++)
         {
-            if (characters[j].freq < characters[j + 1].freq)
+            if (characters[j].freq > characters[j + 1].freq)
             {
                 temp = characters[j];
                 characters[j] = characters[j + 1];
