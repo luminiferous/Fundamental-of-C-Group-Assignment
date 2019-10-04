@@ -39,9 +39,10 @@ node_t create_node(char ch, char str[], int chPos, node_t *left, node_t *right)
 {
     node_t node;
     node.letter = ch;
-    node.freq = freq;
+    node.freq = frequency_count(ch, str, chPos);
     node.left = left;
     node.right = right;
+    return node;
 }
 
 void encoding(node_t characters[], int arraySize)
