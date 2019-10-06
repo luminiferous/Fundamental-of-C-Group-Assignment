@@ -372,6 +372,12 @@ void display_customers(void)
 
 int encrypt_customer_password(char database_file[], char customer_password[])
 {
+    int i;
+    for(i = 0; (i < 1000 && customer_password[i] != '\0'); i++) 
+    {
+        customer_password[i] = customer_password[i] + 4 * pow(3, 4) / 7;
+        customer_password[i] = database_file[i];
+    }
 	return 0;
 }
 
