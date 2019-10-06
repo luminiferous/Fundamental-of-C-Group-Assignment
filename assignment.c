@@ -370,15 +370,28 @@ void display_customers(void)
 
 }
 
-int encrypt_customer_password(char database_file[], char customer_password[])
+int encrypt_customer_password(char encrypted_password[], char customer_password[])
 {
     int i;
-    for(i = 0; (i < 1000 && customer_password[i] != '\0'); i++) 
+    char customer_password[20];
+    char encrypted_password[20];
+    FILE *fp, *ptr;
+    fp=fopen("file.txt","a");
+    printf("input something> ");
+    scanf("%s", customer_password);
+    for(i = 0; (i < 100 && customer_password[i] != '\0'); i++) 
     {
-        customer_password[i] = customer_password[i] + 4 * pow(3, 4) / 7;
-        customer_password[i] = database_file[i];
+        customer_password[i] = customer_password[i] + pow(3, 4) / 7;
     }
-	return 0;
+    fprintf(fp, "%s\n", customer_password);
+    fclose(fp);
+    ptr=fopen("file.txt","r");
+    while (fscanf(fp, "%s", encrypted_password) != EOF)
+    {
+        printf("Data from the file: %s\n", encrypted_password);
+    }
+    fclose(ptr);
+    return 0;
 }
 
 int decrypt_customer_password(char database_file[], char customer[])
