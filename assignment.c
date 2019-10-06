@@ -1,6 +1,6 @@
 /*******************************************************************************
 Fundamentals of C Programming - Assessment 3
-Project Name: Secure Clothing Store Database System (Placeholder)
+Project Name: Secure Clothing Store Database System
 Authors: Cameron Wang (13202320), Brendan Huynh (13202155),
 	Peter Phan (13202268), David Ung (13245547), Daming Luo (13160039)
 Date of Submission: -
@@ -141,7 +141,7 @@ int search_items(void);
 
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
-item_t add_items(void);
+int add_items(void);
 
 /* Removes an item / items from the product database.
 Author: Brendan Huynh */
@@ -477,13 +477,12 @@ int search_items(void)
 	return 0;
 }
 
-/* int add_items()
+int add_items(void)
 {
-	item_t items;
-	int i;
+	item_t item;
+	int sex, flag = 1;
 
-	FILE *fp;
-	fp = fopen(USER, "w");
+	FILE *fp = fopen(ITEM_DB, "w");
 
 	if(fp == NULL)
 	{
@@ -491,15 +490,44 @@ int search_items(void)
 		return 1;
 	}
 
-	for(i = 0; i < counter; i++)
+	printf("Enter Clothing Name> ");
+	scanf("%s", item.name);
+
+	while(flag)
 	{
-		fprintf(fp, "%s %c %d %0.2lf\n", &items[i].name, &items[i].sex,
-			&items[i].size, &items[i].price););
+		printf("1: Male (M)\n"
+				"2: Female (F)\n"
+				"3: Unisex (U)\n"
+				"Select Clothing Gender> ");
+		scanf("%d", &sex);
+		switch(sex)
+		{
+			case 1:
+				item.sex = 'M';
+				flag = 0;
+				break;
+			case 2:
+				item.sex = 'F';
+				flag = 0;
+				break;
+			case 3:
+				item.sex = 'U';
+				flag = 0;
+				break;
+			default:
+				printf("Invalid input\n");
+		}
 	}
+
+	printf("Enter Clothing Size> ");
+	scanf("%d", &item.size);
+
+	printf("Enter Clothing Price> ");
+	scanf("%lf", &item.price);
 
 	fclose(fp);
 	return 0;
-} */
+}
 
 int remove_items(void)
 {
