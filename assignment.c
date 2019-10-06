@@ -166,7 +166,6 @@ void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
-
 /*******************************************************************************
 Main Function
 Author(s): Cameron Wang, Daming Luo
@@ -207,7 +206,7 @@ Author(s): Daming Luo, Cameron Wang
 *******************************************************************************/
 void account_menu(void)
 {
-	printf("Welcome to the Online Clothing Store.\n"
+	printf("\nWelcome to the Online Clothing Store.\n"
 		"1. Sign Up\n"
 		"2. Log In\n"
 		"0. Exit\n");
@@ -226,7 +225,7 @@ void customer_menu(void)
 
 void admin_menu(void)
 {
-	printf("Welcome to the Admin Controls."
+	printf("\nWelcome to the Admin Controls."
 		"1. Display all customers\n"
 		"2. Compress database\n"
 		"3. Decompress database\n"
@@ -238,7 +237,6 @@ int get_input(void)
 	int input;
 	printf("Select an Option> ");
 	scanf("%d", &input);
-	printf("\n");
 	return input;
 }
 
@@ -542,16 +540,20 @@ void help_admin(void)
 void debug(void)
 {
 	int input, exitFlag = 0, existingFlag;
+	int test3flag = 0;
 	char string[101];
 	node_t characters[30];
 	node_t letter;
+	int arraySize, j, i;
 	while (1)
 	{
-		printf("Debug Menu:\n"
+		printf("\nDebug Menu:\n"
 				"1. Force Customer Menu\n"
 				"2. Force Admin Menu\n"
 				"3. Frequency Count + Output Debugging / Testing\n"
 				"4. Bubble Sort + Output Debugging / Testing\n"
+				"5. Create Node + Output Debugging / Testing\n"
+				"6. Build Huffman Tree + Output Debugging / Testing\n"
 				"0. Exit\n");
 		input = get_input();
 
@@ -570,23 +572,24 @@ void debug(void)
 				printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
 				fgets(string, 100, stdin);
-				int arraySize = 0, j, i = 0;
+				arraySize = 0;
+				i = 0;
 				while (string[i] != '\0')
 				{
 					existingFlag = 0;
 					for (j = 0; j < arraySize; j++)
 					{
-						if (characters[j].letter == string[i])
+						if (characters[j].character == string[i])
 						{
 							existingFlag = 1;
 							break;
 						}
 					}
 
-					if (!existingFlag)
+					if (!existingFlag && string[i] != '\n')
 					{
 						letter = debug_frequency_count(string[i], string, i);
-						characters[j].letter = letter.letter;
+						characters[j].character = letter.character;
 						characters[j].freq = letter.freq;
 						arraySize++;
 					}
@@ -594,17 +597,59 @@ void debug(void)
 				}
 
 				character_output_loop(characters, arraySize);
+				test3flag = 1;
 				break;
 			case 4:
-				if (strlen(string) > 0)
+				if (test3flag)
 				{
 					bubble_sort(characters, arraySize);
 					character_output_loop(characters, arraySize);
 				}
 				else
 				{
-					printf("Enter a String before Sorting\n");
+					printf("Must Run Test 3 before Performing This Test\n");
 				}
+
+				break;
+			case 5:
+				printf("Enter a debug string (Max 100 Characters)> ");
+				fgets(string, 100, stdin);
+				fgets(string, 100, stdin);
+				arraySize = 0;
+				i = 0;
+				while (string[i] != '\0')
+				{
+					existingFlag = 0;
+					for (j = 0; j < arraySize; j++)
+					{
+						if (characters[j].character == string[i])
+						{
+							existingFlag = 1;
+							break;
+						}
+					}
+					if (!existingFlag && string[i] != '\n')
+					{
+						character_output(create_node(string[i], frequency_count(string[i], string, i), NULL, NULL));
+						characters[j].character = string[i];
+						arraySize++;
+					}
+					i++;
+				}
+
+				break;
+			case 6:
+				if (test3flag)
+				{
+					node_t rootNode;
+					rootNode = build_tree(characters, arraySize);
+					huffman_tree_output(&rootNode);
+				}
+				else
+				{
+					printf("Must Run Test 3 before Performing This Test\n");
+				}
+
 				break;
 			default:
 				printf("Invalid input\n");
