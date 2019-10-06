@@ -139,6 +139,10 @@ int view_items(void);
 Author: Cameron Wang */
 int search_items(void);
 
+void add_cart(void);
+
+void remove_cart(void);
+
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
 int add_items(void);
@@ -217,16 +221,18 @@ void customer_menu(void)
 	printf("\nWelcome to the Online Clothing Store\n"
 		"1. View items\n"
 		"2. Search items\n"
-		"3. Add items\n"
-		"4. Remove items\n"
+		"3. Add items to cart\n"
+		"4. Remove items from cart\n"
 		"5. View purchase history\n"
 		"0. Help\n");
 }
 
 void admin_menu(void)
 {
-	printf("\nWelcome to the Admin Controls."
+	printf("\nWelcome to the Admin Controls.\n"
 		"1. Display all customers\n"
+		"2. Add items to database\n"
+		"3. Remove items from database\n"
 		"2. Compress database\n"
 		"3. Decompress database\n"
 		"0. Help\n");
@@ -259,13 +265,10 @@ void customer_input(void)
 				search_items();
 				break;
 			case 3:
-				printf("Add Items is currently Unavailable\n");
-				printf("\n");
-				/* items[counter] = add_items();
-				counter++; */
+				add_cart();
 				break;
 			case 4:
-				remove_items();
+				remove_cart();
 				break;
 			case 5:
 				view_purchase_history();
@@ -301,18 +304,23 @@ void admin_input(void)
 				display_customers();
 				break;
 			case 2:
-				printf("Compress Database File Function currently "
-				"Unavailable\n");
-				printf("\n");
-				/* compress_database_file(); */
+				add_items();
 				break;
 			case 3:
-				printf("Decompress Database File Function currently "
-				"Unavailable\n");
-				printf("\n");
-				/* decompress_database_file(); */
+				printf("Remove Items Function currently Unavailable\n");
+				/* remove_items(); */
 				break;
 			case 4:
+				printf("Compress Database File Function currently "
+				"Unavailable\n");
+				/* compress_database_file(); */
+				break;
+			case 5:
+				printf("Decompress Database File Function currently "
+				"Unavailable\n");
+				/* decompress_database_file(); */
+				break;
+			case 6:
 				help();
 				break;
 			case 0:
@@ -477,12 +485,22 @@ int search_items(void)
 	return 0;
 }
 
+void add_cart(void)
+{
+
+}
+
+void remove_cart(void)
+{
+
+}
+
 int add_items(void)
 {
 	item_t item;
 	int sex, flag = 1;
 
-	FILE *fp = fopen(ITEM_DB, "w");
+	FILE *fp = fopen(ITEM_DB, "a");
 
 	if(fp == NULL)
 	{
@@ -524,6 +542,8 @@ int add_items(void)
 
 	printf("Enter Clothing Price> ");
 	scanf("%lf", &item.price);
+
+	fprintf(fp, "%s %c %d %lf\n", item.name, item.sex, item.size, item.price);
 
 	fclose(fp);
 	return 0;
