@@ -19,6 +19,7 @@ C Libraries
 #define ITEMS_IN_DATABASE 50
 #define USER "database"
 #define ITEM_DB "item_db"
+#define PURCHASE_DB "p_db"
 #define ITEM_NAME_SIZE 30
 
 /*******************************************************************************
@@ -153,7 +154,7 @@ int remove_items(void);
 
 /* Allows a customer to purchase items from the store.
 Author: Brendan Huynh */
-void purchase_items(void);
+int purchase_items(void);
 
 /* Displays a customer's purchase history.
 Author: Peter Phan */
@@ -265,7 +266,7 @@ void customer_input(void)
 				search_items();
 				break;
 			case 3:
-				add_cart();
+				purchase_items();
 				break;
 			case 4:
 				remove_cart();
@@ -554,10 +555,39 @@ int remove_items(void)
 	return 0;
 }
 
-void puchase_items(void)
-{
+ 
+int purchase_items(void)
+{	
 
+	 item_t item;
+	 char input[ITEM_NAME_SIZE + 1];
+     FILE *fp = fopen(ITEM_DB, "r");
+	 FILE *fp2 = fopen(PURCHASE_DB,"a"); 
+	 if (fp == NULL)
+	 {
+		printf("Write Error");
+		return 1; 
+	 }
+	printf("Enter Clothing Name> ");
+	scanf("%s", input);
+	/* fprintf(fp2, "%s\n", input); */
+	while(fscanf(fp, "%s %c %d %lf\n", item.name, &item.sex, &item.size, &item.price) != EOF)
+	{
+		if (strcmp(input, item.name) == 0)
+		{	
+			
+			fprintf(fp2, "%s %c %d %0.2lf\n", item.name, item.sex, item.size, item.price);
+			
+		}
+
+	}
+
+	
+	fclose(fp);
+	fclose(fp2);
+    return 0;
 }
+
 
 void view_purchase_history(void)
 {
