@@ -104,7 +104,7 @@ void add_customer(customer_t* add, int count);
 
 /* Saves all customers to the database.
 Author: Brendan Huynh */
-void save_customer(customer_t* save, int count);
+/*void save_customer(customer_t* save, int count); */
 
 void check_customer(customer_t* check);
 
