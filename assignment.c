@@ -17,7 +17,7 @@ C Libraries
 
 #define MAX_USER 5
 #define ITEMS_IN_DATABASE 50
-#define USER "database"
+#define USER_DB "customer_db"
 #define ITEM_DB "item_db"
 #define ITEM_NAME_SIZE 30
 
@@ -32,8 +32,8 @@ typedef struct node node_t; */
 struct customer
 {
 	char customer_id[10];
-	char customer_password[20];
-	int encrypt_password;
+	char username[101];
+	char password[101];
 };
 typedef struct customer customer_t;
 
@@ -46,7 +46,7 @@ struct item
 };
 typedef struct item item_t;
 
-/* typedef struct compress_code
+typedef struct compress_code
 {
 	char letter;
 	int letter_f;
@@ -61,7 +61,7 @@ typedef struct compress_table
 	char letter;
 	int letter_f;
 	unsigned int code;
-} compress_table_t; */
+} compress_table_t;
 
 /*******************************************************************************
 Function Prototypes
@@ -78,13 +78,17 @@ void customer_menu(void);
 Author: Cameron Wang */
 void admin_menu(void);
 
+/*Display introduction of this program.
+Author: Daming Luo*/
+void Introduction_menu(void);
+
 /* Gets an input from the user.
 Author: Cameron Wang */
 int get_input(void);
 
 /* Gets an input from the customer.
 Author: Cameron Wang */
-void customer_input(void);
+void customer_input(char customer[]);
 
 /* Gets an input from the system admin.
 Author: Cameron Wang */
@@ -92,11 +96,11 @@ void admin_input(void);
 
 /* Allows customers to provide their details.
 Author: Daming Luo */
-void customer_detail_input(void);
+int login(customer_t** log, int count);
 
 /* Adds customer to the system.
 Author: Daming Luo */
-void add_customer(customer_t* add, int count);
+int add_customer(char name[]);
 
 /* Saves all customers to the database.
 Author: Brendan Huynh */
@@ -106,7 +110,7 @@ void check_customer(customer_t* check);
 
 /* Allows a customer to log into the system.
 Author: Daming Luo */
-void login(customer_t* log, int logged_customer, int count);
+/*void login(customer_t* log, int logged_customer, int count);*/
 
 /* Displays all customers in the database.
 Author: Brendan Huynh */
@@ -138,7 +142,7 @@ int search_items(void);
 
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
-item_t add_items(void);
+item_t add_items(char name[]);
 
 /* Removes an item / items from the product database.
 Author: Brendan Huynh */
@@ -163,6 +167,9 @@ void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
+int _isSpecial(char c);
+int _isdigit(char c);
+int _isalpha(char c);
 
 /*******************************************************************************
 Main Function
@@ -170,21 +177,42 @@ Author(s): Cameron Wang, Daming Luo
 *******************************************************************************/
 int main(void) {
 	int input;
-	/* customer_t* wu = NULL;
-	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t)); */
+	int count = 0; 
+	char username[101];
+	/*customer_number = 0;*/
+
+	customer_t* wu = NULL;
+	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
+	if (wu == NULL)
+	{
+		printf("Memory error\n");
+		return 1;
+	}
+	/*else
+	{
+		count = load_customer(&wu);
+	}*/
 	while (1)
 	{
+		Introduction_menu();
 		account_menu();
 		input = get_input();
 		switch (input)
 		{
 			case 1:
-				printf("Add Customer Function currently Unavailable\n");
-				/*add_customer();*/
+				if (count == 9)
+				{
+					printf("Can't add more customer\n");
+				}
+				else
+				{
+					add_customer(username);
+					customer_input(username);
+				}
 				break;
 			case 2:
 				printf("Login Function currently Unavailable\n");
-				/*login();*/
+				login(&wu, count);
 				break;
 			case 3:
 				exit(0);
@@ -328,6 +356,19 @@ void admin_menu(void)
 		"4: Help\n");
 }
 
+void Introduction_menu(void)
+{
+	printf("\n--------------------------------------------------------\n"
+			"INTRODUCTION OF THIS PROGRAM OF MARKET\n"
+			"This program lets multiple customers sign up and "
+			"login\n"
+			"Customer will be able to add, view, search, remove "
+			"items\n"
+			"Customer can also view the purchase history\n"
+			"The encrypted password of Customers makes more safety \n"
+			"-------------------------------------------------------- \n");
+}
+
 int get_input(void)
 {
 	int input;
@@ -337,7 +378,7 @@ int get_input(void)
 	return input;
 }
 
-void customer_input(void)
+void customer_input(char username[])
 {
 	int input, exitFlag = 0;
 	/* item_t items[100];
@@ -432,15 +473,174 @@ Author(s): Daming Luo
 *******************************************************************************/
 
 /****************************ADD_CUSTOMER FUNCTION*****************************/
-void add_customer(customer_t* add, int count)
+int add_customer(char name[])
 {
+	char password[101];
+	char existingName[101];
 
+	FILE *fp = fopen(USER_DB, "a");
+	FILE *fp2 = fopen(USER_DB, "r");
+
+	if(fp == NULL)
+	{
+		printf("Write error\n");
+		return 1;
+	}
+
+	else
+	{
+	printf("Enter a Username> ");
+	scanf("%s", name);
+	int i, count = 0;
+	for (i = 0; name[i] != '\0'; i++)
+	{
+		/*Detect if input number or letter*/
+		if (_isdigit(name[i]) || _isalpha(name[i]))
+		{
+			continue;
+		}
+		else if(name[0] == '\n' || _isSpecial(name[i]))
+		{
+			printf("\nInvaild input.\n"
+				   "The username must start by character or number\n"
+				   "Please enter a username\n> ");
+			scanf("%s",name);
+			i = -1;
+			continue;
+
+		/*Checks if the input name same with another customer's*/
+		}else if(name[i] == '\n' && count != 0 && i > 2){
+			/*Replaces '\n' with '\0'*/
+			name[i] = '\0';
+			while (fscanf(fp2, "%s %s", existingName, password) != EOF){
+				/*Customer name already exists*/
+				if(strcmp(name, existingName)  == 0)
+				{
+					printf("\nUsername already exsits\n"
+						   "\nPlease enter a username\n> ");
+					scanf("%s", name);
+					i = -1;
+					break;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			i--;
+			continue;
+		}
+
+		if(name[i] == '\n' && count == 0 && i > 2){
+			name[i] = '\0';
+			i--;
+			continue;
+		}
+		else
+		{
+			printf("\nInvaild input, customer name too short wuwuwuwuuw.\n"
+				   "Please enter another username\n> ");
+			scanf("%s", name);
+			i = -1;
+			continue;
+		}
+	}/*Customer name for loop end*/
+
+	printf("\n Please enter password \n> ");
+	scanf("%s", password);
+	/*Check password*/
+	for (i = 0; password[i] != '\0'; i++)
+	{	
+		/*Password can be number, letter and special characters*/
+		if( _isSpecial(password[i]) || _isalpha(password[i])){
+			continue;
+		}else if( _isdigit(password[i])){
+			continue;
+		/*Check the length of customer password
+		The password must have 6+ characters*/
+		}else if(password[i] == '\n' && i > 6){
+			password[i] = '\0';
+			i--;
+			continue;
+		}else if(password[i] == '\n' && i < 6){
+			printf("\nPassword too short\n"
+				     "\nPlease enter another password\n> ");
+			scanf("%s", name);
+			i = -1;
+			continue;
+		}else{
+			printf("\nInvaild input\n"
+				   "\nPlease enter another password\n> ");
+			scanf("%s", name);
+			i = -1;
+			continue;
+		}
+	}/*Password loop end*/
+	}
+
+	fprintf(fp, "%s %s\n", name, password);
+	fclose(fp);
+
+	return 0;
 }
 
 /********************************LOGIN FUNCTION********************************/
-void login(customer_t* log, int logged_customer, int count)
+int login(customer_t** log, int count)
 {
+ char cust_pass[50];
+ char cust_name[50];
+ char existingName[101];
+ char password[101];
+ int flag = 0;
+ FILE *fp = fopen(USER_DB, "r");
 
+ if (fp == NULL)
+ {
+ 	printf("Write error\n");
+ 	return 1;
+ }
+
+while(1)
+{
+	printf("Enter your username\n");
+	scanf("%s", cust_name);
+	/* cust_name[strlen(cust_name) - 1] = '\0'; */
+	while (fscanf(fp, "%s %s", existingName, password) != EOF)
+	{
+		if(strcmp(cust_name, existingName) == 0)
+		{
+			flag = 1;
+		}
+		else
+		{
+			printf("Username does not exsits");
+			break;
+		}
+	}
+
+	if (flag)
+	{
+		break;
+	}
+}
+
+ /***CHECK PASSWORD***/
+ while(1)
+ {
+  printf("Enter your password.\n> ");
+  scanf("%s", cust_pass);
+
+  if (strcmp(cust_pass, password) == 0)
+  {
+   printf("\nLogged in.\n");
+   return 0;
+  }
+  else
+  {
+   printf("Incorrect password.\n");
+   continue;
+  }
+ }
 }
 
 void save_customer(customer_t* save, int count)
@@ -636,6 +836,7 @@ void help_admin(void)
 
 void debug(void)
 {
+	char username[101] = "debug";
 	int input, exitFlag = 0, existingFlag;
 	char string[101];
 	weight_t characters[30];
@@ -688,7 +889,7 @@ void debug(void)
 				}
 				break;
 			case 2:
-				customer_input();
+				customer_input(username);
 				break;
 			case 3:
 				admin_input();
@@ -704,9 +905,9 @@ void debug(void)
 	}
 }
 
-/* int _isdigit(char c)
+int _isdigit(char c)
 {
-    if (c >= 48 && c <= 57)
+    if (c >= '0' && c <= '9')
 		{
         return 1;
     }
@@ -722,7 +923,7 @@ int _isalpha(char c)
 		return 0;
 }
 
-int _isupper(char c)
+/*char isupper(char c)
 {
     if (c >= 'A' && c <= 'Z')
 		{
@@ -731,7 +932,7 @@ int _isupper(char c)
 		return 0;
 }
 
-char _toupper(char c)
+char toupper(char c)
 {
     if(_isalpha(c))
 		{
@@ -742,19 +943,21 @@ char _toupper(char c)
     return c;
 }
 
-int _islower(char c)
+char islower(char c)
 {
 	if(c <= 'z' && c >='a'){
 		return 1;
 	}
 	return 0;
-}
+}*/
 
 int _isSpecial(char c)
 {
-	if(c => 36 && c <= 126)
-	{
+	if((c >= 32 && c <= 47) &&
+	(c >= 58 && c <= 64) &&
+	(c >= 91 && c <= 96) &&
+	(c >=123 && c <=  126)){
 		return 1;
 	}
 	return 0;
-} */
+}
