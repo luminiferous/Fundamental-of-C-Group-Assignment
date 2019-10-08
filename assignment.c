@@ -578,9 +578,7 @@ int purchase_items(void)
 			fprintf(fp2, "%s %c %d %0.2lf\n", item.name, item.sex, item.size, item.price);
 
 		}
-
 	}
-
 
 	fclose(fp);
 	fclose(fp2);
