@@ -158,7 +158,7 @@ int purchase_items(void);
 
 /* Displays a customer's purchase history.
 Author: Peter Phan */
-void view_purchase_history(void);
+int view_purchase_history(void);
 
 /* Display the help screen.
 Author: Peter Phan */
@@ -438,6 +438,7 @@ int view_items()
 	}
 
 	printf("\n");
+	fclose(fp);
 	return 0;
 }
 
@@ -586,11 +587,12 @@ int purchase_items(void)
 }
 
 
-void view_purchase_history(void)
+int view_purchase_history(void)
 {
 	FILE *fp = fopen(PURCHASE_DB, "r");
+	FILE *fp2 = fopen(USER, "r");
 	long fileSize;
-	item_t item;
+	/*item_t item;*/
 	int i;
 
     if(fp == NULL)
@@ -607,6 +609,11 @@ void view_purchase_history(void)
 		i = 0;
         printf("You current have %d purchases.\n", i);
     }
+
+	fclose(fp);
+	fclose(fp2);
+
+	return 0;
 }
 
 void help(void)
