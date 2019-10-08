@@ -10,8 +10,8 @@ Date of Submission: -
 C Libraries
 *******************************************************************************/
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "huffman_coding.h"
 
@@ -186,7 +186,7 @@ int main(void) {
 				printf("Login Function currently Unavailable\n");
 				/*login();*/
 				break;
-			case 3:
+			case 0:
 				exit(0);
 				break;
 			case 9:
@@ -197,104 +197,6 @@ int main(void) {
 		}
 	}
 }
-
-/* int main(void)
-{
-
-	int count = 0, customer_number = 0;
-	int logged_customer;
-
-	while(1)
-	{
-		if (wu == NULL)
-		{
-			printf("Error\n");
-			return 1;
-		}
-
-		else
-		{
-			count = load_customer(&up);
-			printf("\n INTRODUCTION OF THIS PROGRAM OF MARKET\n"
-						"This program lets multiple customers sign up and "
-						"login\n"
-						"Customer will be able to add, view, search, remove "
-						"items\n"
-						"Customer can also view the purchase history\n"
-						"The encrypted password of Customers makes more safety "
-						\n");
-		}
-	}
-
-	int count = 0, customer_number = 0;
-	int logged_customer;
-	int success_exit = 0;
-	int choice = -1;
-	while(1)
-	{
-		while(count == 0)
-		{
-			main_menu(void);
-			scanf("%d", &choice);
-			switch(choice)
-			{
-				case 1:
-					add_customer(&wu, count);
-					break;
-
-				case 2:
-					login(&wu, count);
-					break;
-
-				case 3:
-					display_all_customers();
-					break;
-
-				case 4:
-					success_exit = 1;
-					break;
-
-				default:
-					printf("Invaild input\n");
-			}
-			if (success_exit) break;
-		}
-		return 0;
-
-		while(count == 1)
-		{
-			menu2(void);
-
-			scanf("%d", &choice);
-			switch(choice)
-			{
-				case 1:
-					add_items(void);
-					break;
-
-				case 2:
-					view_items(void);
-					break;
-
-				case 3:
-					search_items(void);
-					break;
-
-				case 4:
-					view_purchase_history(void);
-					break;
-
-				case 5:
-					success_exit = 1;
-					break;
-
-				default:
-					printf("Invaild input\n");
-			}
-		}
-	}
-	return 0;
-} */
 
 /*******************************************************************************
 Menu Functions - Lists all the menu options avaliable.
@@ -638,14 +540,15 @@ void debug(void)
 {
 	int input, exitFlag = 0, existingFlag;
 	char string[101];
-	weight_t characters[30];
-	weight_t letter;
+	node_t characters[30];
+	node_t letter;
 	while (1)
 	{
 		printf("Debug Menu:\n"
-				"1. Weight Count + Output Debugging / Testing\n"
-				"2. Force Customer Menu\n"
-				"3. Force Admin Menu\n"
+				"1. Force Customer Menu\n"
+				"2. Force Admin Menu\n"
+				"3. Frequency Count + Output Debugging / Testing\n"
+				"4. Bubble Sort + Output Debugging / Testing\n"
 				"0. Exit\n");
 		input = get_input();
 
@@ -655,6 +558,12 @@ void debug(void)
 				exitFlag = 1;
 				break;
 			case 1:
+				customer_input();
+				break;
+			case 2:
+				admin_input();
+				break;
+			case 3:
 				printf("Enter a debug string (Max 100 Characters)> ");
 				scanf("%s", string);
 				int arraySize = 0, j, i = 0;
@@ -672,26 +581,26 @@ void debug(void)
 
 					if (!existingFlag)
 					{
-						letter = weight_count(string[i], string, i);
+						letter = character_count(string[i], string, i);
 						characters[j].letter = letter.letter;
-						characters[j].weight = letter.weight;
+						characters[j].freq = letter.freq;
 						arraySize++;
 					}
 					i++;
 				}
 
-				for (j = 0; j < arraySize; j++)
+				character_output_loop(characters, arraySize);
+				break;
+			case 4:
+				if (strlen(string) > 0)
 				{
-					letter.letter = characters[j].letter;
-					letter.weight = characters[j].weight;
-					weight_output(&letter);
+					bubble_sort(characters, arraySize);
+					character_output_loop(characters, arraySize);
 				}
-				break;
-			case 2:
-				customer_input();
-				break;
-			case 3:
-				admin_input();
+				else
+				{
+					printf("Enter a String before Sorting\n");
+				}
 				break;
 			default:
 				printf("Invalid input\n");
