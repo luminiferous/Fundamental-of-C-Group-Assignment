@@ -555,18 +555,17 @@ int remove_items(void)
 	return 0;
 }
 
- 
-int purchase_items(void)
-{	
 
+int purchase_items(void)
+{
 	 item_t item;
 	 char input[ITEM_NAME_SIZE + 1];
      FILE *fp = fopen(ITEM_DB, "r");
-	 FILE *fp2 = fopen(PURCHASE_DB,"a"); 
+	 FILE *fp2 = fopen(PURCHASE_DB,"a");
 	 if (fp == NULL)
 	 {
 		printf("Write Error");
-		return 1; 
+		return 1;
 	 }
 	printf("Enter Clothing Name> ");
 	scanf("%s", input);
@@ -574,15 +573,15 @@ int purchase_items(void)
 	while(fscanf(fp, "%s %c %d %lf\n", item.name, &item.sex, &item.size, &item.price) != EOF)
 	{
 		if (strcmp(input, item.name) == 0)
-		{	
-			
+		{
+
 			fprintf(fp2, "%s %c %d %0.2lf\n", item.name, item.sex, item.size, item.price);
-			
+
 		}
 
 	}
 
-	
+
 	fclose(fp);
 	fclose(fp2);
     return 0;
@@ -591,7 +590,25 @@ int purchase_items(void)
 
 void view_purchase_history(void)
 {
+	FILE *fp = fopen(PURCHASE_DB, "r");
+	long fileSize;
+	item_t item;
+	int i;
 
+    if(fp == NULL)
+    {
+        printf("Read error\n");
+		return 1;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    fileSize = ftell(fp);
+
+    if (fileSize == 0)
+	{
+		i = 0;
+        printf("You current have %d purchases.\n", i);
+    }
 }
 
 void help(void)
