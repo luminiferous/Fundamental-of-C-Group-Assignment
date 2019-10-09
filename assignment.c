@@ -100,11 +100,11 @@ void admin_input(void);
 
 /* Allows customers to provide their details.
 Author: Daming Luo */
-int login(customer_t** log, int count);
+int login(char name[]);
 
-/* Adds customer to the system.
+/* Signs up customer to the system.
 Author: Daming Luo */
-int add_customer(char name[]);
+int signup(char name[]);
 
 /* Saves all customers to the database.
 Author: Brendan Huynh */
@@ -150,11 +150,7 @@ void remove_cart(void);
 
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
-<<<<<<< HEAD
-item_t add_items(char name[]);
-=======
 int add_items(void);
->>>>>>> 10c8a34c704a47c5ec98e67bc7eb46c33b499180
 
 /* Removes an item / items from the product database.
 Author: Brendan Huynh */
@@ -179,22 +175,27 @@ void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
-<<<<<<< HEAD
-int _isSpecial(char c);
-int _isdigit(char c);
-int _isalpha(char c);
+/* Checks if a character is an integer.
+Author: Daming Luo */
+int check_digit_char(char c);
 
-=======
->>>>>>> 10c8a34c704a47c5ec98e67bc7eb46c33b499180
+/* Checks if a character is a letter.
+Author: Daming Luo */
+int check_letter_char(char c);
+
+/* Checks if a character is a special character (not letter or digit).
+Author: Daming Luo */
+int check_special_char(char c);
+
 /*******************************************************************************
 Main Function
 Author(s): Cameron Wang, Daming Luo
 *******************************************************************************/
 int main(void) {
 	int input;
-	int count = 0; 
 	char username[101];
-	/*customer_number = 0;*/
+	/* int count = 0;
+	customer_number = 0;
 
 	customer_t* wu = NULL;
 	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
@@ -203,10 +204,10 @@ int main(void) {
 		printf("Memory error\n");
 		return 1;
 	}
-	/*else
+	else
 	{
 		count = load_customer(&wu);
-	}*/
+	} */
 	while (1)
 	{
 		Introduction_menu();
@@ -215,19 +216,14 @@ int main(void) {
 		switch (input)
 		{
 			case 1:
-				if (count == 9)
-				{
-					printf("Can't add more customer\n");
-				}
-				else
-				{
-					add_customer(username);
-					customer_input(username);
-				}
+				signup(username);
+				customer_input(username);
 				break;
 			case 2:
-				printf("Login Function currently Unavailable\n");
-				login(&wu, count);
+				if (login(username))
+				{
+					customer_input(username);
+				}
 				break;
 			case 0:
 				exit(0);
@@ -307,8 +303,6 @@ void customer_input(char username[])
 		switch (input)
 		{
 			case 1:
-				/* printf("View Items is currently Unavailable\n");
-				printf("\n"); */
 				view_items();
 				break;
 			case 2:
@@ -393,7 +387,7 @@ Author(s): Daming Luo
 *******************************************************************************/
 
 /****************************ADD_CUSTOMER FUNCTION*****************************/
-int add_customer(char name[])
+int signup(char name[])
 {
 	char password[101];
 	char existingName[101];
@@ -409,93 +403,101 @@ int add_customer(char name[])
 
 	else
 	{
-	printf("Enter a Username> ");
-	scanf("%s", name);
-	int i, count = 0;
-	for (i = 0; name[i] != '\0'; i++)
-	{
-		/*Detect if input number or letter*/
-		if (_isdigit(name[i]) || _isalpha(name[i]))
+		printf("Enter a Username> ");
+		scanf("%s", name);
+		int i, count = 0;
+		for (i = 0; name[i] != '\0'; i++)
 		{
-			continue;
-		}
-		else if(name[0] == '\n' || _isSpecial(name[i]))
-		{
-			printf("\nInvaild input.\n"
-				   "The username must start by character or number\n"
-				   "Please enter a username\n> ");
-			scanf("%s",name);
-			i = -1;
-			continue;
-
-		/*Checks if the input name same with another customer's*/
-		}else if(name[i] == '\n' && count != 0 && i > 2){
-			/*Replaces '\n' with '\0'*/
-			name[i] = '\0';
-			while (fscanf(fp2, "%s %s", existingName, password) != EOF){
-				/*Customer name already exists*/
-				if(strcmp(name, existingName)  == 0)
-				{
-					printf("\nUsername already exsits\n"
-						   "\nPlease enter a username\n> ");
-					scanf("%s", name);
-					i = -1;
-					break;
-				}
-				else
-				{
-					continue;
-				}
+			/*Detect if input number or letter*/
+			if (check_digit_char(name[i]) || check_letter_char(name[i]))
+			{
+				continue;
 			}
-			i--;
-			continue;
-		}
+			else if(name[0] == '\n' || check_special_char(name[i]))
+			{
+				printf("\nInvaild input.\n"
+				   		"The username must start by character or number\n"
+				   		"Please enter a username\n> ");
+				scanf("%s",name);
+				i = -1;
+				continue;
+			/*Checks if the input name same with another customer's*/
+			}
+			else if(name[i] == '\n' && count != 0 && i > 2){
+				/*Replaces '\n' with '\0'*/
+				name[i] = '\0';
+				while (fscanf(fp2, "%s %s", existingName, password) != EOF)
+				{
+					/*Customer name already exists*/
+					if(strcmp(name, existingName)  == 0)
+					{
+						printf("\nUsername already exsits\n"
+						   		"\nPlease enter a username\n> ");
+					   	scanf("%s", name);
+						i = -1;
+						break;
+					}
+					else
+					{
+						continue;
+					}
+				}
+				i--;
+				continue;
+			}
 
-		if(name[i] == '\n' && count == 0 && i > 2){
-			name[i] = '\0';
-			i--;
-			continue;
-		}
-		else
+			if(name[i] == '\n' && count == 0 && i > 2)
+			{
+				name[i] = '\0';
+				i--;
+				continue;
+			}
+			else
+			{
+				printf("\nInvaild input, customer name too short wuwuwuwuuw.\n"
+				   		"Please enter another username\n> ");
+			  	scanf("%s", name);
+				i = -1;
+				continue;
+			}
+		}/*Customer name for loop end*/
+
+		printf("\n Please enter password \n> ");
+		scanf("%s", password);
+		/*Check password*/
+		for (i = 0; password[i] != '\0'; i++)
 		{
-			printf("\nInvaild input, customer name too short wuwuwuwuuw.\n"
-				   "Please enter another username\n> ");
-			scanf("%s", name);
-			i = -1;
-			continue;
-		}
-	}/*Customer name for loop end*/
-
-	printf("\n Please enter password \n> ");
-	scanf("%s", password);
-	/*Check password*/
-	for (i = 0; password[i] != '\0'; i++)
-	{	
-		/*Password can be number, letter and special characters*/
-		if( _isSpecial(password[i]) || _isalpha(password[i])){
-			continue;
-		}else if( _isdigit(password[i])){
-			continue;
-		/*Check the length of customer password
-		The password must have 6+ characters*/
-		}else if(password[i] == '\n' && i > 6){
-			password[i] = '\0';
-			i--;
-			continue;
-		}else if(password[i] == '\n' && i < 6){
-			printf("\nPassword too short\n"
-				     "\nPlease enter another password\n> ");
-			scanf("%s", name);
-			i = -1;
-			continue;
-		}else{
-			printf("\nInvaild input\n"
-				   "\nPlease enter another password\n> ");
-			scanf("%s", name);
-			i = -1;
-			continue;
-		}
-	}/*Password loop end*/
+			/*Password can be number, letter and special characters*/
+			if(check_special_char(password[i]) || check_letter_char(password[i]))
+			{
+				continue;
+			}
+			else if(check_digit_char(password[i]))
+			{
+				continue;
+			}
+			else if(password[i] == '\n' && i > 6)
+			{
+				password[i] = '\0';
+				i--;
+				continue;
+			}
+			else if(password[i] == '\n' && i < 6){
+				printf("\nPassword too short\n"
+				     	"\nPlease enter another password\n> ");
+				scanf("%s", name);
+				i = -1;
+				continue;
+			}
+			else
+			{
+				printf("\nInvaild input\n"
+				   		"\nPlease enter another password\n> ");
+				scanf("%s", name);
+				i = -1;
+				continue;
+			}
+		}/*Password loop end*/
 	}
 
 	fprintf(fp, "%s %s\n", name, password);
@@ -505,62 +507,65 @@ int add_customer(char name[])
 }
 
 /********************************LOGIN FUNCTION********************************/
-int login(customer_t** log, int count)
+int login(char name[])
 {
- char cust_pass[50];
- char cust_name[50];
- char existingName[101];
- char password[101];
- int flag = 0;
- FILE *fp = fopen(USER_DB, "r");
+	char cust_pass[50];
+	char cust_name[50];
+	char existingName[101];
+	char password[101];
+	int flag = 0, attempts = 3;
+	FILE *fp = fopen(USER_DB, "r");
 
- if (fp == NULL)
- {
- 	printf("Write error\n");
- 	return 1;
- }
-
-while(1)
-{
-	printf("Enter your username\n");
-	scanf("%s", cust_name);
-	/* cust_name[strlen(cust_name) - 1] = '\0'; */
-	while (fscanf(fp, "%s %s", existingName, password) != EOF)
+	if (fp == NULL)
 	{
-		if(strcmp(cust_name, existingName) == 0)
+		printf("Write error\n");
+		return 1;
+	}
+
+	while(1)
+	{
+		printf("Enter your username\n");
+		scanf("%s", cust_name);
+		/* cust_name[strlen(cust_name) - 1] = '\0'; */
+		while (fscanf(fp, "%s %s", existingName, password) != EOF)
 		{
-			flag = 1;
+			if(strcmp(cust_name, existingName) == 0)
+			{
+				flag = 1;
+			}
+			else
+			{
+				printf("Username does not exsits");
+				break;
+			}
 		}
-		else
+
+		if (flag)
 		{
-			printf("Username does not exsits");
 			break;
 		}
 	}
 
-	if (flag)
+	/***CHECK PASSWORD***/
+	while(attempts > 3)
 	{
-		break;
+		printf("Enter your password.\n> ");
+		scanf("%s", cust_pass);
+
+		if (strcmp(cust_pass, password) == 0)
+		{
+			printf("\nLogged in.\n");
+			return 0;
+		}
+		else
+		{
+			printf("Incorrect password.\n");
+			attempts--;
+		}
 	}
-}
 
- /***CHECK PASSWORD***/
- while(1)
- {
-  printf("Enter your password.\n> ");
-  scanf("%s", cust_pass);
-
-  if (strcmp(cust_pass, password) == 0)
-  {
-   printf("\nLogged in.\n");
-   return 0;
-  }
-  else
-  {
-   printf("Incorrect password.\n");
-   continue;
-  }
- }
+	printf("Login Failed\n");
+	return 1;
 }
 
 void save_customer(customer_t* save, int count)
@@ -798,7 +803,7 @@ int purchase_items(void)
 int view_purchase_history(void)
 {
 	FILE *fp = fopen(PURCHASE_DB, "r");
-	FILE *fp2 = fopen(USER, "r");
+	FILE *fp2 = fopen(USER_DB, "r");
 	long fileSize;
 	/*item_t item;*/
 	int i;
@@ -872,7 +877,7 @@ void debug(void)
 				exitFlag = 1;
 				break;
 			case 1:
-				customer_input();
+				customer_input(username);
 				break;
 			case 2:
 				admin_input();
@@ -920,10 +925,6 @@ void debug(void)
 				}
 
 				break;
-<<<<<<< HEAD
-			case 2:
-				customer_input(username);
-=======
 			case 5:
 				printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
@@ -949,8 +950,6 @@ void debug(void)
 					}
 					i++;
 				}
-
->>>>>>> 10c8a34c704a47c5ec98e67bc7eb46c33b499180
 				break;
 			case 6:
 				if (test3flag)
@@ -976,7 +975,7 @@ void debug(void)
 	}
 }
 
-int _isdigit(char c)
+int check_digit_char(char c)
 {
     if (c >= '0' && c <= '9')
 		{
@@ -985,13 +984,24 @@ int _isdigit(char c)
 		return 0;
 }
 
-int _isalpha(char c)
+int check_letter_char(char c)
 {
     if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 		{
         return 1;
     }
 		return 0;
+}
+
+int check_special_char(char c)
+{
+	if((c >= 32 && c <= 47) &&
+	(c >= 58 && c <= 64) &&
+	(c >= 91 && c <= 96) &&
+	(c >=123 && c <=  126)){
+		return 1;
+	}
+	return 0;
 }
 
 /*char isupper(char c)
@@ -1021,14 +1031,3 @@ char islower(char c)
 	}
 	return 0;
 }*/
-
-int _isSpecial(char c)
-{
-	if((c >= 32 && c <= 47) &&
-	(c >= 58 && c <= 64) &&
-	(c >= 91 && c <= 96) &&
-	(c >=123 && c <=  126)){
-		return 1;
-	}
-	return 0;
-}
