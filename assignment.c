@@ -431,7 +431,7 @@ int signup(char name[])
 					/*Customer name already exists*/
 					if(strcmp(name, existingName)  == 0)
 					{
-						printf("\nUsername already exsits\n"
+						printf("\nUsername already exists\n"
 						   		"\nPlease enter a username\n> ");
 					   	scanf("%s", name);
 						i = -1;
