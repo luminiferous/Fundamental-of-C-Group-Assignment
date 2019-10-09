@@ -772,15 +772,20 @@ int remove_items(void)
 
 int purchase_items(void)
 {
-	 item_t item;
-	 char input[ITEM_NAME_SIZE + 1];
-     FILE *fp = fopen(ITEM_DB, "r");
-	 FILE *fp2 = fopen(PURCHASE_DB,"a");
-	 if (fp == NULL)
-	 {
+	item_t item;
+	char input[ITEM_NAME_SIZE + 1];
+    FILE *fp = fopen(ITEM_DB, "r");
+	FILE *fp2 = fopen(PURCHASE_DB,"a");
+	if(fp == NULL)
+	{
 		printf("Write Error");
 		return 1;
-	 }
+	}
+	if(fp2 == NULL)
+	{
+		printf("Write Error");
+		return 1;
+	}
 	printf("Enter Clothing Name> ");
 	scanf("%s", input);
 	/* fprintf(fp2, "%s\n", input); */
@@ -788,9 +793,7 @@ int purchase_items(void)
 	{
 		if (strcmp(input, item.name) == 0)
 		{
-
 			fprintf(fp2, "%s %c %d %0.2lf\n", item.name, item.sex, item.size, item.price);
-
 		}
 	}
 
