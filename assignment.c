@@ -802,7 +802,6 @@ int purchase_items(void)
     return 0;
 }
 
-
 int view_purchase_history(void)
 {
 	FILE *fp = fopen(PURCHASE_DB, "r");
@@ -827,7 +826,6 @@ int view_purchase_history(void)
     }
 
 	fclose(fp);
-	fclose(fp2);
 
 	return 0;
 }
