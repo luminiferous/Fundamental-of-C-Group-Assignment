@@ -535,7 +535,7 @@ int login(char name[])
 			}
 			else
 			{
-				printf("Username does not exsits");
+				printf("Username does not exist");
 				break;
 			}
 		}
