@@ -15,7 +15,8 @@ C Libraries
 #include <math.h>
 #include "huffman_coding.h"
 
-#define MAX_USER 5
+#define UN_LEN 101
+#define PW_LEN 101
 #define ITEMS_IN_DATABASE 50
 #define USER_DB "customer_db"
 #define ITEM_DB "item_db"
@@ -84,7 +85,7 @@ void admin_menu(void);
 
 /*Display introduction of this program.
 Author: Daming Luo*/
-void Introduction_menu(void);
+void introduction_menu(void);
 
 /* Gets an input from the user.
 Author: Cameron Wang */
@@ -98,7 +99,7 @@ void customer_input(char customer[]);
 Author: Cameron Wang */
 void admin_input(void);
 
-/* Allows customers to provide their details.
+/* Allows a customer to log into the system.
 Author: Daming Luo */
 int login(char name[]);
 
@@ -110,11 +111,9 @@ int signup(char name[]);
 Author: Brendan Huynh */
 /*void save_customer(customer_t* save, int count); */
 
-void check_customer(customer_t* check);
+/* char get_account_type(char username[]);
 
-/* Allows a customer to log into the system.
-Author: Daming Luo */
-/*void login(customer_t* log, int logged_customer, int count);*/
+void check_account(char name[], char account_type); */
 
 /* Displays all, or a specific customer in the database.
 Author: Brendan Huynh */
@@ -193,7 +192,7 @@ Author(s): Cameron Wang, Daming Luo
 *******************************************************************************/
 int main(void) {
 	int input;
-	char username[101];
+	char username[UN_LEN];
 	/* int count = 0;
 	customer_number = 0;
 
@@ -210,7 +209,7 @@ int main(void) {
 	} */
 	while (1)
 	{
-		Introduction_menu();
+		introduction_menu();
 		account_menu();
 		input = get_input();
 		switch (input)
@@ -220,10 +219,7 @@ int main(void) {
 				customer_input(username);
 				break;
 			case 2:
-				if (login(username))
-				{
-					customer_input(username);
-				}
+				login(username);
 				break;
 			case 0:
 				exit(0);
@@ -244,43 +240,44 @@ Author(s): Daming Luo, Cameron Wang
 void account_menu(void)
 {
 	printf("\nWelcome to the Online Clothing Store.\n"
-		"1. Sign Up\n"
-		"2. Log In\n"
-		"0. Exit\n");
+			"1. Sign Up\n"
+			"2. Log In\n"
+			"0. Exit\n");
 }
 
 void customer_menu(void)
 {
 	printf("\nWelcome to the Online Clothing Store\n"
-		"1. View items\n"
-		"2. Search items\n"
-		"3. Add items to cart\n"
-		"4. Remove items from cart\n"
-		"5. View purchase history\n"
-		"0. Help\n");
+			"1. View items\n"
+			"2. Search items\n"
+			"3. Add items to cart\n"
+			"4. Remove items from cart\n"
+			"5. View purchase history\n"
+			"6. Help\n"
+			"0. Exit\n");
 }
 
 void admin_menu(void)
 {
 	printf("\nWelcome to the Admin Controls.\n"
-		"1. Display all customers\n"
-		"2. Add items to database\n"
-		"3. Remove items from database\n"
-		"2. Compress database\n"
-		"3. Decompress database\n"
-		"0. Help\n");
+			"1. Display all customers\n"
+			"2. Add items to database\n"
+			"3. Remove items from database\n"
+			"4. Compress database\n"
+			"5. Decompress database\n"
+			"6. Access Debug Menu\n"
+			"7. Help\n"
+			"0. Exit\n");
 }
 
-void Introduction_menu(void)
+void introduction_menu(void)
 {
 	printf("\n--------------------------------------------------------\n"
-			"INTRODUCTION OF THIS PROGRAM OF MARKET\n"
-			"This program lets multiple customers sign up and "
-			"login\n"
-			"Customer will be able to add, view, search, remove "
-			"items\n"
-			"Customer can also view the purchase history\n"
-			"The encrypted password of Customers makes more safety \n"
+			"WELCOME TO THE ONLINE CLOTHING STORE\n"
+			"This program allows customers to purchase clothing through"
+			"the system\n"
+			"Customers can view, search, and purchase items, as well as"
+			"view the purchase history\n"
 			"-------------------------------------------------------- \n");
 }
 
@@ -297,7 +294,9 @@ void customer_input(char username[])
 	int input, exitFlag = 0;
 	/* item_t items[100];
 	int counter = ITEMS_IN_DATABASE; */
-	while (1) {
+	printf("Welcome %s!", username);
+	while (1)
+	{
 		customer_menu();
 		input = get_input();
 		switch (input)
@@ -318,6 +317,9 @@ void customer_input(char username[])
 				view_purchase_history();
 				break;
 			case 6:
+				debug();
+				break;
+			case 7:
 				help();
 				break;
 			case 0:
@@ -338,6 +340,7 @@ void admin_input(void)
 {
 	int input, exitFlag = 0;
 
+	printf("Welcome Admin!");
 	while (1)
 	{
 		admin_menu();
@@ -385,17 +388,16 @@ void admin_input(void)
 Add Customer Function - Adds a customer to the system.
 Author(s): Daming Luo
 *******************************************************************************/
-
-/****************************ADD_CUSTOMER FUNCTION*****************************/
 int signup(char name[])
 {
-	char password[101];
-	char existingName[101];
+	char password[PW_LEN];
+	char existingName[UN_LEN];
+	char account_type;
 
 	FILE *fp = fopen(USER_DB, "a");
 	FILE *fp2 = fopen(USER_DB, "r");
 
-	if(fp == NULL)
+	if (fp == NULL)
 	{
 		printf("Write error\n");
 		return 1;
@@ -405,7 +407,22 @@ int signup(char name[])
 	{
 		printf("Enter a Username> ");
 		scanf("%s", name);
-		int i, count = 0;
+		int i;
+
+		while (fscanf(fp2, "%s %s %c",
+						existingName, password, &account_type) != EOF)
+		{
+			/*Customer name already exists*/
+			if (!strcmp(name, existingName))
+			{
+				printf("\nUsername already exsits.\n"
+						"Please enter a username> ");
+				scanf("%s", name);
+				i = -1;
+				break;
+			}
+		}
+
 		for (i = 0; name[i] != '\0'; i++)
 		{
 			/*Detect if input number or letter*/
@@ -413,86 +430,51 @@ int signup(char name[])
 			{
 				continue;
 			}
-			else if(name[0] == '\n' || check_special_char(name[i]))
+			else if (name[0] == '\0' || check_special_char(name[i]))
 			{
 				printf("\nInvaild input.\n"
 				   		"The username must start by character or number\n"
-				   		"Please enter a username\n> ");
+				   		"Please enter a username> ");
 				scanf("%s",name);
 				i = -1;
 				continue;
 			/*Checks if the input name same with another customer's*/
 			}
-			else if(name[i] == '\n' && count != 0 && i > 2){
-				/*Replaces '\n' with '\0'*/
-				name[i] = '\0';
-				while (fscanf(fp2, "%s %s", existingName, password) != EOF)
-				{
-					/*Customer name already exists*/
-					if(strcmp(name, existingName)  == 0)
-					{
-						printf("\nUsername already exists\n"
-						   		"\nPlease enter a username\n> ");
-					   	scanf("%s", name);
-						i = -1;
-						break;
-					}
-					else
-					{
-						continue;
-					}
-				}
-				i--;
-				continue;
-			}
-
-			if(name[i] == '\n' && count == 0 && i > 2)
-			{
-				name[i] = '\0';
-				i--;
-				continue;
-			}
 			else
 			{
-				printf("\nInvaild input, customer name too short wuwuwuwuuw.\n"
-				   		"Please enter another username\n> ");
+				printf("\nUsername is too short.\n"
+				   		"Please enter another username> ");
 			  	scanf("%s", name);
 				i = -1;
 				continue;
 			}
 		}/*Customer name for loop end*/
 
-		printf("\n Please enter password \n> ");
+		printf("Please enter a password> ");
 		scanf("%s", password);
 		/*Check password*/
 		for (i = 0; password[i] != '\0'; i++)
 		{
 			/*Password can be number, letter and special characters*/
-			if(check_special_char(password[i]) || check_letter_char(password[i]))
+			if (check_special_char(password[i]) || check_letter_char(password[i]))
 			{
 				continue;
 			}
-			else if(check_digit_char(password[i]))
+			else if (check_digit_char(password[i]))
 			{
 				continue;
 			}
-			else if(password[i] == '\n' && i > 6)
-			{
-				password[i] = '\0';
-				i--;
-				continue;
-			}
-			else if(password[i] == '\n' && i < 6){
-				printf("\nPassword too short\n"
-				     	"\nPlease enter another password\n> ");
+			else if (password[i] == '\0' && i < 6){
+				printf("\nPassword is too short.\n"
+				     	"Please enter another password> ");
 				scanf("%s", name);
 				i = -1;
 				continue;
 			}
 			else
 			{
-				printf("\nInvaild input\n"
-				   		"\nPlease enter another password\n> ");
+				printf("\nInvaild input.\n"
+				   		"Please enter another password> ");
 				scanf("%s", name);
 				i = -1;
 				continue;
@@ -500,8 +482,9 @@ int signup(char name[])
 		}/*Password loop end*/
 	}
 
-	fprintf(fp, "%s %s\n", name, password);
+	fprintf(fp, "%s %s c\n", name, password);
 	fclose(fp);
+	fclose(fp2);
 
 	return 0;
 }
@@ -509,10 +492,11 @@ int signup(char name[])
 /********************************LOGIN FUNCTION********************************/
 int login(char name[])
 {
-	char cust_pass[50];
-	char cust_name[50];
-	char existingName[101];
-	char password[101];
+	char cust_pass[PW_LEN];
+	char cust_name[UN_LEN];
+	char existingName[UN_LEN];
+	char password[PW_LEN];
+	char account_type;
 	int flag = 0, attempts = 3;
 	FILE *fp = fopen(USER_DB, "r");
 
@@ -522,20 +506,21 @@ int login(char name[])
 		return 1;
 	}
 
-	while(1)
+	while (1)
 	{
-		printf("Enter your username\n");
+		printf("Enter your username> ");
 		scanf("%s", cust_name);
-		/* cust_name[strlen(cust_name) - 1] = '\0'; */
-		while (fscanf(fp, "%s %s", existingName, password) != EOF)
+		while (fscanf(fp, "%s %s %c",
+						existingName, password, &account_type) != EOF)
 		{
-			if(strcmp(cust_name, existingName) == 0)
+			if (!strcmp(cust_name, existingName))
 			{
 				flag = 1;
+				break;
 			}
 			else
 			{
-				printf("Username does not exist");
+				printf("Username does not exist.\n");
 				break;
 			}
 		}
@@ -547,14 +532,21 @@ int login(char name[])
 	}
 
 	/***CHECK PASSWORD***/
-	while(attempts > 3)
+	while (attempts > 0)
 	{
-		printf("Enter your password.\n> ");
+		printf("Enter your password> ");
 		scanf("%s", cust_pass);
-
-		if (strcmp(cust_pass, password) == 0)
+		if (!strcmp(cust_pass, password))
 		{
-			printf("\nLogged in.\n");
+			printf("Logged in.\n");
+			if (account_type == 'c')
+			{
+				customer_input(cust_name);
+			}
+			else
+			{
+				admin_input();
+			}
 			return 0;
 		}
 		else
@@ -568,15 +560,40 @@ int login(char name[])
 	return 1;
 }
 
-void save_customer(customer_t* save, int count)
+/* char get_account_type(char name[])
 {
+	char existingName[101], password[101], account_type;
+	FILE *fp = fopen(USER_DB, "r");
 
+	while (fscanf(fp, "%s %s %c",
+					existingName, password, &account_type) != EOF)
+	{
+		printf("%s %s %c\n", existingName, password, account_type);
+		printf("%d\n", strcmp(existingName, name));
+		if (!strcmp(existingName, name))
+		{
+			return account_type;
+		}
+	}
+
+	return 'e';
 }
 
-void check_customer(customer_t* check)
+void check_account(char name[], char account_type)
 {
-
-}
+	if (account_type == 'e')
+	{
+		printf("Account Doesn't Exist\n");
+	}
+	else if (account_type == 'c')
+	{
+		customer_input(name);
+	}
+	else
+	{
+		admin_input();
+	}
+} */
 
 
 
@@ -772,20 +789,15 @@ int remove_items(void)
 
 int purchase_items(void)
 {
-	item_t item;
-	char input[ITEM_NAME_SIZE + 1];
-    FILE *fp = fopen(ITEM_DB, "r");
-	FILE *fp2 = fopen(PURCHASE_DB,"a");
-	if(fp == NULL)
-	{
+	 item_t item;
+	 char input[ITEM_NAME_SIZE + 1];
+     FILE *fp = fopen(ITEM_DB, "r");
+	 FILE *fp2 = fopen(PURCHASE_DB,"a");
+	 if (fp == NULL)
+	 {
 		printf("Write Error");
 		return 1;
-	}
-	if(fp2 == NULL)
-	{
-		printf("Write Error");
-		return 1;
-	}
+	 }
 	printf("Enter Clothing Name> ");
 	scanf("%s", input);
 	/* fprintf(fp2, "%s\n", input); */
@@ -793,7 +805,9 @@ int purchase_items(void)
 	{
 		if (strcmp(input, item.name) == 0)
 		{
+
 			fprintf(fp2, "%s %c %d %0.2lf\n", item.name, item.sex, item.size, item.price);
+
 		}
 	}
 
@@ -801,6 +815,7 @@ int purchase_items(void)
 	fclose(fp2);
     return 0;
 }
+
 
 int view_purchase_history(void)
 {
@@ -826,6 +841,7 @@ int view_purchase_history(void)
     }
 
 	fclose(fp);
+	fclose(fp2);
 
 	return 0;
 }
