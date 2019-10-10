@@ -845,15 +845,15 @@ void debug(void)
 	int test3flag = 0;
 	char string[101];
 	node_t characters[30];
-	node_t letter;
+	/* node_t letter; */
 	int arraySize, j, i;
-	list_t *listPointer;
+	/* list_t *listPointer;
 	listPointer = (list_t*) malloc(sizeof(list_t));
 	listPointer -> listptr = NULL;
 	list_t *ip;
 	ip = (list_t*) malloc(sizeof(list_t));
 	node_t *newNode;
-	newNode = (list_t*) malloc(sizeof(list_t));
+	newNode = (list_t*) malloc(sizeof(list_t)); */
 	while (1)
 	{
 		printf("\nDebug Menu:\n"
@@ -878,7 +878,8 @@ void debug(void)
 				admin_input();
 				break;
 			case 3:
-				printf("Enter a debug string (Max 100 Characters)> ");
+				printf("Case 3 Under Construction\n");
+				/* printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
 				fgets(string, 100, stdin);
 				arraySize = 0;
@@ -913,7 +914,7 @@ void debug(void)
 
 				character_output_loop(characters, arraySize);
 				test3flag = 1;
-				break;
+				break; */
 			case 4:
 				if (test3flag)
 				{

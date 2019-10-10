@@ -12,6 +12,13 @@ struct node
 };
 typedef struct node node_t;
 
+struct list
+{
+    node_t *nodeptr;
+    struct list *listptr;
+};
+typedef struct list list_t;
+
 /* Huffman Coding Compression Functions */
 int frequency_count(char letter, char string[], int letterPosition);
 void bubble_sort(node_t characters[], int arraySize);
