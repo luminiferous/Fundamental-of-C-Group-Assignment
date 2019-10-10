@@ -107,14 +107,6 @@ int login(char name[]);
 Author: Daming Luo */
 int signup(char name[]);
 
-/* Saves all customers to the database.
-Author: Brendan Huynh */
-/*void save_customer(customer_t* save, int count); */
-
-/* char get_account_type(char username[]);
-
-void check_account(char name[], char account_type); */
-
 /* Displays all, or a specific customer in the database.
 Author: Brendan Huynh */
 void display_customers(void);
@@ -248,11 +240,11 @@ void account_menu(void)
 void customer_menu(void)
 {
 	printf("\nWelcome to the Online Clothing Store\n"
-			"1. View items\n"
-			"2. Search items\n"
-			"3. Add items to cart\n"
-			"4. Remove items from cart\n"
-			"5. View purchase history\n"
+			"1. View Items\n"
+			"2. Search Items\n"
+			"3. Add Items to Cart\n"
+			"4. Remove Items from Cart\n"
+			"5. View Purchase History\n"
 			"6. Help\n"
 			"0. Exit\n");
 }
@@ -260,11 +252,11 @@ void customer_menu(void)
 void admin_menu(void)
 {
 	printf("\nWelcome to the Admin Controls.\n"
-			"1. Display all customers\n"
-			"2. Add items to database\n"
-			"3. Remove items from database\n"
-			"4. Compress database\n"
-			"5. Decompress database\n"
+			"1. Display All Customers\n"
+			"2. Add Items to Database\n"
+			"3. Remove Items from Database\n"
+			"4. Compress Database\n"
+			"5. Decompress Database\n"
 			"6. Access Debug Menu\n"
 			"7. Help\n"
 			"0. Exit\n");
@@ -275,9 +267,9 @@ void introduction_menu(void)
 	printf("\n--------------------------------------------------------\n"
 			"WELCOME TO THE ONLINE CLOTHING STORE\n"
 			"This program allows customers to purchase clothing through"
-			"the system\n"
+			"the system.\n"
 			"Customers can view, search, and purchase items, as well as"
-			"view the purchase history\n"
+			"view the purchase history.\n"
 			"-------------------------------------------------------- \n");
 }
 
