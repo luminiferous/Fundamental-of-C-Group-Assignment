@@ -342,7 +342,7 @@ int signup(char name[])
     char existingName[UN_LEN + 1], password[PW_LEN + 1], account_type;
 
     FILE *fp = fopen(USER_DB, "a");
-    FILE *fp2 = fopen(USER_DB, "r");\
+    FILE *fp2 = fopen(USER_DB, "r");
 
     if (fp == NULL)
     {
@@ -484,6 +484,7 @@ int login(char name[])
 			{
 				admin_input();
 			}
+			break;
 		}
 		else
 		{
@@ -494,43 +495,6 @@ int login(char name[])
 
 	return 0;
 }
-
-/* char get_account_type(char name[])
-{
-	char existingName[101], password[101], account_type;
-	FILE *fp = fopen(USER_DB, "r");
-
-	while (fscanf(fp, "%s %s %c",
-					existingName, password, &account_type) != EOF)
-	{
-		printf("%s %s %c\n", existingName, password, account_type);
-		printf("%d\n", strcmp(existingName, name));
-		if (!strcmp(existingName, name))
-		{
-			return account_type;
-		}
-	}
-
-	return 'e';
-}
-
-void check_account(char name[], char account_type)
-{
-	if (account_type == 'e')
-	{
-		printf("Account Doesn't Exist\n");
-	}
-	else if (account_type == 'c')
-	{
-		customer_input(name);
-	}
-	else
-	{
-		admin_input();
-	}
-} */
-
-
 
 /*******************************************************************************
 Display Function - Displays all the selected data fetched from
@@ -785,43 +749,44 @@ int purchase_items(char name[])
     return 0;
 }
 
-
 int view_purchase_history(char name[])
 {
-	FILE *fp = fopen(PURCHASE_DB, "r");
-	long fileSize;
-	item_t item;
-	char p_name[101];
-	int i;
-	int count = 0;
+    FILE *fp = fopen(PURCHASE_DB, "r");
+    long fileSize;
+    item_t item;
+    char p_name[101];
+    int i;
+    int count = 0;
 
     if(fp == NULL)
     {
         printf("Read error\n");
-		return 1;
+        return 1;
     }
 
     fseek(fp, 0, SEEK_END);
     fileSize = ftell(fp);
 
     if (fileSize == 0)
-	{
-		i = 0;
-        printf("You currently have %d purchases.\n", i);
+    {
+        i = 0;
+        printf("\nYou currently have %d purchases.\n", i);
     }
 
-	while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
-	{
-		if(!(strcmp(p_name, name)))
-		{
-			fprintf(fp, "%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
-			count++;
-		}
-		printf("You currently have %d purchases.\n", count);
-	}
-	fclose(fp);
+    fseek(fp, 0, SEEK_SET);
 
-	return 0;
+    while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
+    {
+        if(!strcmp(p_name, name))
+        {
+            printf("\n%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
+            count++;
+        }
+        printf("\nYou currently have %d purchase(s).\n", count);
+    }
+    fclose(fp);
+
+    return 0;
 }
 
 void help(void)
