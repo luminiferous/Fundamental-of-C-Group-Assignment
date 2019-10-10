@@ -15,9 +15,9 @@ C Libraries
 #include <math.h>
 #include "huffman_coding.h"
 
-#define UN_LEN 101
-#define PW_LEN 101
-#define ITEMS_IN_DATABASE 50
+#define UN_LEN 100
+#define PW_LEN 100
+#define SIZE_LEN 2
 #define USER_DB "customer_db"
 #define ITEM_DB "item_db"
 #define PURCHASE_DB "p_db"
@@ -46,27 +46,10 @@ struct item
 {
 	char name[ITEM_NAME_SIZE + 1];
 	char sex;
-	int size;
+	char size[SIZE_LEN + 1];
 	double price;
 };
 typedef struct item item_t;
-
-typedef struct compress_code
-{
-	char letter;
-	int letter_f;
-	unsigned int code;
-	struct compress_code* st;
-	struct compress_code* nd;
-	struct compress_code* rd;
-} compress_code_c;
-
-typedef struct compress_table
-{
-	char letter;
-	int letter_f;
-	unsigned int code;
-} compress_table_t;
 
 /*******************************************************************************
 Function Prototypes
@@ -166,17 +149,7 @@ void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
-/* Checks if a character is an integer.
-Author: Daming Luo */
-int check_digit_char(char c);
-
-/* Checks if a character is a letter.
-Author: Daming Luo */
-int check_letter_char(char c);
-
-/* Checks if a character is a special character (not letter or digit).
-Author: Daming Luo */
-int check_special_char(char c);
+int is_ascii(char c);
 
 /*******************************************************************************
 Main Function
@@ -184,7 +157,7 @@ Author(s): Cameron Wang, Daming Luo
 *******************************************************************************/
 int main(void) {
 	int input;
-	char username[UN_LEN];
+	char username[UN_LEN + 1];
 	/* int count = 0;
 	customer_number = 0;
 
@@ -286,7 +259,7 @@ void customer_input(char username[])
 	int input, exitFlag = 0;
 	/* item_t items[100];
 	int counter = ITEMS_IN_DATABASE; */
-	printf("Welcome %s!", username);
+	printf("\nWelcome %s!", username);
 	while (1)
 	{
 		customer_menu();
@@ -332,7 +305,7 @@ void admin_input(void)
 {
 	int input, exitFlag = 0;
 
-	printf("Welcome Admin!");
+	printf("\nWelcome Admin!");
 	while (1)
 	{
 		admin_menu();
@@ -382,137 +355,118 @@ Author(s): Daming Luo
 *******************************************************************************/
 int signup(char name[])
 {
-	char password[PW_LEN];
-	char existingName[UN_LEN];
-	char account_type;
+    char existingName[UN_LEN + 1], password[PW_LEN + 1], account_type;
 
-	FILE *fp = fopen(USER_DB, "a");
-	FILE *fp2 = fopen(USER_DB, "r");
+    FILE *fp = fopen(USER_DB, "a");
+    FILE *fp2 = fopen(USER_DB, "r");\
 
-	if (fp == NULL)
-	{
-		printf("Write error\n");
-		return 1;
-	}
+    if (fp == NULL)
+    {
+        printf("Write error\n");
+        return 1;
+    }
 
-	else
-	{
-		printf("Enter a Username> ");
+    if (fp2 == NULL)
+    {
+        printf("Read error\n");
+        return 1;
+    }
+
+    int i, flag = 1;
+    while (flag)
+    {
+        printf("Enter a Username> ");
 		scanf("%s", name);
-		int i;
+        flag = 0;
 
-		while (fscanf(fp2, "%s %s %c",
-						existingName, password, &account_type) != EOF)
-		{
-			/*Customer name already exists*/
-			if (!strcmp(name, existingName))
-			{
-				printf("\nUsername already exsits.\n"
-						"Please enter a username> ");
-				scanf("%s", name);
-				i = -1;
-				break;
-			}
-		}
+        while (fscanf(fp2, "%s %s %c",
+                        existingName, password, &account_type) != EOF)
+        {
+            /*Customer name already exists*/
+            if (!strcmp(name, existingName))
+            {
+                printf("Username already exists.\n");
+                flag = 1;
+                break;
+            }
+        }
 
-		for (i = 0; name[i] != '\0'; i++)
-		{
-			/*Detect if input number or letter*/
-			if (check_digit_char(name[i]) || check_letter_char(name[i]))
-			{
-				continue;
-			}
-			else if (name[0] == '\0' || check_special_char(name[i]))
-			{
-				printf("\nInvaild input.\n"
-				   		"The username must start by character or number\n"
-				   		"Please enter a username> ");
-				scanf("%s",name);
-				i = -1;
-				continue;
-			/*Checks if the input name same with another customer's*/
-			}
-			else
-			{
-				printf("\nUsername is too short.\n"
-				   		"Please enter another username> ");
-			  	scanf("%s", name);
-				i = -1;
-				continue;
-			}
-		}/*Customer name for loop end*/
+        if (!flag)
+        {
+            for (i = 0; name[i] != '\0'; i++)
+            {
+                if (!is_ascii(name[i]) && (name[i] >= 32 && name[i] <= 64) &&
+                    (name[i] >= 91 && name[i] <= 96) &&
+                    (name[i] >= 123 && name[i <= 126]))
+                {
+                    printf("Invaild input.\n"
+                            "The username must only be letters or digits.\n");
+                    flag = 1;
+                    break;
+                }
+            }
+        }
+    }
 
-		printf("Please enter a password> ");
+    flag = 1;
+    while (flag)
+    {
+        printf("Please enter a valid password> ");
 		scanf("%s", password);
-		/*Check password*/
-		for (i = 0; password[i] != '\0'; i++)
-		{
-			/*Password can be number, letter and special characters*/
-			if (check_special_char(password[i]) || check_letter_char(password[i]))
-			{
-				continue;
-			}
-			else if (check_digit_char(password[i]))
-			{
-				continue;
-			}
-			else if (password[i] == '\0' && i < 6){
-				printf("\nPassword is too short.\n"
-				     	"Please enter another password> ");
-				scanf("%s", name);
-				i = -1;
-				continue;
-			}
-			else
-			{
-				printf("\nInvaild input.\n"
-				   		"Please enter another password> ");
-				scanf("%s", name);
-				i = -1;
-				continue;
-			}
-		}/*Password loop end*/
-	}
+        flag = 0;
 
-	fprintf(fp, "%s %s c\n", name, password);
-	fclose(fp);
-	fclose(fp2);
+        for (i = 0; password[i] != '\0'; i++)
+        {
+            if (!is_ascii(name[i]) || name[i] == 32)
+            {
+                printf("Invalid Password.\n");
+                flag = 1;
+                break;
+            }
+        }
 
-	return 0;
+        if (!flag && i < 6)
+        {
+            printf("Password is too short.\n");
+            flag = 1;
+        }
+    }
+
+    fprintf(fp, "%s %s c\n", name, password);
+    fclose(fp);
+    fclose(fp2);
+
+    return 0;
 }
 
 /********************************LOGIN FUNCTION********************************/
 int login(char name[])
 {
-	char cust_pass[PW_LEN];
-	char cust_name[UN_LEN];
-	char existingName[UN_LEN];
-	char password[PW_LEN];
-	char account_type;
-	int flag = 0, attempts = 3;
-	FILE *fp = fopen(USER_DB, "r");
+    char un_input[UN_LEN + 1], pw_input[PW_LEN + 1], existingName[UN_LEN + 1];
+    char password[PW_LEN + 1], account_type;
+    int flag, attempts;
 
-	if (fp == NULL)
-	{
-		printf("Write error\n");
-		return 1;
-	}
+    FILE *fp = fopen(USER_DB, "r");
 
-	while (1)
-	{
-		printf("Enter your username> ");
-		scanf("%s", cust_name);
+    if (fp == NULL)
+    {
+        printf("Read error\n");
+        return 1;
+    }
+
+    attempts = 3;
+    while (attempts > 0)
+    {
+        printf("Enter your username (Attempts: %d)> ", attempts);
+		scanf("%s", un_input);
+        flag = 0;
+
 		while (fscanf(fp, "%s %s %c",
 						existingName, password, &account_type) != EOF)
 		{
-			if (!strcmp(cust_name, existingName))
+			if (!strcmp(un_input, existingName))
 			{
 				flag = 1;
-				break;
-			}
-			else
-			{
-				printf("Username does not exist.\n");
 				break;
 			}
 		}
@@ -521,25 +475,31 @@ int login(char name[])
 		{
 			break;
 		}
-	}
+		else
+		{
+			printf("Username does not exist.\n");
+			attempts--;
+		}
+    }
 
-	/***CHECK PASSWORD***/
+    /***CHECK PASSWORD***/
 	while (attempts > 0)
 	{
-		printf("Enter your password> ");
-		scanf("%s", cust_pass);
-		if (!strcmp(cust_pass, password))
+		attempts = 3;
+		printf("Enter your password (Attempts: %d)> ", attempts);
+		scanf("%s", pw_input);
+
+		if (!strcmp(pw_input, password))
 		{
 			printf("Logged in.\n");
 			if (account_type == 'c')
 			{
-				customer_input(cust_name);
+				customer_input(un_input);
 			}
 			else
 			{
 				admin_input();
 			}
-			return 0;
 		}
 		else
 		{
@@ -548,8 +508,7 @@ int login(char name[])
 		}
 	}
 
-	printf("Login Failed\n");
-	return 1;
+	return 0;
 }
 
 /* char get_account_type(char name[])
@@ -646,13 +605,13 @@ int view_items()
 	else
 	{
 		fseek(fp, 0, SEEK_SET);
-		while (fscanf(fp, "%s %c %d %lf",
-				item.name, &item.sex, &item.size, &item.price) != EOF)
+		while (fscanf(fp, "%s %c %s %lf",
+				item.name, &item.sex, item.size, &item.price) != EOF)
 		{
 			printf("-------------------------\n");
         	printf("Clothing Name: %s\n"
 				"Sex: %c\n"
-                "Size: %d\n"
+                "Size: %s\n"
                 "Price: $%0.2lf\n",
                 item.name, item.sex, item.size, item.price);
 			printf("-------------------------\n");
@@ -683,8 +642,8 @@ int search_items(void)
 
 	printf("Enter Clothing Name You Wish To Find> ");
 	scanf("%s", input);
-	while (fscanf(fp, "%s %c %d %lf",
-			item.name, &item.sex, &item.size, &item.price) != EOF)
+	while (fscanf(fp, "%s %c %s %lf",
+			item.name, &item.sex, item.size, &item.price) != EOF)
 	{
 		if (!strcmp(input, item.name))
 		{
@@ -692,7 +651,7 @@ int search_items(void)
 			printf("-------------------------\n");
 			printf("Clothing Name: %s\n"
 					"Gender: %c\n"
-					"Size: %d\n"
+					"Size: %s\n"
 					"Price: $%0.2lf\n",
 					item.name, item.sex, item.size, item.price);
 			printf("-------------------------\n");
@@ -722,7 +681,7 @@ void remove_cart(void)
 int add_items(void)
 {
 	item_t item;
-	int sex, flag = 1;
+	int input, flag;
 
 	FILE *fp = fopen(ITEM_DB, "a");
 
@@ -735,14 +694,15 @@ int add_items(void)
 	printf("Enter Clothing Name> ");
 	scanf("%s", item.name);
 
-	while(flag)
+	flag = 1;
+	while (flag)
 	{
-		printf("1: Male (M)\n"
-				"2: Female (F)\n"
-				"3: Unisex (U)\n"
+		printf("1. Male (M)\n"
+				"2. Female (F)\n"
+				"3. Unisex (U)\n"
 				"Select Clothing Gender> ");
-		scanf("%d", &sex);
-		switch(sex)
+		scanf("%d", &input);
+		switch (input)
 		{
 			case 1:
 				item.sex = 'M';
@@ -757,17 +717,52 @@ int add_items(void)
 				flag = 0;
 				break;
 			default:
-				printf("Invalid input\n");
+				printf("Invalid input.\n");
 		}
 	}
 
-	printf("Enter Clothing Size> ");
-	scanf("%d", &item.size);
+	flag = 1;
+	while (flag)
+	{
+		printf("1. Extra Small (XS)\n"
+				"2. Small (S)\n"
+				"3. Medium (M)\n"
+				"4. Large (L)\n"
+				"5. Extra Large (XL)\n"
+				"Select Clothing Size> ");
+		scanf("%d", &input);
+		switch (input)
+		{
+			case 1:
+				strcpy(item.size, "XS");
+				flag = 0;
+				break;
+			case 2:
+				strcpy(item.size, "S");
+				flag = 0;
+				break;
+			case 3:
+				strcpy(item.size, "M");
+				flag = 0;
+				break;
+			case 4:
+				strcpy(item.size, "L");
+				flag = 0;
+				break;
+			case 5:
+				strcpy(item.size, "XL");
+				flag = 0;
+				break;
+			default:
+				printf("Invalid input.\n");
+		}
+	}
+
 
 	printf("Enter Clothing Price> ");
 	scanf("%lf", &item.price);
 
-	fprintf(fp, "%s %c %d %lf\n", item.name, item.sex, item.size, item.price);
+	fprintf(fp, "%s %c %s %lf\n", item.name, item.sex, item.size, item.price);
 
 	fclose(fp);
 	return 0;
@@ -793,12 +788,12 @@ int purchase_items(void)
 	printf("Enter Clothing Name> ");
 	scanf("%s", input);
 	/* fprintf(fp2, "%s\n", input); */
-	while(fscanf(fp, "%s %c %d %lf\n", item.name, &item.sex, &item.size, &item.price) != EOF)
+	while(fscanf(fp, "%s %c %s %lf\n", item.name, &item.sex, item.size, &item.price) != EOF)
 	{
 		if (strcmp(input, item.name) == 0)
 		{
 
-			fprintf(fp2, "%s %c %d %0.2lf\n", item.name, item.sex, item.size, item.price);
+			fprintf(fp2, "%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
 
 		}
 	}
@@ -984,10 +979,10 @@ void debug(void)
 	}
 }
 
-int check_digit_char(char c)
+/* int check_digit_char(char c)
 {
     if (c >= '0' && c <= '9')
-		{
+	{
         return 1;
     }
 		return 0;
@@ -996,7 +991,7 @@ int check_digit_char(char c)
 int check_letter_char(char c)
 {
     if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		{
+	{
         return 1;
     }
 		return 0;
@@ -1004,12 +999,23 @@ int check_letter_char(char c)
 
 int check_special_char(char c)
 {
-	if((c >= 32 && c <= 47) &&
+	if ((c >= 32 && c <= 47) &&
 	(c >= 58 && c <= 64) &&
 	(c >= 91 && c <= 96) &&
-	(c >=123 && c <=  126)){
+	(c >= 123 && c <= 126))
+	{
 		return 1;
 	}
+	return 0;
+} */
+
+int is_ascii(char c)
+{
+	if (c >= 32 && c <= 126)
+	{
+		return 1;
+	}
+
 	return 0;
 }
 
