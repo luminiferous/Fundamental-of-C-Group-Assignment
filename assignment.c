@@ -26,22 +26,6 @@ C Libraries
 /*******************************************************************************
 Structures
 *******************************************************************************/
-/* struct node
-{
-	char letter;
-	int weight;
-	struct node* nextp;
-};
-typedef struct node node_t; */
-
-struct customer
-{
-	char customer_id[10];
-	char username[101];
-	char password[101];
-};
-typedef struct customer customer_t;
-
 struct item
 {
 	char name[ITEM_NAME_SIZE + 1];
@@ -417,7 +401,7 @@ int signup(char name[])
 
         for (i = 0; password[i] != '\0'; i++)
         {
-            if (!is_ascii(name[i]) || name[i] == 32)
+            if (!is_ascii(name[i]) && name[i] == 32)
             {
                 printf("Invalid Password.\n");
                 flag = 1;
@@ -843,22 +827,22 @@ int view_purchase_history(char name[])
 void help(void)
 {
 	printf("Below is a detailed explanation on how to use the menu\n\n"
-		"View items - Display all products available on the catalogue.\n"
-		"Search items - User can search up key words to find specific products"
+			"View items - Display all products available on the catalogue.\n"
+			"Search items - User can search up key words to find specific products"
 			"or categories on the catalogue.\n"
-		"Add items - Add an item / items to the shopping cart.\n"
-		"Remove items - Remove an item / items from the shopping cart.\n"
-		"View purchase history - Allows user to see what products they have "
+			"Add items - Add an item / items to the shopping cart.\n"
+			"Remove items - Remove an item / items from the shopping cart.\n"
+			"View purchase history - Allows user to see what products they have "
 			"bought in the past.\n");
 }
 
 void help_admin(void)
 {
 	printf("Below is a detailed explanation on how to use the admin menu.\n\n"
-		"Display all customers - Retrieves and displays a list of customers and"
+			"Display all customers - Retrieves and displays a list of customers and"
 			" their details from the database.\n"
-		"Compress database - Compresses database.\n"
-		"Decompress database - Decompresses database.\n");
+			"Compress database - Compresses database.\n"
+			"Decompress database - Decompresses database.\n");
 }
 
 void debug(void)
@@ -870,6 +854,13 @@ void debug(void)
 	node_t characters[30];
 	node_t letter;
 	int arraySize, j, i;
+	list_t *listPointer;
+	listPointer = (list_t*) malloc(sizeof(list_t));
+	listPointer -> listptr = NULL;
+	list_t *ip;
+	ip = (list_t*) malloc(sizeof(list_t));
+	node_t *newNode;
+	newNode = (list_t*) malloc(sizeof(list_t));
 	while (1)
 	{
 		printf("\nDebug Menu:\n"
@@ -913,9 +904,15 @@ void debug(void)
 
 					if (!existingFlag && string[i] != '\n')
 					{
-						letter = debug_frequency_count(string[i], string, i);
+						listPointer -> *nodeptr = debug_frequency_count(string[i], string, i);
 						characters[j].character = letter.character;
-						characters[j].freq = letter.freq;
+						ip = listPointer;
+						while (ip -> listptr != NULL)
+						{
+							ip = ip -> listptr;
+						}
+						newNode -> nodeptr = &letter;
+
 						arraySize++;
 					}
 					i++;
@@ -934,7 +931,6 @@ void debug(void)
 				{
 					printf("Must Run Test 3 before Performing This Test\n");
 				}
-
 				break;
 			case 5:
 				printf("Enter a debug string (Max 100 Characters)> ");
@@ -986,36 +982,6 @@ void debug(void)
 	}
 }
 
-/* int check_digit_char(char c)
-{
-    if (c >= '0' && c <= '9')
-	{
-        return 1;
-    }
-		return 0;
-}
-
-int check_letter_char(char c)
-{
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-	{
-        return 1;
-    }
-		return 0;
-}
-
-int check_special_char(char c)
-{
-	if ((c >= 32 && c <= 47) &&
-	(c >= 58 && c <= 64) &&
-	(c >= 91 && c <= 96) &&
-	(c >= 123 && c <= 126))
-	{
-		return 1;
-	}
-	return 0;
-} */
-
 int is_ascii(char c)
 {
 	if (c >= 32 && c <= 126)
@@ -1025,31 +991,3 @@ int is_ascii(char c)
 
 	return 0;
 }
-
-/*char isupper(char c)
-{
-    if (c >= 'A' && c <= 'Z')
-		{
-        return 1;
-    }
-		return 0;
-}
-
-char toupper(char c)
-{
-    if(_isalpha(c))
-		{
-        if(_isupper(c)) return c;
-        return c - 32;
-    }
-		printf("Input is not an alphabet.");
-    return c;
-}
-
-char islower(char c)
-{
-	if(c <= 'z' && c >='a'){
-		return 1;
-	}
-	return 0;
-}*/
