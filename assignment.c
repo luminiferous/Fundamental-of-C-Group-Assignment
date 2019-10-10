@@ -132,11 +132,11 @@ int remove_items(void);
 
 /* Allows a customer to purchase items from the store.
 Author: Brendan Huynh */
-int purchase_items(void);
+int purchase_items(char name[]);
 
 /* Displays a customer's purchase history.
 Author: Peter Phan */
-int view_purchase_history(void);
+int view_purchase_history(char name[]);
 
 /* Display the help screen.
 Author: Peter Phan */
@@ -273,13 +273,13 @@ void customer_input(char username[])
 				search_items();
 				break;
 			case 3:
-				purchase_items();
+				purchase_items(username);
 				break;
 			case 4:
 				remove_cart();
 				break;
 			case 5:
-				view_purchase_history();
+				view_purchase_history(username);
 				break;
 			case 6:
 				debug();
@@ -774,7 +774,7 @@ int remove_items(void)
 }
 
 
-int purchase_items(void)
+int purchase_items(char name[])
 {
 	 item_t item;
 	 char input[ITEM_NAME_SIZE + 1];
@@ -792,9 +792,7 @@ int purchase_items(void)
 	{
 		if (strcmp(input, item.name) == 0)
 		{
-
-			fprintf(fp2, "%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
-
+			fprintf(fp2, "%s %s %c %s %0.2lf\n", name, item.name, item.sex, item.size, item.price);
 		}
 	}
 
@@ -804,13 +802,14 @@ int purchase_items(void)
 }
 
 
-int view_purchase_history(void)
+int view_purchase_history(char name[])
 {
 	FILE *fp = fopen(PURCHASE_DB, "r");
-	FILE *fp2 = fopen(USER_DB, "r");
 	long fileSize;
-	/*item_t item;*/
+	item_t item;
+	char p_name[101];
 	int i;
+	int count = 0;
 
     if(fp == NULL)
     {
@@ -824,11 +823,19 @@ int view_purchase_history(void)
     if (fileSize == 0)
 	{
 		i = 0;
-        printf("You current have %d purchases.\n", i);
+        printf("You currently have %d purchases.\n", i);
     }
 
+	while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
+	{
+		if(!(strcmp(p_name, name)))
+		{
+			fprintf(fp, "%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
+			count++;
+		}
+		printf("You currently have %d purchases.\n", count);
+	}
 	fclose(fp);
-	fclose(fp2);
 
 	return 0;
 }
