@@ -481,7 +481,18 @@ Author(s):
 *******************************************************************************/
 void display_customers(void)
 {
+	char username[UN_LEN], password[PW_LEN], account_type;
 
+	FILE *fp = fopen(USER_DB, "r");
+
+	printf("Accounts stored in the Database\n");
+	printf("-----------------------------------\n");
+	while (fscanf(fp, "%s %s %c",
+					username, password, &account_type) != EOF)
+	{
+		printf("Account Username: %s\n", username);
+	}
+	printf("-----------------------------------\n");
 }
 
 int encrypt_customer_password(char database_file[], char customer_password[])
