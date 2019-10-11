@@ -362,6 +362,7 @@ int signup(char name[])
         printf("Enter a Username> ");
 		scanf("%s", name);
         flag = 0;
+		fseek(fp, 0, SEEK_SET);
 
         while (fscanf(fp2, "%s %s %c",
                         existingName, password, &account_type) != EOF)
@@ -444,6 +445,7 @@ int login(char name[])
         printf("Enter your username (Attempts: %d)> ", attempts);
 		scanf("%s", un_input);
         flag = 0;
+		fseek(fp, 0, SEEK_SET);
 
 		while (fscanf(fp, "%s %s %c",
 						existingName, password, &account_type) != EOF)
@@ -819,13 +821,13 @@ void debug(void)
 	node_t characters[30];
 	/* node_t letter; */
 	int arraySize, j, i;
-	/* list_t *listPointer;
-	listPointer = (list_t*) malloc(sizeof(list_t));
-	listPointer -> listptr = NULL;
-	list_t *ip;
-	ip = (list_t*) malloc(sizeof(list_t));
+	/* node_t *nodeList;
+	nodeList = (node_t*) malloc(sizeof(node_t));
+	node_list -> listptr = NULL;
+	node_t *ip;
+	ip = (node_t*) malloc(sizeof(node_t));
 	node_t *newNode;
-	newNode = (list_t*) malloc(sizeof(list_t)); */
+	newNode = (node_t*) malloc(sizeof(node_t)); */
 	while (1)
 	{
 		printf("\nDebug Menu:\n"
@@ -850,8 +852,8 @@ void debug(void)
 				admin_input();
 				break;
 			case 3:
-				printf("Case 3 Under Construction\n");
-				/* printf("Enter a debug string (Max 100 Characters)> ");
+				/* printf("Case 3 Under Construction\n");
+				printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
 				fgets(string, 100, stdin);
 				arraySize = 0;
@@ -861,7 +863,7 @@ void debug(void)
 					existingFlag = 0;
 					for (j = 0; j < arraySize; j++)
 					{
-						if (characters[j].character == string[i])
+						if (characters[j]. == string[i])
 						{
 							existingFlag = 1;
 							break;
@@ -870,13 +872,12 @@ void debug(void)
 
 					if (!existingFlag && string[i] != '\n')
 					{
-						listPointer -> *nodeptr = debug_frequency_count(string[i], string, i);
-						characters[j].character = letter.character;
-						ip = listPointer;
 						while (ip -> listptr != NULL)
 						{
 							ip = ip -> listptr;
 						}
+						newNode -> *nodeptr = debug_frequency_count(string[i], string, i);
+						characters[j] = newNode -> character;
 						newNode -> nodeptr = &letter;
 
 						arraySize++;
