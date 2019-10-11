@@ -1,6 +1,6 @@
 /*******************************************************************************
 Fundamentals of C Programming - Assessment 3
-Project Name: Secure Clothing Store Database System (Placeholder)
+Project Name: Secure Clothing Store Database System
 Authors: Cameron Wang (13202320), Brendan Huynh (13202155),
 	Peter Phan (13202268), David Ung (13245547), Daming Luo (13160039)
 Date of Submission: -
@@ -15,56 +15,25 @@ C Libraries
 #include <math.h>
 #include "huffman_coding.h"
 
-#define MAX_USER 5
-#define ITEMS_IN_DATABASE 50
-#define USER "database"
+#define UN_LEN 100
+#define PW_LEN 100
+#define SIZE_LEN 2
+#define USER_DB "customer_db"
 #define ITEM_DB "item_db"
+#define PURCHASE_DB "p_db"
 #define ITEM_NAME_SIZE 30
 
 /*******************************************************************************
 Structures
 *******************************************************************************/
-/* struct node
-{
-	char letter;
-	int weight;
-	struct node* nextp;
-};
-typedef struct node node_t; */
-
-struct customer
-{
-	char customer_id[10];
-	char customer_password[20];
-	int encrypt_password;
-};
-typedef struct customer customer_t;
-
 struct item
 {
 	char name[ITEM_NAME_SIZE + 1];
 	char sex;
-	int size;
+	char size[SIZE_LEN + 1];
 	double price;
 };
 typedef struct item item_t;
-
-/* typedef struct compress_code
-{
-	char letter;
-	int letter_f;
-	unsigned int code;
-	struct compress_code* st;
-	struct compress_code* nd;
-	struct compress_code* rd;
-} compress_code_c;
-
-typedef struct compress_table
-{
-	char letter;
-	int letter_f;
-	unsigned int code;
-} compress_table_t; */
 
 /*******************************************************************************
 Function Prototypes
@@ -81,35 +50,29 @@ void customer_menu(void);
 Author: Cameron Wang */
 void admin_menu(void);
 
+/*Display introduction of this program.
+Author: Daming Luo*/
+void introduction_menu(void);
+
 /* Gets an input from the user.
 Author: Cameron Wang */
 int get_input(void);
 
 /* Gets an input from the customer.
 Author: Cameron Wang */
-void customer_input(void);
+void customer_input(char customer[]);
 
 /* Gets an input from the system admin.
 Author: Cameron Wang */
 void admin_input(void);
 
-/* Allows customers to provide their details.
-Author: Daming Luo */
-void customer_detail_input(void);
-
-/* Adds customer to the system.
-Author: Daming Luo */
-void add_customer(customer_t* add, int count);
-
-/* Saves all customers to the database.
-Author: Brendan Huynh */
-void save_customer(customer_t* save, int count);
-
-void check_customer(customer_t* check);
-
 /* Allows a customer to log into the system.
 Author: Daming Luo */
-void login(customer_t* log, int logged_customer, int count);
+int login(char name[]);
+
+/* Signs up customer to the system.
+Author: Daming Luo */
+int signup(char name[]);
 
 /* Displays all, or a specific customer in the database.
 Author: Brendan Huynh */
@@ -117,11 +80,11 @@ void display_customers(void);
 
 /* Encrypts the customer's password before being stored in the database.
 Author: David Ung */
-int encrypt_customer_password(char database_file[], char customer_password[]);
+void encrypt_customer_password(char password[]);
 
 /* Decrypts the customer's password.
 Author: David Ung */
-int decrypt_customer_password(char database_file[], char customer[]);
+void decrypt_customer_password(char password[]);
 
 /* Compresses the database file.
 Author: Cameron Wang */
@@ -139,9 +102,13 @@ int view_items(void);
 Author: Cameron Wang */
 int search_items(void);
 
+void add_cart(void);
+
+void remove_cart(void);
+
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
-item_t add_items(void);
+int add_items(void);
 
 /* Removes an item / items from the product database.
 Author: Brendan Huynh */
@@ -149,11 +116,11 @@ int remove_items(void);
 
 /* Allows a customer to purchase items from the store.
 Author: Brendan Huynh */
-void purchase_items(void);
+int purchase_items(char name[]);
 
 /* Displays a customer's purchase history.
 Author: Peter Phan */
-void view_purchase_history(void);
+int view_purchase_history(char name[]);
 
 /* Display the help screen.
 Author: Peter Phan */
@@ -166,6 +133,7 @@ void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
+int is_ascii(char c);
 
 /*******************************************************************************
 Main Function
@@ -173,21 +141,33 @@ Author(s): Cameron Wang, Daming Luo
 *******************************************************************************/
 int main(void) {
 	int input;
-	/* customer_t* wu = NULL;
-	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t)); */
+	char username[UN_LEN + 1];
+	/* int count = 0;
+	customer_number = 0;
+	customer_t* wu = NULL;
+	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
+	if (wu == NULL)
+	{
+		printf("Memory error\n");
+		return 1;
+	}
+	else
+	{
+		count = load_customer(&wu);
+	} */
 	while (1)
 	{
+		introduction_menu();
 		account_menu();
 		input = get_input();
 		switch (input)
 		{
 			case 1:
-				printf("Add Customer Function currently Unavailable\n");
-				/*add_customer();*/
+				signup(username);
+				customer_input(username);
 				break;
 			case 2:
-				printf("Login Function currently Unavailable\n");
-				/*login();*/
+				login(username);
 				break;
 			case 0:
 				exit(0);
@@ -207,30 +187,46 @@ Author(s): Daming Luo, Cameron Wang
 *******************************************************************************/
 void account_menu(void)
 {
-	printf("Welcome to the Online Clothing Store.\n"
-		"1. Sign Up\n"
-		"2. Log In\n"
-		"0. Exit\n");
+	printf("\nWelcome to the Online Clothing Store.\n"
+			"1. Sign Up\n"
+			"2. Log In\n"
+			"0. Exit\n");
 }
 
 void customer_menu(void)
 {
 	printf("\nWelcome to the Online Clothing Store\n"
-		"1. View items\n"
-		"2. Search items\n"
-		"3. Add items\n"
-		"4. Remove items\n"
-		"5. View purchase history\n"
-		"0. Help\n");
+			"1. View Items\n"
+			"2. Search Items\n"
+			"3. Add Items to Cart\n"
+			"4. Remove Items from Cart\n"
+			"5. View Purchase History\n"
+			"6. Help\n"
+			"0. Exit\n");
 }
 
 void admin_menu(void)
 {
-	printf("Welcome to the Admin Controls."
-		"1. Display all customers\n"
-		"2. Compress database\n"
-		"3. Decompress database\n"
-		"0. Help\n");
+	printf("\nWelcome to the Admin Controls.\n"
+			"1. Display All Customers\n"
+			"2. Add Items to Database\n"
+			"3. Remove Items from Database\n"
+			"4. Compress Database\n"
+			"5. Decompress Database\n"
+			"6. Access Debug Menu\n"
+			"7. Help\n"
+			"0. Exit\n");
+}
+
+void introduction_menu(void)
+{
+	printf("\n--------------------------------------------------------\n"
+			"WELCOME TO THE ONLINE CLOTHING STORE\n"
+			"This program allows customers to purchase clothing through"
+			"the system.\n"
+			"Customers can view, search, and purchase items, as well as"
+			"view the purchase history.\n"
+			"-------------------------------------------------------- \n");
 }
 
 int get_input(void)
@@ -238,41 +234,40 @@ int get_input(void)
 	int input;
 	printf("Select an Option> ");
 	scanf("%d", &input);
-	printf("\n");
 	return input;
 }
 
-void customer_input(void)
+void customer_input(char username[])
 {
 	int input, exitFlag = 0;
 	/* item_t items[100];
 	int counter = ITEMS_IN_DATABASE; */
-	while (1) {
+	printf("\nWelcome %s!", username);
+	while (1)
+	{
 		customer_menu();
 		input = get_input();
 		switch (input)
 		{
 			case 1:
-				/* printf("View Items is currently Unavailable\n");
-				printf("\n"); */
 				view_items();
 				break;
 			case 2:
 				search_items();
 				break;
 			case 3:
-				printf("Add Items is currently Unavailable\n");
-				printf("\n");
-				/* items[counter] = add_items();
-				counter++; */
+				purchase_items(username);
 				break;
 			case 4:
-				remove_items();
+				remove_cart();
 				break;
 			case 5:
-				view_purchase_history();
+				view_purchase_history(username);
 				break;
 			case 6:
+				debug();
+				break;
+			case 7:
 				help();
 				break;
 			case 0:
@@ -293,6 +288,7 @@ void admin_input(void)
 {
 	int input, exitFlag = 0;
 
+	printf("\nWelcome Admin!");
 	while (1)
 	{
 		admin_menu();
@@ -303,18 +299,23 @@ void admin_input(void)
 				display_customers();
 				break;
 			case 2:
-				printf("Compress Database File Function currently "
-				"Unavailable\n");
-				printf("\n");
-				/* compress_database_file(); */
+				add_items();
 				break;
 			case 3:
-				printf("Decompress Database File Function currently "
-				"Unavailable\n");
-				printf("\n");
-				/* decompress_database_file(); */
+				printf("Remove Items Function currently Unavailable\n");
+				/* remove_items(); */
 				break;
 			case 4:
+				printf("Compress Database File Function currently "
+				"Unavailable\n");
+				/* compress_database_file(); */
+				break;
+			case 5:
+				printf("Decompress Database File Function currently "
+				"Unavailable\n");
+				/* decompress_database_file(); */
+				break;
+			case 6:
 				help();
 				break;
 			case 0:
@@ -335,30 +336,168 @@ void admin_input(void)
 Add Customer Function - Adds a customer to the system.
 Author(s): Daming Luo
 *******************************************************************************/
-
-/****************************ADD_CUSTOMER FUNCTION*****************************/
-void add_customer(customer_t* add, int count)
+int signup(char name[])
 {
+    char existingName[UN_LEN + 1], password[PW_LEN + 1], account_type;
 
+    FILE *fp = fopen(USER_DB, "a");
+    FILE *fp2 = fopen(USER_DB, "r");
+
+    if (fp == NULL)
+    {
+        printf("Write error\n");
+        return 1;
+    }
+
+    if (fp2 == NULL)
+    {
+        printf("Read error\n");
+        return 1;
+    }
+
+    int i, flag = 1;
+    while (flag)
+    {
+        printf("Enter a Username> ");
+		scanf("%s", name);
+        flag = 0;
+		fseek(fp, 0, SEEK_SET);
+
+        while (fscanf(fp2, "%s %s %c",
+                        existingName, password, &account_type) != EOF)
+        {
+            /*Customer name already exists*/
+            if (!strcmp(name, existingName))
+            {
+                printf("Username already exists.\n");
+                flag = 1;
+                break;
+            }
+        }
+
+        if (!flag)
+        {
+            for (i = 0; name[i] != '\0'; i++)
+            {
+                if (!is_ascii(name[i]) && (name[i] >= 32 && name[i] <= 64) &&
+                    (name[i] >= 91 && name[i] <= 96) &&
+                    (name[i] >= 123 && name[i <= 126]))
+                {
+                    printf("Invaild input.\n"
+                            "The username must only be letters or digits.\n");
+                    flag = 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    flag = 1;
+    while (flag)
+    {
+        printf("Please enter a valid password> ");
+		scanf("%s", password);
+        flag = 0;
+        encrypt_customer_password(password);
+
+        for (i = 0; password[i] != '\0'; i++)
+        {
+            if (!is_ascii(name[i]) && name[i] == 32)
+            {
+                printf("Invalid Password.\n");
+                flag = 1;
+                break;
+            }
+        }
+
+        if (!flag && i < 6)
+        {
+            printf("Password is too short. Minimum 6 characters.\n");
+            flag = 1;
+        }
+    }
+
+    fprintf(fp, "%s %s c\n", name, password);
+    fclose(fp);
+    fclose(fp2);
+
+    return 0;
 }
 
 /********************************LOGIN FUNCTION********************************/
-void login(customer_t* log, int logged_customer, int count)
+int login(char name[])
 {
+    char un_input[UN_LEN + 1], pw_input[PW_LEN + 1], existingName[UN_LEN + 1];
+    char password[PW_LEN + 1], account_type;
+    int flag, attempts;
 
+    FILE *fp = fopen(USER_DB, "r");
+
+    if (fp == NULL)
+    {
+        printf("Read error\n");
+        return 1;
+    }
+
+    attempts = 3;
+    while (attempts > 0)
+    {
+        printf("Enter your username (Attempts: %d)> ", attempts);
+		scanf("%s", un_input);
+        flag = 0;
+		fseek(fp, 0, SEEK_SET);
+
+		while (fscanf(fp, "%s %s %c",
+						existingName, password, &account_type) != EOF)
+		{
+			if (!strcmp(un_input, existingName))
+			{
+				flag = 1;
+				break;
+			}
+		}
+
+		if (flag)
+		{
+			break;
+		}
+		else
+		{
+			printf("Username does not exist.\n");
+			attempts--;
+		}
+    }
+
+    /***CHECK PASSWORD***/
+	while (attempts > 0)
+	{
+		attempts = 3;
+		printf("Enter your password (Attempts: %d)> ", attempts);
+		scanf("%s", pw_input);
+        decrypt_customer_password(password);
+
+		if (!strcmp(pw_input, password))
+		{
+			printf("Logged in.\n");
+			if (account_type == 'c')
+			{
+				customer_input(un_input);
+			}
+			else
+			{
+				admin_input();
+			}
+			break;
+		}
+		else
+		{
+			printf("Incorrect password.\n");
+			attempts--;
+		}
+	}
+
+	return 0;
 }
-
-void save_customer(customer_t* save, int count)
-{
-
-}
-
-void check_customer(customer_t* check)
-{
-
-}
-
-
 
 /*******************************************************************************
 Display Function - Displays all the selected data fetched from
@@ -370,33 +509,30 @@ void display_customers(void)
 
 }
 
-int encrypt_customer_password(char encrypted_password[], char customer_password[])
+void encrypt_customer_password(char password[])
 {
-    int i;
-    char customer_password[20];
-    char encrypted_password[20];
-    FILE *fp, *ptr;
-    fp=fopen("file.txt","a");
-    printf("input something> ");
-    scanf("%s", customer_password);
-    for(i = 0; (i < 100 && customer_password[i] != '\0'); i++) 
+	int i;
+    FILE *fp;
+    fp=fopen("USER_DB","a");
+    for(i = 0; i < 50 && password[i] != '\0'; i++)
     {
-        customer_password[i] = customer_password[i] + pow(3, 4) / 7;
+        password[i] += (pow(3, 4)/9);
     }
-    fprintf(fp, "%s\n", customer_password);
+    fprintf(fp, "%s\n", password);
     fclose(fp);
-    ptr=fopen("file.txt","r");
-    while (fscanf(fp, "%s", encrypted_password) != EOF)
-    {
-        printf("Data from the file: %s\n", encrypted_password);
-    }
-    fclose(ptr);
-    return 0;
 }
 
-int decrypt_customer_password(char database_file[], char customer[])
+void decrypt_customer_password(char password[])
 {
-	return 0;
+	int i;
+    FILE *fp;
+    fp=fopen("USER_DB","r");
+    for(i = 0; i < 50 && password[i] != '\0'; i++)
+    {
+        password[i] -= (pow(3, 4)/9);
+    }
+    fprintf(fp, "%s\n", password);
+    fclose(fp);
 }
 
 int compress_database_file(char database_file[])
@@ -436,13 +572,13 @@ int view_items()
 	else
 	{
 		fseek(fp, 0, SEEK_SET);
-		while (fscanf(fp, "%s %c %d %lf",
-				item.name, &item.sex, &item.size, &item.price) != EOF)
+		while (fscanf(fp, "%s %c %s %lf",
+				item.name, &item.sex, item.size, &item.price) != EOF)
 		{
 			printf("-------------------------\n");
         	printf("Clothing Name: %s\n"
 				"Sex: %c\n"
-                "Size: %d\n"
+                "Size: %s\n"
                 "Price: $%0.2lf\n",
                 item.name, item.sex, item.size, item.price);
 			printf("-------------------------\n");
@@ -450,6 +586,7 @@ int view_items()
 	}
 
 	printf("\n");
+	fclose(fp);
 	return 0;
 }
 
@@ -472,8 +609,8 @@ int search_items(void)
 
 	printf("Enter Clothing Name You Wish To Find> ");
 	scanf("%s", input);
-	while (fscanf(fp, "%s %c %d %lf",
-			item.name, &item.sex, &item.size, &item.price) != EOF)
+	while (fscanf(fp, "%s %c %s %lf",
+			item.name, &item.sex, item.size, &item.price) != EOF)
 	{
 		if (!strcmp(input, item.name))
 		{
@@ -481,7 +618,7 @@ int search_items(void)
 			printf("-------------------------\n");
 			printf("Clothing Name: %s\n"
 					"Gender: %c\n"
-					"Size: %d\n"
+					"Size: %s\n"
 					"Price: $%0.2lf\n",
 					item.name, item.sex, item.size, item.price);
 			printf("-------------------------\n");
@@ -498,13 +635,22 @@ int search_items(void)
 	return 0;
 }
 
-/* int add_items()
+void add_cart(void)
 {
-	item_t items;
-	int i;
 
-	FILE *fp;
-	fp = fopen(USER, "w");
+}
+
+void remove_cart(void)
+{
+
+}
+
+int add_items(void)
+{
+	item_t item;
+	int input, flag;
+
+	FILE *fp = fopen(ITEM_DB, "a");
 
 	if(fp == NULL)
 	{
@@ -512,65 +658,202 @@ int search_items(void)
 		return 1;
 	}
 
-	for(i = 0; i < counter; i++)
+	printf("Enter Clothing Name> ");
+	scanf("%s", item.name);
+
+	flag = 1;
+	while (flag)
 	{
-		fprintf(fp, "%s %c %d %0.2lf\n", &items[i].name, &items[i].sex,
-			&items[i].size, &items[i].price););
+		printf("1. Male (M)\n"
+				"2. Female (F)\n"
+				"3. Unisex (U)\n"
+				"Select Clothing Gender> ");
+		scanf("%d", &input);
+		switch (input)
+		{
+			case 1:
+				item.sex = 'M';
+				flag = 0;
+				break;
+			case 2:
+				item.sex = 'F';
+				flag = 0;
+				break;
+			case 3:
+				item.sex = 'U';
+				flag = 0;
+				break;
+			default:
+				printf("Invalid input.\n");
+		}
 	}
+
+	flag = 1;
+	while (flag)
+	{
+		printf("1. Extra Small (XS)\n"
+				"2. Small (S)\n"
+				"3. Medium (M)\n"
+				"4. Large (L)\n"
+				"5. Extra Large (XL)\n"
+				"Select Clothing Size> ");
+		scanf("%d", &input);
+		switch (input)
+		{
+			case 1:
+				strcpy(item.size, "XS");
+				flag = 0;
+				break;
+			case 2:
+				strcpy(item.size, "S");
+				flag = 0;
+				break;
+			case 3:
+				strcpy(item.size, "M");
+				flag = 0;
+				break;
+			case 4:
+				strcpy(item.size, "L");
+				flag = 0;
+				break;
+			case 5:
+				strcpy(item.size, "XL");
+				flag = 0;
+				break;
+			default:
+				printf("Invalid input.\n");
+		}
+	}
+
+
+	printf("Enter Clothing Price> ");
+	scanf("%lf", &item.price);
+
+	fprintf(fp, "%s %c %s %lf\n", item.name, item.sex, item.size, item.price);
 
 	fclose(fp);
 	return 0;
-} */
+}
 
 int remove_items(void)
 {
 	return 0;
 }
 
-void puchase_items(void)
-{
 
+int purchase_items(char name[])
+{
+	 item_t item;
+	 char input[ITEM_NAME_SIZE + 1];
+     FILE *fp = fopen(ITEM_DB, "r");
+	 FILE *fp2 = fopen(PURCHASE_DB,"a");
+	 if (fp == NULL)
+	 {
+		printf("Write Error");
+		return 1;
+	 }
+	printf("Enter Clothing Name> ");
+	scanf("%s", input);
+	/* fprintf(fp2, "%s\n", input); */
+	while(fscanf(fp, "%s %c %s %lf\n", item.name, &item.sex, item.size, &item.price) != EOF)
+	{
+		if (strcmp(input, item.name) == 0)
+		{
+			fprintf(fp2, "%s %s %c %s %0.2lf\n", name, item.name, item.sex, item.size, item.price);
+		}
+	}
+
+	fclose(fp);
+	fclose(fp2);
+    return 0;
 }
 
-void view_purchase_history(void)
+int view_purchase_history(char name[])
 {
+    FILE *fp = fopen(PURCHASE_DB, "r");
+    long fileSize;
+    item_t item;
+    char p_name[101];
+    int i;
+    int count = 0;
 
+    if(fp == NULL)
+    {
+        printf("Read error\n");
+        return 1;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    fileSize = ftell(fp);
+
+    if (fileSize == 0)
+    {
+        i = 0;
+        printf("\nYou currently have %d purchases.\n", i);
+    }
+
+    fseek(fp, 0, SEEK_SET);
+
+    while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
+    {
+        if(!strcmp(p_name, name))
+        {
+            printf("\n%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
+            count++;
+        }
+        printf("\nYou currently have %d purchase(s).\n", count);
+    }
+    fclose(fp);
+
+    return 0;
 }
 
 void help(void)
 {
 	printf("Below is a detailed explanation on how to use the menu\n\n"
-		"View items - Display all products available on the catalogue.\n"
-		"Search items - User can search up key words to find specific products"
+			"View items - Display all products available on the catalogue.\n"
+			"Search items - User can search up key words to find specific products"
 			"or categories on the catalogue.\n"
-		"Add items - Add an item / items to the shopping cart.\n"
-		"Remove items - Remove an item / items from the shopping cart.\n"
-		"View purchase history - Allows user to see what products they have "
+			"Add items - Add an item / items to the shopping cart.\n"
+			"Remove items - Remove an item / items from the shopping cart.\n"
+			"View purchase history - Allows user to see what products they have "
 			"bought in the past.\n");
 }
 
 void help_admin(void)
 {
 	printf("Below is a detailed explanation on how to use the admin menu.\n\n"
-		"Display all customers - Retrieves and displays a list of customers and"
+			"Display all customers - Retrieves and displays a list of customers and"
 			" their details from the database.\n"
-		"Compress database - Compresses database.\n"
-		"Decompress database - Decompresses database.\n");
+			"Compress database - Compresses database.\n"
+			"Decompress database - Decompresses database.\n");
 }
 
 void debug(void)
 {
+	char username[101] = "debug";
 	int input, exitFlag = 0, existingFlag;
+	int test3flag = 0;
 	char string[101];
 	node_t characters[30];
-	node_t letter;
+	/* node_t letter; */
+	int arraySize, j, i;
+	/* node_t *nodeList;
+	nodeList = (node_t*) malloc(sizeof(node_t));
+	node_list -> listptr = NULL;
+	node_t *ip;
+	ip = (node_t*) malloc(sizeof(node_t));
+	node_t *newNode;
+	newNode = (node_t*) malloc(sizeof(node_t)); */
 	while (1)
 	{
-		printf("Debug Menu:\n"
+		printf("\nDebug Menu:\n"
 				"1. Force Customer Menu\n"
 				"2. Force Admin Menu\n"
 				"3. Frequency Count + Output Debugging / Testing\n"
 				"4. Bubble Sort + Output Debugging / Testing\n"
+				"5. Create Node + Output Debugging / Testing\n"
+				"6. Build Huffman Tree + Output Debugging / Testing\n"
 				"0. Exit\n");
 		input = get_input();
 
@@ -580,50 +863,94 @@ void debug(void)
 				exitFlag = 1;
 				break;
 			case 1:
-				customer_input();
+				customer_input(username);
 				break;
 			case 2:
 				admin_input();
 				break;
 			case 3:
+				/* printf("Case 3 Under Construction\n");
 				printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
 				fgets(string, 100, stdin);
-				int arraySize = 0, j, i = 0;
+				arraySize = 0;
+				i = 0;
 				while (string[i] != '\0')
 				{
 					existingFlag = 0;
 					for (j = 0; j < arraySize; j++)
 					{
-						if (characters[j].letter == string[i])
+						if (characters[j]. == string[i])
 						{
 							existingFlag = 1;
 							break;
 						}
 					}
-
-					if (!existingFlag)
+					if (!existingFlag && string[i] != '\n')
 					{
-						letter = debug_frequency_count(string[i], string, i);
-						characters[j].letter = letter.letter;
-						characters[j].freq = letter.freq;
+						while (ip -> listptr != NULL)
+						{
+							ip = ip -> listptr;
+						}
+						newNode -> *nodeptr = debug_frequency_count(string[i], string, i);
+						characters[j] = newNode -> character;
+						newNode -> nodeptr = &letter;
 						arraySize++;
 					}
 					i++;
 				}
-
 				character_output_loop(characters, arraySize);
-				break;
+				test3flag = 1;
+				break; */
 			case 4:
-				if (strlen(string) > 0)
+				if (test3flag)
 				{
 					bubble_sort(characters, arraySize);
 					character_output_loop(characters, arraySize);
 				}
 				else
 				{
-					printf("Enter a String before Sorting\n");
+					printf("Must Run Test 3 before Performing This Test\n");
 				}
+				break;
+			case 5:
+				printf("Enter a debug string (Max 100 Characters)> ");
+				fgets(string, 100, stdin);
+				fgets(string, 100, stdin);
+				arraySize = 0;
+				i = 0;
+				while (string[i] != '\0')
+				{
+					existingFlag = 0;
+					for (j = 0; j < arraySize; j++)
+					{
+						if (characters[j].character == string[i])
+						{
+							existingFlag = 1;
+							break;
+						}
+					}
+					if (!existingFlag && string[i] != '\n')
+					{
+						character_output(create_node(string[i], frequency_count(string[i], string, i), NULL, NULL));
+						characters[j].character = string[i];
+						arraySize++;
+					}
+					i++;
+				}
+				break;
+			case 6:
+				if (test3flag)
+				{
+					node_t rootNode;
+					rootNode = build_tree(characters, arraySize);
+					huffman_tree_output(&rootNode);
+				}
+				else
+				{
+					printf("Must Run Test 3 before Performing This Test\n");
+				}
+
 				break;
 			default:
 				printf("Invalid input\n");
@@ -636,57 +963,12 @@ void debug(void)
 	}
 }
 
-/* int _isdigit(char c)
+int is_ascii(char c)
 {
-    if (c >= 48 && c <= 57)
-		{
-        return 1;
-    }
-		return 0;
-}
-
-int _isalpha(char c)
-{
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		{
-        return 1;
-    }
-		return 0;
-}
-
-int _isupper(char c)
-{
-    if (c >= 'A' && c <= 'Z')
-		{
-        return 1;
-    }
-		return 0;
-}
-
-char _toupper(char c)
-{
-    if(_isalpha(c))
-		{
-        if(_isupper(c)) return c;
-        return c - 32;
-    }
-		printf("Input is not an alphabet.");
-    return c;
-}
-
-int _islower(char c)
-{
-	if(c <= 'z' && c >='a'){
-		return 1;
-	}
-	return 0;
-}
-
-int _isSpecial(char c)
-{
-	if(c => 36 && c <= 126)
+	if (c >= 32 && c <= 126)
 	{
 		return 1;
 	}
+
 	return 0;
-} */
+}
