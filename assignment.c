@@ -129,6 +129,7 @@ void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
+/* Checks if the character is a proper ascii value */
 int is_ascii(char c);
 
 /*******************************************************************************
@@ -481,6 +482,7 @@ Author(s):
 *******************************************************************************/
 void display_customers(void)
 {
+	int count = 0;
 	char username[UN_LEN], password[PW_LEN], account_type;
 
 	FILE *fp = fopen(USER_DB, "r");
@@ -490,9 +492,16 @@ void display_customers(void)
 	while (fscanf(fp, "%s %s %c",
 					username, password, &account_type) != EOF)
 	{
-		printf("Account Username: %s\n", username);
+		if (account_type == 'c')
+		{
+			printf("Account Username: %s\n", username);
+			count++;
+		}
 	}
 	printf("-----------------------------------\n");
+	printf("There are %d customers in the database.\n", count);
+
+	fclose(fp);
 }
 
 int encrypt_customer_password(char database_file[], char customer_password[])
