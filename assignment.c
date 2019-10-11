@@ -102,10 +102,6 @@ int view_items(void);
 Author: Cameron Wang */
 int search_items(void);
 
-void add_cart(void);
-
-void remove_cart(void);
-
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
 int add_items(void);
@@ -133,6 +129,7 @@ void help_admin(void);
 /* Function for debugging. */
 void debug(void);
 
+/* Checks if the character is a proper ascii value */
 int is_ascii(char c);
 
 /*******************************************************************************
@@ -142,20 +139,7 @@ Author(s): Cameron Wang, Daming Luo
 int main(void) {
 	int input;
 	char username[UN_LEN + 1];
-	/* int count = 0;
-	customer_number = 0;
 
-	customer_t* wu = NULL;
-	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
-	if (wu == NULL)
-	{
-		printf("Memory error\n");
-		return 1;
-	}
-	else
-	{
-		count = load_customer(&wu);
-	} */
 	while (1)
 	{
 		introduction_menu();
@@ -199,10 +183,9 @@ void customer_menu(void)
 	printf("\nWelcome to the Online Clothing Store\n"
 			"1. View Items\n"
 			"2. Search Items\n"
-			"3. Add Items to Cart\n"
-			"4. Remove Items from Cart\n"
-			"5. View Purchase History\n"
-			"6. Help\n"
+			"3. Purchase Item\n"
+			"4. View Purchase History\n"
+			"5. Help\n"
 			"0. Exit\n");
 }
 
@@ -260,15 +243,9 @@ void customer_input(char username[])
 				purchase_items(username);
 				break;
 			case 4:
-				remove_cart();
-				break;
-			case 5:
 				view_purchase_history(username);
 				break;
-			case 6:
-				debug();
-				break;
-			case 7:
+			case 5:
 				help();
 				break;
 			case 0:
@@ -342,7 +319,7 @@ int signup(char name[])
     char existingName[UN_LEN + 1], password[PW_LEN + 1], account_type;
 
     FILE *fp = fopen(USER_DB, "a");
-    FILE *fp2 = fopen(USER_DB, "r");\
+    FILE *fp2 = fopen(USER_DB, "r");
 
     if (fp == NULL)
     {
@@ -362,6 +339,7 @@ int signup(char name[])
         printf("Enter a Username> ");
 		scanf("%s", name);
         flag = 0;
+		fseek(fp, 0, SEEK_SET);
 
         while (fscanf(fp2, "%s %s %c",
                         existingName, password, &account_type) != EOF)
@@ -444,6 +422,7 @@ int login(char name[])
         printf("Enter your username (Attempts: %d)> ", attempts);
         scanf("%s", un_input);
         flag = 0;
+		fseek(fp, 0, SEEK_SET);
 
         while (fscanf(fp, "%s %s %c",
                         existingName, password, &account_type) != EOF)
@@ -473,6 +452,7 @@ int login(char name[])
         printf("Enter your password (Attempts: %d)> ", attempts);
         scanf("%s", pw_input);
 
+<<<<<<< HEAD
         if (!strcmp(pw_input, password))
         {
             printf("Logged in.\n");
@@ -491,46 +471,30 @@ int login(char name[])
             attempts--;
         }
     }
+=======
+		if (!strcmp(pw_input, password))
+		{
+			printf("Logged in.\n");
+			if (account_type == 'c')
+			{
+				customer_input(un_input);
+			}
+			else
+			{
+				admin_input();
+			}
+			break;
+		}
+		else
+		{
+			printf("Incorrect password.\n");
+			attempts--;
+		}
+	}
+>>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
 
     return 0;
 }
-
-/* char get_account_type(char name[])
-{
-	char existingName[101], password[101], account_type;
-	FILE *fp = fopen(USER_DB, "r");
-
-	while (fscanf(fp, "%s %s %c",
-					existingName, password, &account_type) != EOF)
-	{
-		printf("%s %s %c\n", existingName, password, account_type);
-		printf("%d\n", strcmp(existingName, name));
-		if (!strcmp(existingName, name))
-		{
-			return account_type;
-		}
-	}
-
-	return 'e';
-}
-
-void check_account(char name[], char account_type)
-{
-	if (account_type == 'e')
-	{
-		printf("Account Doesn't Exist\n");
-	}
-	else if (account_type == 'c')
-	{
-		customer_input(name);
-	}
-	else
-	{
-		admin_input();
-	}
-} */
-
-
 
 /*******************************************************************************
 Display Function - Displays all the selected data fetched from
@@ -539,7 +503,26 @@ Author(s):
 *******************************************************************************/
 void display_customers(void)
 {
+	int count = 0;
+	char username[UN_LEN], password[PW_LEN], account_type;
 
+	FILE *fp = fopen(USER_DB, "r");
+
+	printf("Accounts stored in the Database\n");
+	printf("-----------------------------------\n");
+	while (fscanf(fp, "%s %s %c",
+					username, password, &account_type) != EOF)
+	{
+		if (account_type == 'c')
+		{
+			printf("Account Username: %s\n", username);
+			count++;
+		}
+	}
+	printf("-----------------------------------\n");
+	printf("There are %d customers in the database.\n", count);
+
+	fclose(fp);
 }
 
 int encrypt_customer_password(char database_file[], char customer_password[])
@@ -650,16 +633,6 @@ int search_items(void)
 
 	fclose(fp);
 	return 0;
-}
-
-void add_cart(void)
-{
-
-}
-
-void remove_cart(void)
-{
-
 }
 
 int add_items(void)
@@ -785,26 +758,26 @@ int purchase_items(char name[])
     return 0;
 }
 
-
 int view_purchase_history(char name[])
 {
-	FILE *fp = fopen(PURCHASE_DB, "r");
-	long fileSize;
-	item_t item;
-	char p_name[101];
-	int i;
-	int count = 0;
+    FILE *fp = fopen(PURCHASE_DB, "r");
+    long fileSize;
+    item_t item;
+    char p_name[101];
+    int i;
+    int count = 0;
 
     if(fp == NULL)
     {
         printf("Read error\n");
-		return 1;
+        return 1;
     }
 
     fseek(fp, 0, SEEK_END);
     fileSize = ftell(fp);
 
     if (fileSize == 0)
+<<<<<<< HEAD
 	{
 		i = 0;
         printf("\nYou currently have %d purchases.\n", i);
@@ -822,8 +795,27 @@ int view_purchase_history(char name[])
 		printf("\nYou currently have %d purchase(s).\n", count);
 	}
 	fclose(fp);
+=======
+    {
+        i = 0;
+        printf("\nYou currently have %d purchases.\n", i);
+    }
 
-	return 0;
+    fseek(fp, 0, SEEK_SET);
+>>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
+
+    while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
+    {
+        if(!strcmp(p_name, name))
+        {
+            printf("\n%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
+            count++;
+        }
+        printf("\nYou currently have %d purchase(s).\n", count);
+    }
+    fclose(fp);
+
+    return 0;
 }
 
 void help(void)
@@ -857,6 +849,7 @@ void debug(void)
 	/*
 	node_t letter;*/
 	int arraySize, j, i;
+<<<<<<< HEAD
 	/*list_t *listPointer;
 	listPointer = (list_t*) malloc(sizeof(list_t));
 	listPointer -> listptr = NULL;
@@ -865,6 +858,15 @@ void debug(void)
 	node_t *newNode;
 	newNode = (list_t*) malloc(sizeof(list_t));
 	*/
+=======
+	/* node_t *nodeList;
+	nodeList = (node_t*) malloc(sizeof(node_t));
+	node_list -> listptr = NULL;
+	node_t *ip;
+	ip = (node_t*) malloc(sizeof(node_t));
+	node_t *newNode;
+	newNode = (node_t*) malloc(sizeof(node_t)); */
+>>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
 	while (1)
 	{
 		printf("\nDebug Menu:\n"
@@ -890,6 +892,10 @@ void debug(void)
 				break;
 				/*
 			case 3:
+<<<<<<< HEAD
+=======
+				/* printf("Case 3 Under Construction\n");
+>>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
 				printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
 				fgets(string, 100, stdin);
@@ -900,7 +906,7 @@ void debug(void)
 					existingFlag = 0;
 					for (j = 0; j < arraySize; j++)
 					{
-						if (characters[j].character == string[i])
+						if (characters[j]. == string[i])
 						{
 							existingFlag = 1;
 							break;
@@ -909,13 +915,12 @@ void debug(void)
 
 					if (!existingFlag && string[i] != '\n')
 					{
-						listPointer -> *nodeptr = debug_frequency_count(string[i], string, i);
-						characters[j].character = letter.character;
-						ip = listPointer;
 						while (ip -> listptr != NULL)
 						{
 							ip = ip -> listptr;
 						}
+						newNode -> *nodeptr = debug_frequency_count(string[i], string, i);
+						characters[j] = newNode -> character;
 						newNode -> nodeptr = &letter;
 
 						arraySize++;
