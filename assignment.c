@@ -207,7 +207,7 @@ void introduction_menu(void)
 	printf("\n--------------------------------------------------------\n"
 			"WELCOME TO THE ONLINE CLOTHING STORE\n"
 			"This program allows customers to purchase clothing through"
-			"the system.\n"
+			" the system.\n"
 			"Customers can view, search, and purchase items, as well as"
 			"view the purchase history.\n"
 			"-------------------------------------------------------- \n");
@@ -452,26 +452,6 @@ int login(char name[])
         printf("Enter your password (Attempts: %d)> ", attempts);
         scanf("%s", pw_input);
 
-<<<<<<< HEAD
-        if (!strcmp(pw_input, password))
-        {
-            printf("Logged in.\n");
-            if (account_type == 'c')
-            {
-                customer_input(un_input);
-            }
-            else
-            {
-                admin_input();
-            }
-        }
-        else
-        {
-            printf("Incorrect password.\n");
-            attempts--;
-        }
-    }
-=======
 		if (!strcmp(pw_input, password))
 		{
 			printf("Logged in.\n");
@@ -491,7 +471,6 @@ int login(char name[])
 			attempts--;
 		}
 	}
->>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
 
     return 0;
 }
@@ -777,32 +756,12 @@ int view_purchase_history(char name[])
     fileSize = ftell(fp);
 
     if (fileSize == 0)
-<<<<<<< HEAD
-	{
-		i = 0;
-        printf("\nYou currently have %d purchases.\n", i);
-    }
-
-	fseek(fp, 0, SEEK_SET);
-
-	while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
-	{
-		if(!strcmp(p_name, name))
-		{
-			printf(\n"%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
-			count++;
-		}
-		printf("\nYou currently have %d purchase(s).\n", count);
-	}
-	fclose(fp);
-=======
     {
         i = 0;
         printf("\nYou currently have %d purchases.\n", i);
     }
 
     fseek(fp, 0, SEEK_SET);
->>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
 
     while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
     {
@@ -849,16 +808,6 @@ void debug(void)
 	/*
 	node_t letter;*/
 	int arraySize, j, i;
-<<<<<<< HEAD
-	/*list_t *listPointer;
-	listPointer = (list_t*) malloc(sizeof(list_t));
-	listPointer -> listptr = NULL;
-	list_t *ip;
-	ip = (list_t*) malloc(sizeof(list_t));
-	node_t *newNode;
-	newNode = (list_t*) malloc(sizeof(list_t));
-	*/
-=======
 	/* node_t *nodeList;
 	nodeList = (node_t*) malloc(sizeof(node_t));
 	node_list -> listptr = NULL;
@@ -866,7 +815,6 @@ void debug(void)
 	ip = (node_t*) malloc(sizeof(node_t));
 	node_t *newNode;
 	newNode = (node_t*) malloc(sizeof(node_t)); */
->>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
 	while (1)
 	{
 		printf("\nDebug Menu:\n"
@@ -892,10 +840,7 @@ void debug(void)
 				break;
 				/*
 			case 3:
-<<<<<<< HEAD
-=======
-				/* printf("Case 3 Under Construction\n");
->>>>>>> 218caa6024342503ffbcca564f5b64903c3ed90d
+				 printf("Case 3 Under Construction\n");
 				printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
 				fgets(string, 100, stdin);
