@@ -102,10 +102,6 @@ int view_items(void);
 Author: Cameron Wang */
 int search_items(void);
 
-void add_cart(void);
-
-void remove_cart(void);
-
 /* Adds an item / items to the product database.
 Author: Brendan Huynh */
 int add_items(void);
@@ -142,20 +138,7 @@ Author(s): Cameron Wang, Daming Luo
 int main(void) {
 	int input;
 	char username[UN_LEN + 1];
-	/* int count = 0;
-	customer_number = 0;
 
-	customer_t* wu = NULL;
-	wu = (customer_t*) malloc(MAX_USER* sizeof(customer_t));
-	if (wu == NULL)
-	{
-		printf("Memory error\n");
-		return 1;
-	}
-	else
-	{
-		count = load_customer(&wu);
-	} */
 	while (1)
 	{
 		introduction_menu();
@@ -616,16 +599,6 @@ int search_items(void)
 
 	fclose(fp);
 	return 0;
-}
-
-void add_cart(void)
-{
-
-}
-
-void remove_cart(void)
-{
-
 }
 
 int add_items(void)
