@@ -182,10 +182,9 @@ void customer_menu(void)
 	printf("\nWelcome to the Online Clothing Store\n"
 			"1. View Items\n"
 			"2. Search Items\n"
-			"3. Add Items to Cart\n"
-			"4. Remove Items from Cart\n"
-			"5. View Purchase History\n"
-			"6. Help\n"
+			"3. Purchase Item\n"
+			"4. View Purchase History\n"
+			"5. Help\n"
 			"0. Exit\n");
 }
 
@@ -243,15 +242,9 @@ void customer_input(char username[])
 				purchase_items(username);
 				break;
 			case 4:
-				remove_cart();
-				break;
-			case 5:
 				view_purchase_history(username);
 				break;
-			case 6:
-				debug();
-				break;
-			case 7:
+			case 5:
 				help();
 				break;
 			case 0:
