@@ -442,57 +442,57 @@ int login(char name[])
     while (attempts > 0)
     {
         printf("Enter your username (Attempts: %d)> ", attempts);
-		scanf("%s", un_input);
+        scanf("%s", un_input);
         flag = 0;
 
-		while (fscanf(fp, "%s %s %c",
-						existingName, password, &account_type) != EOF)
-		{
-			if (!strcmp(un_input, existingName))
-			{
-				flag = 1;
-				break;
-			}
-		}
+        while (fscanf(fp, "%s %s %c",
+                        existingName, password, &account_type) != EOF)
+        {
+            if (!strcmp(un_input, existingName))
+            {
+                flag = 1;
+                break;
+            }
+        }
 
-		if (flag)
-		{
-			break;
-		}
-		else
-		{
-			printf("Username does not exist.\n");
-			attempts--;
-		}
+        if (flag)
+        {
+            break;
+        }
+        else
+        {
+            printf("Username does not exist.\n");
+            attempts--;
+        }
     }
 
     /***CHECK PASSWORD***/
-	while (attempts > 0)
-	{
-		attempts = 3;
-		printf("Enter your password (Attempts: %d)> ", attempts);
-		scanf("%s", pw_input);
+    while (attempts > 0)
+    {
+        attempts = 3;
+        printf("Enter your password (Attempts: %d)> ", attempts);
+        scanf("%s", pw_input);
 
-		if (!strcmp(pw_input, password))
-		{
-			printf("Logged in.\n");
-			if (account_type == 'c')
-			{
-				customer_input(un_input);
-			}
-			else
-			{
-				admin_input();
-			}
-		}
-		else
-		{
-			printf("Incorrect password.\n");
-			attempts--;
-		}
-	}
+        if (!strcmp(pw_input, password))
+        {
+            printf("Logged in.\n");
+            if (account_type == 'c')
+            {
+                customer_input(un_input);
+            }
+            else
+            {
+                admin_input();
+            }
+        }
+        else
+        {
+            printf("Incorrect password.\n");
+            attempts--;
+        }
+    }
 
-	return 0;
+    return 0;
 }
 
 /* char get_account_type(char name[])
@@ -807,17 +807,19 @@ int view_purchase_history(char name[])
     if (fileSize == 0)
 	{
 		i = 0;
-        printf("You currently have %d purchases.\n", i);
+        printf("\nYou currently have %d purchases.\n", i);
     }
+
+	fseek(fp, 0, SEEK_SET);
 
 	while(fscanf(fp, "%s %s %c %s %lf\n", p_name, item.name, &item.sex, item.size, &item.price) != EOF)
 	{
-		if(!(strcmp(p_name, name)))
+		if(!strcmp(p_name, name))
 		{
-			fprintf(fp, "%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
+			printf(\n"%s %c %s %0.2lf\n", item.name, item.sex, item.size, item.price);
 			count++;
 		}
-		printf("You currently have %d purchases.\n", count);
+		printf("\nYou currently have %d purchase(s).\n", count);
 	}
 	fclose(fp);
 
@@ -852,15 +854,17 @@ void debug(void)
 	int test3flag = 0;
 	char string[101];
 	node_t characters[30];
-	/* node_t letter; */
+	/*
+	node_t letter;*/
 	int arraySize, j, i;
-	/* list_t *listPointer;
+	/*list_t *listPointer;
 	listPointer = (list_t*) malloc(sizeof(list_t));
 	listPointer -> listptr = NULL;
 	list_t *ip;
 	ip = (list_t*) malloc(sizeof(list_t));
 	node_t *newNode;
-	newNode = (list_t*) malloc(sizeof(list_t)); */
+	newNode = (list_t*) malloc(sizeof(list_t));
+	*/
 	while (1)
 	{
 		printf("\nDebug Menu:\n"
@@ -884,9 +888,9 @@ void debug(void)
 			case 2:
 				admin_input();
 				break;
+				/*
 			case 3:
-				printf("Case 3 Under Construction\n");
-				/* printf("Enter a debug string (Max 100 Characters)> ");
+				printf("Enter a debug string (Max 100 Characters)> ");
 				fgets(string, 100, stdin);
 				fgets(string, 100, stdin);
 				arraySize = 0;
@@ -921,7 +925,8 @@ void debug(void)
 
 				character_output_loop(characters, arraySize);
 				test3flag = 1;
-				break; */
+				break;
+				*/
 			case 4:
 				if (test3flag)
 				{
