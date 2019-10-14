@@ -636,7 +636,7 @@ Author(s): Brendan Huynh
 *******************************************************************************/
 int add_items(void)
 {
-	item_t item;
+	item_t item, item2;
 	int input, flag, count = 0;
 
 	FILE *fp = fopen(ITEM_DB, "a");
@@ -727,7 +727,7 @@ int add_items(void)
 
 
 	while (fscanf(fp2, "%d %s %c %s %lf",
-			&item.id, item.name, &item.sex, item.size, &item.price) != EOF)
+			&item2.id, item2.name, &item2.sex, item2.size, &item2.price) != EOF)
 	{
 		count++;
 	}
@@ -747,7 +747,7 @@ int remove_items(void)
 {
 	item_t item;
 	char confirmation;
-	int input, flag;
+	int input, flag = 1;
 	long fileSize;
 
 	FILE *fp = fopen(ITEM_DB, "r");
@@ -815,18 +815,21 @@ int remove_items(void)
 					flag = 0;
 	                break;
 	            }
-	            else
-	            {
-	                printf("Invalid input\n");
-	            }
-			}
-
-			if (flag)
-			{
-				printf("Item does not exist\n");
+				else
+				{
+					printf("Invalid input\n");
+				}
 			}
 		}
+		if (flag)
+		{
+			printf("Item does not exist\n");
+		}
 	}
+
+	fclose(fp);
+	fclose(fp2);
+
 	return 0;
 }
 
