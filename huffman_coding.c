@@ -123,6 +123,7 @@ void huffman_tree_output(node_t *node)
         printf("Left\n");
         huffman_tree_output(node -> left);
     }
+
     if (node -> right != NULL)
     {
         printf("Right\n");
