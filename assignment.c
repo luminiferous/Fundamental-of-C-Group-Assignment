@@ -893,12 +893,11 @@ int purchase_items(char name[])
 	                printf("Invalid input\n");
 	            }
 	        }
-
-			if (flag)
-			{
-				printf("Item does not exist\n");
-			}
 	    }
+		if (flag)
+		{
+			printf("Item does not exist\n");
+		}
 	}
 
     fclose(fp);
